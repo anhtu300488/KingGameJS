@@ -1,0 +1,45 @@
+{
+    "project_type": "javascript",
+
+    "debugMode" : 1,
+    "showFPS" : false,
+    "frameRate" : 60,
+    "noCache" : false,
+    "id" : "gameCanvas",
+    "renderMode" : 0,
+    "engineDir":"frameworks/cocos2d-html5",
+
+    "modules" : ["cocos2d", "extensions","pluginx", "plugin-facebook"],
+
+    "plugin" : {
+        "facebook": {
+            "appId" : "1418719121678197",
+            "xfbml" : true,
+            "version" : "v2.2"
+        }
+    },
+
+    "plugin-facebook": [
+        "external/pluginx/platform/facebook_sdk.js",
+        "external/pluginx/platform/facebook.js"
+    ],
+
+    "pluginx" : [
+        "external/pluginx/Plugin.js"
+    ],
+
+    "jsList" : [
+        "src/resource.js",
+        "src/app.js",
+        "src/Scenes/LoginScene.js",
+        "src/Scenes/PlayScene.js",
+        "src/Scenes/BaseScene.js",
+        "src/Scenes/ShowGame.js",
+        "src/Utils/TLMNConfig.js",
+        "src/Utils/common.js",
+        "src/Utils/LocalString.js",
+        "src/UI/MButton.js",
+        "src/UI/MLabel.js",
+        "src/UI/MSprite.js"
+    ]
+}
