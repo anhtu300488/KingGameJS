@@ -187,20 +187,20 @@ var LoginLayer = cc.Layer.extend({
         //     this.popupMessage.showPopup("Tài khoản không được để trống!");
         //     return;
         // }
-
+        //
         // var space_pos = txtUserName.find(' ');
         // if (space_pos != -1) {
         //     this.popupMessage = new cc.popupMessage();
         //     this.popupMessage.showPopup("Tài khoản không được để dấu cách!");
         //     return;
         // }
-
+        //
         // if (txtPassword == null) {
         //     this.popupMessage = new cc.popupMessage();
         //     this.popupMessage.showPopup("Mật khẩu không được để trống!");
         //     return;
         // }
-
+        //
         // if (txtUserName.length < 3 || txtUserName.length > 12) {
         //     // cc.log("length");
         //     // cc.director.popScene(new PopupScene());
@@ -214,45 +214,13 @@ var LoginLayer = cc.Layer.extend({
         //     this.ShowMessageBoxOK(this, message, this);
         //     return;
         // }
-
+        //
         // if (txtPassword.length() < 6 || txtPassword.length() > 12) {
         //     this.popupMessage = new cc.popupMessage();
         //     this.popupMessage.showPopup("Mật khẩu phải có độ dài 6-12 ký tự!");
         //     return;
         // }
-        // var config = {
-        //     event:Events.LOGIN,
-        //     username:txtUserName
-        // };
-        // var message = Encode(config);
-        // try {
-        //     ws = new WebSocket("ws://localhost:8888/ws");
-        //     ws.onopen = function() {
-        //
-        //         ws.send(message);
-        //
-        //     };
-        //     ws.onmessage = function (e) {
-        //         cc.log("app->srv.ws.onmessage():"+e.data);
-        //         // if(e.data!==null || e.data !== 'undefined')
-        //         // {
-        //         //     var jsonFromClient = Decode(e.data);
-        //         //     if(jsonFromClient.event === Events.LOGIN_DONE)
-        //         //     {
-        //         //         enterWorldScene = new EnterWorldScene(jsonFromClient);
-        //         //         cc.director.runScene(enterWorldScene);
-        //         //     }
-        //         // }
-        //     };
-        //     ws.onclose = function (e) {
-        //
-        //     };
-        //     ws.onerror = function (e) {
-        //
-        //     };
-        // } catch (e) {
-        //     console.error('Sorry, the web socket at "%s" is un-available', url);
-        // }
+        getLoginMessageFromServer(txtUserName, txtPassword);
     },
     loginFacebook: function () {
         var facebook = plugin.FacebookAgent.getInstance();

@@ -36,31 +36,41 @@ var ShowGameLayer = cc.Layer.extend({
         bkg_x.setPosition(MVec2(0,0));
         this.addChild(bkg_x);
 
-        var btn_back = MCreate(res.btn_back_tlmn,TAG.SHOW_BTN_BACK);
+        var btn_back = MButtonCreate(res.btn_back_tlmn,TAG.SHOW_BTN_BACK);
         btn_back.setPosition(MVec2(padding - btn_back.getContentSize().height/6,
             winsize.height - padding - btn_back.getContentSize().height*(1-1/6)));
-        // btn_back.addTouchEventListener();
+        btn_back.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_back);
 
+        // var btn_back = new ccui.Button(res.btn_back_tlmn);
+        // btn_back.setPosition(MVec2(padding - btn_back.getContentSize().height/6,
+        //     winsize.height - padding - btn_back.getContentSize().height*(1-1/6)));
+        // btn_back.loadTextureNormal(res.btn_back_tlmn);
+        // btn_back.setZoomScale(0.02);
+        // btn_back.setAnchorPoint(cc.p(0,0));
+        // btn_back.setTag(TAG.SHOW_BTN_BACK);
+        // btn_back.addTouchEventListener(this.menuCallBack, this);
+        // this.addChild(btn_back);
+
         //phone
-        var btn_phone = MCreate(res.TABLE_BTN_PHONE,TAG.SHOW_BTN_PHONE);
+        var btn_phone = MButtonCreate(res.TABLE_BTN_PHONE,TAG.SHOW_BTN_PHONE);
         btn_phone.setPosition(MVec2(padding + btn_phone.getContentSize().width + padding,
             winsize.height - padding - btn_phone.getContentSize().height));
-        // btn_phone.addTouchEventListener();
+        btn_phone.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_phone);
 
         //btn cai dat
-        var btn_caidat = MCreate(res.btn_caidat, TAG.SHOW_BTN_CAIDAT);
+        var btn_caidat = MButtonCreate(res.btn_caidat, TAG.SHOW_BTN_CAIDAT);
         btn_caidat.setPosition(MVec2(winsize.width - padding - btn_caidat.getContentSize().width,
             winsize.height - padding - btn_caidat.getContentSize().height));
-        // btn_caidat.addTouchEventListener();
+        btn_caidat.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_caidat);
 
         //btn hop thu
-        var btn_hopthu = MCreate(res.TABLE_BTN_HOPTHU, TAG.SHOW_GAME_HOPTHU);
+        var btn_hopthu = MButtonCreate(res.TABLE_BTN_HOPTHU, TAG.SHOW_GAME_HOPTHU);
         btn_hopthu.setPosition(cc.p(btn_caidat.getPositionX() - padding - btn_hopthu.getContentSize().width,
             originY + winsize.height - padding - btn_hopthu.getContentSize().height));
-        // btn_hopthu.addTouchEventListener();
+        btn_hopthu.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_hopthu);
 
         // var sprite_new_mail = new cc.Sprite(res.bg_songuoixem);
@@ -77,7 +87,7 @@ var ShowGameLayer = cc.Layer.extend({
 
         // avartar
         var avatar_id = 100000;
-        var btn_avatar = MCreate( cc.formatStr("res/avatar%d.png", avatar_id), TAG.SHOW_BTN_AVATAR);
+        var btn_avatar = MButtonCreate( cc.formatStr("res/avatar%d.png", avatar_id), TAG.SHOW_BTN_AVATAR);
         btn_avatar.setAnchorPoint(cc.p(0.5,0.5));
         btn_avatar.setPosition(cc.p(bk_avatar.getPositionX() + bk_avatar.getContentSize().width / 2,
             bk_avatar.getPositionY() - bk_avatar.getContentSize().height / 2));
@@ -91,6 +101,8 @@ var ShowGameLayer = cc.Layer.extend({
         label_id.setPosition(cc.p(btn_avatar.getPositionX() + btn_avatar.getContentSize().width / 2 + padding, btn_avatar.getPositionY()));
         this.addChild(label_id);
 
+
+
         //ten hien thi
         var userName = 'Tu_Atula';
         var label_name = MLabelCreate(userName, bk_avatar.getContentSize().height / 4, true);
@@ -98,13 +110,14 @@ var ShowGameLayer = cc.Layer.extend({
             btn_phone.getPositionY() + btn_phone.getContentSize().height / 2));
         this.addChild(label_name);
 
+
         var widthName = label_name.getContentSize().width > label_id.getContentSize().width ? label_name.getContentSize().width : label_id.getContentSize().width;
 
         var widthXuKen = btn_hopthu.getPositionX() - (label_name.getPositionX() + widthName + 3 * padding);
 
         //ken
-        var _bgr_ken = MCreate(res.SPRITE_BK_XUKEN);
-        _bgr_ken.setTag(TAG.SHOW_BTN_NAPXU);
+        var _bgr_ken = MButtonCreate(res.SPRITE_BK_XUKEN, TAG.SHOW_BTN_NAPXU);
+        // _bgr_ken.setTag(TAG.SHOW_BTN_NAPXU);
         // _bgr_ken.addTouchEventListener();
         var scale_xuken = (widthXuKen / 2) / (_bgr_ken.getContentSize().width);
         _bgr_ken.setScaleX(scale_xuken);
@@ -123,8 +136,8 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(sprite_napken);
 
         //xu
-        var _bgr_xu = MCreate(res.SPRITE_BK_XUKEN);
-        _bgr_xu.setTag(TAG.SHOW_BTN_NAPKEN);
+        var _bgr_xu = MButtonCreate(res.SPRITE_BK_XUKEN, TAG.SHOW_BTN_NAPKEN);
+        // _bgr_xu.setTag(TAG.SHOW_BTN_NAPKEN);
         // _bgr_xu.addTouchEventListener();
         _bgr_xu.setScaleX(scale_xuken);
         _bgr_xu.setPosition(cc.p(_bgr_ken.getPositionX() - padding - _bgr_xu.getContentSize().width * scale_xuken,
@@ -238,12 +251,12 @@ var ShowGameLayer = cc.Layer.extend({
         var button_size = new cc.Size(winsize.width * 0.22, winsize.width * 0.22 * 356 / 270.0);  //361 / 310.0f
         var distance_button = (scollFrameSize.width - 4.2*button_size.width) / 8;
 
-        var enableGameIds = [1,2,3,4,5,6,7];
+        var enableGameIds = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
 
         for (i = 0; i < nameTabButton.length; i++){
             var isFound = false;
-            for (game_id in enableGameIds) {
-                if (game_id == zoneTagButton[i]) {
+            for ( j = 0; j < enableGameIds.length; j++) {
+                if (enableGameIds[j] == zoneTagButton[i]) {
                     isFound = true;
                     break;
                 }
@@ -267,6 +280,195 @@ var ShowGameLayer = cc.Layer.extend({
     },
     scrollEvent: function () {
 
+    },
+    menuCallBack: function(sender, type){
+        cc.log("TAG.SHOW_BTN_FRIEND");
+        if(type == ccui.Widget.TOUCH_ENDED) {
+            var tag = sender.tag;
+            cc.log("TAG: ", sender);
+            // SoundManager::getInstance()->playSound("sounds/button_click.mp3");
+            switch (tag) {
+                case TAG.SHOW_BTN_FRIEND:
+                {
+                    enableTouch = false;
+                    isCallMsgFilterFriend = true;
+                    // NetworkManager::getInstance()->getFilterAddFriendFromServer(-1,-1);
+                }
+                    break;
+                case TAG.SHOW_BTN_BACK:
+                {
+                    this.onClickExit();
+                }
+
+                    break;
+                case TAG.SHOW_BTN_DOI_THUONG:
+                {
+                    // if (Common::getInstance()->isEnabledTopup()) {
+                    //     if (this->getChildByTag(POPUP_TAG_MUATHE) == nullptr){
+                    //         auto m_popupDoiThuong = PopupDoiThuong::create();
+                    //         m_popupDoiThuong->setTag(POPUP_TAG_MUATHE);
+                    //         m_popupDoiThuong->setContext(this);
+                    //         addChild(m_popupDoiThuong, INDEX_POPUP);
+                    //         m_popupDoiThuong->appear();
+                    //     }
+                    // }else {
+                    //     if(Common::getInstance()->getServerAppVersion() < 0){
+                    //         if(this->getChildByTag(POPUP_TAG_HOTLINE) == nullptr){
+                    //             auto m_popupHotLine = PopupHotLine::create();
+                    //             m_popupHotLine->setTag(POPUP_TAG_HOTLINE);
+                    //             addChild(m_popupHotLine,INDEX_POPUP);
+                    //             m_popupHotLine->appear();
+                    //         }
+                    //     }else{
+                    //         this->showToast(MSG_MAINTAIN, 2);
+                    //     }
+                    // }
+                }
+                    break;
+                case TAG.SHOW_BTN_AVATAR:
+                    // if(this->getChildByTag(POPUP_TAG_USERINFOR) == nullptr){
+                    //     auto m_popupUserInfo = PopupUserInfo::create();
+                    //     m_popupUserInfo->setTag(POPUP_TAG_USERINFOR);
+                    //     addChild(m_popupUserInfo,INDEX_POPUP);
+                    //     m_popupUserInfo->showPositionTab(1);
+                    //     m_popupUserInfo->appear();
+                    // }
+                    break;
+                case TAG.SHOW_BTN_CAIDAT:
+                {
+                    enableTouch = false;
+                    // POPUP SETTING
+                    // if(this->getChildByTag(POPUP_TAG_SETTING) == nullptr){
+                    //     auto m_popupSetting = PopupSetting::create();
+                    //     m_popupSetting->setTag(POPUP_TAG_SETTING);
+                    //     addChild(m_popupSetting,INDEX_POPUP);
+                    //     m_popupSetting->appear();
+                    // }
+
+                }
+                    break;
+                case TAG.SHOW_GAME_HOPTHU:
+                {
+                    // if(this->getChildByTag(POPUP_TAG_USERINFOR) == nullptr){
+                    //     auto m_popupUserInfo = PopupUserInfo::create();
+                    //     m_popupUserInfo->setTag(POPUP_TAG_USERINFOR);
+                    //     m_popupUserInfo->showPositionTab(2);
+                    //     addChild(m_popupUserInfo,INDEX_POPUP);
+                    //     m_popupUserInfo->appear();
+                    // }
+
+                    break;
+                }
+                case TAG.SHOW_BTN_NAPKEN:
+                {
+                    // if(Common::getInstance()->getServerAppVersion() < 0){
+                    // #if(CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+                    //         break;
+                    //         #endif
+                    // }
+                    // auto m_popupDoiThe = (PopupDoiThe*) this->getChildByTag(POPUP_TAG_DOITHE);
+                    // if (m_popupDoiThe == nullptr){
+                    //     m_popupDoiThe = PopupDoiThe::create();
+                    //     m_popupDoiThe->setTag(POPUP_TAG_DOITHE);
+                    //     m_popupDoiThe->addMenuNapThe();
+                    //     addChild(m_popupDoiThe, INDEX_POPUP);
+                    //     m_popupDoiThe->appear();
+                    // }
+                }
+                    break;
+                case TAG.SHOW_BTN_NAPXU:
+                {
+                    // if(Common::getInstance()->getServerAppVersion() < 0){
+                    // #if(CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+                    //         break;
+                    //         #endif
+                    // }
+                    // auto m_popupDoiThe = (PopupDoiThe*) this->getChildByTag(POPUP_TAG_DOITHE);
+                    // if (m_popupDoiThe == nullptr){
+                    //     m_popupDoiThe = PopupDoiThe::create();
+                    //     m_popupDoiThe->setTag(POPUP_TAG_DOITHE);
+                    //     m_popupDoiThe->showPositionTabDoiXu();
+                    //     addChild(m_popupDoiThe, INDEX_POPUP);
+                    //     m_popupDoiThe->appear();
+                    // }
+                }
+                    break;
+                case TAG.SHOW_BTN_TROGIUP:
+                    // if (this->getChildByTag(POPUP_TAG_HELP_TO_PLAY) == nullptr){
+                    //     auto m_popup = PopupHelpToPlay::create();
+                    //     m_popup->setTag(POPUP_TAG_HELP_TO_PLAY);
+                    //     addChild(m_popup, INDEX_POPUP);
+                    //     m_popup->appear(true);
+                    // }
+                    break;
+                case TAG.SHOW_BTN_XEPHANG:
+                    // if(this->getChildByTag(POPUP_TAG_TOPUSER) == nullptr){
+                    //     auto m_popup = PopupTopUser::create();
+                    //     m_popup->setTag(POPUP_TAG_TOPUSER);
+                    //     addChild(m_popup,INDEX_POPUP);
+                    //     m_popup->requestTopUser();
+                    //     m_popup->appear();
+                    // }
+                    break;
+                case TAG.SHOW_BTN_GIFTCODE:
+                    // if(Common::getInstance()->isEnableGiftCode()){
+                    //     if(this->getChildByTag(POPUP_TAG_GIFTCODE) == nullptr){
+                    //         auto m_popupGiftCode = PopupGiftCode::create();
+                    //         m_popupGiftCode->setTag(POPUP_TAG_GIFTCODE);
+                    //         m_popupGiftCode->setContext(this);
+                    //         addChild(m_popupGiftCode,INDEX_POPUP);
+                    //         m_popupGiftCode->appear();
+                    //     }
+                    // }else {
+                    //     if(Common::getInstance()->getServerAppVersion() < 0){
+                    //         this->showToast(MSG_COMMING_SOON, 2);
+                    //     }else{
+                    //         this->showToast(MSG_MAINTAIN, 2);
+                    //     }
+                    // }
+
+                    break;
+                case TAG.SHOW_BTN_PHONE:
+                    if(this.getChildByTag(POPUP.TAG_HOTLINE) == null){
+                        cc.log("TAG.SHOW_BTN_PHONE");
+                        // var m_popupHotLine = PopupHotLineCreate();
+                        // m_popupHotLine->setTag(POPUP_TAG_HOTLINE);
+                        // addChild(m_popupHotLine,INDEX_POPUP);
+                        // m_popupHotLine->appear();
+
+                        // cc.director.pushScene(new PopupHotLineScene());
+                        // this.addChild(new PopupHotLineLayer());
+
+                        var popupHotLine = new PopupHotLineLayer();
+                        this.addChild(popupHotLine);
+                        // // popupHotLine.appear();
+
+                    }
+                    break;
+                case TAG.SHOW_GAME_THONGBAO:
+                    // if (this->getChildByTag(POPUP_TAG_NOTIFY) == nullptr){
+                    //     auto m_popup = PopupNotify::create();
+                    //     m_popup->setTag(POPUP_TAG_NOTIFY);
+                    //     addChild(m_popup, INDEX_POPUP);
+                    //     m_popup->appear();
+                    // }
+                    break;
+                case TAG.SHOW_BTN_MESSAGE:
+                {
+                    // showToast(TEXT_NOTIFY_FUNCTION_FUTURE, 2);
+                }
+                    break;
+                default:
+                    break;
+            }
+        }
+    },
+    onClickExit: function(){
+        // cc.log("onClickExit");
+        // var nodeConfirm = NodeConfirmCreate(ccui.Widget.TOUCH_ENDED, TXT.TITLE_POPUP_CONFIRM, "Bạn có muốn Đăng xuất không?",true);
+        // nodeConfirm.show(true);
+        // return;
+        cc.director.runScene(new LoginScene());
     }
 });
 

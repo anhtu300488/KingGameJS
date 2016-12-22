@@ -49,7 +49,12 @@ var res = {
     ICON_LIENG_ACTIVE: "res/show_game/lieng_active.png",
     ICON_XITO_ACTIVE: "res/show_game/xi_to_active.png",
     ICON_TAMXINGAU_ACTIVE: "res/show_game/tamxingau_active.png",
-    ICON_MINI_POKER_ACTIVE: "res/show_game/mini_poker_active.png"
+    ICON_MINI_POKER_ACTIVE: "res/show_game/mini_poker_active.png",
+    bg_popup: "res/popup_hotline/bg_popup.png",
+    RS_TITLE_POPUP: "res/sprite_title_popup.png",
+    IMAGE_CLOSE: "res/ic_button_close.png",
+    popup_girl_hotline: "res/popup_hotline/girl_hotline.png",
+    popup_btn_call: "res/popup_hotline/btn_call.png"
 };
 
 var g_resources = [];

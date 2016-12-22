@@ -8,5 +8,6 @@ var TXT = {
     TITLE_GAME_XOCDIA:       "CHẴN LẺ",
     TITLE_GAME_MAUBINH:      "MẬU BINH",
     TITLE_GAME_TLMN_SOLO:    "TLMN SOLO",
-    TITLE_GAME_TLMN_LIENG:   "LIÊNG"
+    TITLE_GAME_TLMN_LIENG:   "LIÊNG",
+    TITLE_POPUP_CONFIRM:     "Xác nhận"
 }

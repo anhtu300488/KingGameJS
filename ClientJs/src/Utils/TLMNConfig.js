@@ -2,6 +2,23 @@
  * Created by MyPC on 12/12/2016.
  */
 
+var WebSocket = WebSocket || window.WebSocket || window.MozWebSocket;
+var ws = null;
+
+//anh Linh
+var  SERVER_NAME = "192.168.100.32";
+//const char*  SERVER_NAME = "192.168.100.20";
+// anh Hai
+//const char*  SERVER_NAME = "192.168.100.32";
+// anh Tuấn
+//const char*  SERVER_NAME = "192.168.100.11";
+//const char*  SERVER_NAME = "103.28.37.24";
+//const char*  SERVER_NAME = "192.168.1.100";
+
+var SERVER_PORT = 1280;
+
+var PATH = "bigken";
+
 var TAG = {
     TLMN_SCENE: 100,
     TLMN_BTN_MENU: 101,
@@ -85,5 +102,29 @@ var TAG = {
     TAMXINGAU_ZONE: 17,
     WHEEL_ZONE: 18,
     MINIPOKER_ZONE: 19
+}
+
+
+
+var POPUP = {
+    TAG_FRIEND: 331,
+    TAG_USERINFOR: 332,
+    TAG_DOITHE: 333,
+    TAG_SETTING: 334,
+    TAG_TOPUSER: 335,
+    TAG_PASSWORD: 336,
+    TAG_CREATEROOM: 337,
+    TAG_CHAT: 338,
+    TAG_INVITE: 339,
+    TAG_LOCKTABLE: 340,
+    TAG_OUTSITE_PLAYER: 341,
+    TAG_HOTLINE: 342,
+    TAG_MUATHE: 343,
+    TAG_GIFTCODE: 344,
+
+    TAG_CHANGE_PASS: 346,
+    TAG_CHANGE_PHONE: 347,
+    TAG_HELP_TO_PLAY: 348,
+    TAG_CHANGE_AVATAR: 349
 }
 

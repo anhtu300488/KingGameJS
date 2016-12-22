@@ -18,6 +18,38 @@ var MCreate = function(textureName) {
     return btn;
 };
 
+var MButtonCreate = function(textureName, tag) {
+    var btn = new ccui.Button();
+    btn.loadTextureNormal(textureName);
+    btn.setZoomScale(0.02);
+    btn.setAnchorPoint(cc.p(0,0));
+    btn.setTag(tag);
+
+    return btn;
+};
+
+var MButtonCreate1 = function(textureName) {
+    var btn = new ccui.Button();
+    btn.loadTextureNormal(textureName);
+    btn.setZoomScale(0.02);
+    btn.setAnchorPoint(cc.p(0,0));
+
+    return btn;
+};
+
+var MButtonCreate4 = function(textureName,text,size,tag){
+    var btn = new ccui.Button();
+    btn.loadTextureNormal(textureName);
+    btn.setZoomScale(0.02);
+    btn.setAnchorPoint(cc.p(0,0));
+    btn.setTitleText(text);
+    btn.setTitleFontSize(btn.getContentSize().height*0.4);
+    // btn.setTitleFontName(FONT_BOLD);
+    btn.setTag(tag);
+    return btn;
+
+}
+
 
 // var MCreate = function(textureName, text, size, tag){
 //     var btn = new ccui.Button();

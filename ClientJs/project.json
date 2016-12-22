@@ -40,6 +40,8 @@
         "src/Utils/LocalString.js",
         "src/UI/MButton.js",
         "src/UI/MLabel.js",
-        "src/UI/MSprite.js"
+        "src/UI/MSprite.js",
+        "src/UI/Popup.js",
+        "src/Popups/PopupHotLine.js"
     ]
 }
