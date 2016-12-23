@@ -45,8 +45,14 @@ var IntroLayer = cc.Layer.extend({
             pakageName = getPackageName();
 
         getInitializeMessageFromServer(cp, appversion , country, language, device_id, device_info, pakageName);
+        
+        this.scheduleOnce(this.gotoLoginScene,2,"login");
 
         return true;
+    },
+    
+    gotoLoginScene: function () {
+        cc.director.runScene(new LoginScene());
     }
 });
 

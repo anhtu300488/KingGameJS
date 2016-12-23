@@ -9,8 +9,7 @@
     "renderMode" : 0,
     "engineDir":"frameworks/cocos2d-html5",
 
-    "modules" : ["cocos2d", "extensions","pluginx", "plugin-facebook"],
-
+    "modules" : ["cocos2d", "extensions","plugin", "plugin-facebook"],
     "plugin" : {
         "facebook": {
             "appId" : "1418719121678197",
@@ -22,10 +21,6 @@
     "plugin-facebook": [
         "external/pluginx/platform/facebook_sdk.js",
         "external/pluginx/platform/facebook.js"
-    ],
-
-    "pluginx" : [
-        "external/pluginx/Plugin.js"
     ],
 
     "jsList" : [
