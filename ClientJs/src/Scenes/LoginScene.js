@@ -15,21 +15,15 @@ var LoginLayer = cc.Layer.extend({
     init:function(){
         this._super();
 
-        var winsize = cc.director.getWinSize();
-
-        //create the background image and position it at the center of screen
-
         var spriteBG = new cc.Sprite(res.item_background);
-
         var spriteWidth = spriteBG.getContentSize().width;
-
         var spriteHeight = spriteBG.getContentSize().height;
 
-        var rows = winsize.width/ spriteWidth + 1;
-        var cols = winsize.height/ spriteHeight + 1;
+        var rows = width/ spriteWidth + 1;
+        var cols = height/ spriteHeight + 1;
         for(i = 0; i< rows; i++){
             for(j = 0; j<cols; j++){
-                var itemSpriteBG = new cc.Sprite(res.item_background);
+                var itemSpriteBG = MSprite.create(res.item_background);
                 var centerPos = cc.p(spriteBG.x + i*spriteWidth, spriteBG.y + j*spriteHeight);
                 itemSpriteBG.setPosition(centerPos);
                 this.addChild(itemSpriteBG);
@@ -39,8 +33,7 @@ var LoginLayer = cc.Layer.extend({
         var sprite_card = new cc.Sprite(res.sprite_background_login);
         sprite_card.setAnchorPoint(cc.p(0,0));
         sprite_card.setPosition(cc.p(0, 0));
-        sprite_card.setScale(winsize.width/sprite_card.getContentSize().width, winsize.height/sprite_card.getContentSize().height);
-        sprite_card.setContentSize(winsize);
+        sprite_card.setContentSize(visibleSize);
         this.addChild(sprite_card);
 
         var pageView = new ccui.PageView();
@@ -48,7 +41,7 @@ var LoginLayer = cc.Layer.extend({
         pageView.setContentSize(cc.size(400, 800));
         pageView.setAnchorPoint(cc.p(0.5, 0.5));
         pageView.x = pageView.getContentSize().width - 70;
-        pageView.y = winsize.width - pageView.getContentSize().height - 135;
+        pageView.y = width - pageView.getContentSize().height - 135;
 
         for (var i = 0; i < 5; i++)
         {
@@ -73,36 +66,24 @@ var LoginLayer = cc.Layer.extend({
         pageView.addEventListener(this.pageViewEvent, this);
         this.addChild(pageView);
 
-        var btn_login_facebook = new ccui.Button(res.btn_facebook);
-        btn_login_facebook.setAnchorPoint(cc.p(0,0));
-        btn_login_facebook.setPosition(cc.p(winsize.width-btn_login_facebook.getContentSize().width*5/4,
-            winsize.height/2-btn_login_facebook.getContentSize().height*3-20*3));
-        btn_login_facebook.setZoomScale(0.01);
-        btn_login_facebook.setTitleText("Login facebook");
-        btn_login_facebook.setTitleFontSize(btn_login_facebook.getContentSize().height*0.4);
-        btn_login_facebook.setTag(2);
+        var btn_login_facebook = MButton.create(res.btn_facebook,"Login Facebook",2);
+        btn_login_facebook.setPosition(cc.p(width-btn_login_facebook.getWidth() *5/4,
+            height/2-btn_login_facebook.getHeight() *3-20*3));
         btn_login_facebook.addTouchEventListener(this.touchEvent, this);
         this.addChild(btn_login_facebook);
 
         //choi ngay
-        var btn_playnow = new ccui.Button(res.btn_choingay_login);
-        btn_playnow.setAnchorPoint(cc.p(0,0));
+        var btn_playnow = MButton.create(res.btn_choingay_login,"Play Nows",3);
         btn_playnow.setPosition(cc.p(btn_login_facebook.getPosition().x,
             btn_login_facebook.getPosition().y
-            +btn_login_facebook.getContentSize().height+15));
-        btn_playnow.setTitleText("Play Now");
-        btn_playnow.setTitleFontSize(btn_login_facebook.getContentSize().height*0.4);
+            +btn_login_facebook.getHeight()+15));
         // btn_playnow.addTouchEventListener(this.touchEvent, this);
         this.addChild(btn_playnow);
 
         //đăng nhập
-        var btn_login = new ccui.Button(res.btn_dangnhap);
-        btn_login.setAnchorPoint(cc.p(0,0));
-        btn_login.setTitleText("Đăng nhập");
-        btn_login.setTitleFontSize(btn_login_facebook.getContentSize().height*0.4);
+        var btn_login = MButton.create(res.btn_dangnhap,"Đăng nhập",1);
         btn_login.setPosition(cc.p(btn_playnow.getPosition().x,
-            btn_playnow.getPosition().y+btn_playnow.getContentSize().height+15));
-        btn_login.setTag(1);
+            btn_playnow.getPosition().y+btn_playnow.getHeight()+15));
         btn_login.addTouchEventListener(this.touchEvent, this);
         this.addChild(btn_login);
 
@@ -117,7 +98,7 @@ var LoginLayer = cc.Layer.extend({
         // btn_register.addTouchEventListener(this.touchEvent, this);
         this.addChild(btn_register);
 
-        var editBackgroundMatKhau = new cc.Sprite(res.edit_password);
+        var editBackgroundMatKhau = MSprite.create(res.edit_password);
         editBackgroundMatKhau.setPosition(cc.p(btn_register.getPosition().x,
             btn_register.getPosition().y + btn_register.getContentSize().height + 100));
         this.addChild(editBackgroundMatKhau);
@@ -223,7 +204,7 @@ var LoginLayer = cc.Layer.extend({
         getLoginMessageFromServer(txtUserName, txtPassword);
     },
     loginFacebook: function () {
-        var facebook = plugin.FacebookAgent.getInstance();
+        /*var facebook = plugin.FacebookAgent.getInstance();
 
         facebook.login(["public_profile"], function(code, response){
             cc.log("code:", code);
@@ -242,8 +223,7 @@ var LoginLayer = cc.Layer.extend({
             } else {
                 cc.log("Login failed, error #" + code + ": " + response);
             }
-        });
-
+        });*/
     }
 });
 
