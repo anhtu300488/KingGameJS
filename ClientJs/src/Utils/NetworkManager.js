@@ -74,20 +74,104 @@ var NetworkManager = {
     EPS : 1000
 }
 
+var getInitializeMessageFromServer = function(cp, appversion , country, language, device_id, device_info, pakageName) {
+    cc.log("getInitializeMessageFromServer");
+    var request = initInitializeMessage(cp, appversion, country, language, device_id, device_info, pakageName);
+
+    cc.log("request = ", request);
+
+    var requestMess = requestMessage(request, 2, NetworkManager.INITIALIZE, "");
+
+    return requestMess;
+}
+
+var initInitializeMessage = function(cp, appversion, country, language, device_id, device_info, pakageName) {
+    // var ProtoBuf = dcodeIO.ProtoBuf;
+    // var InitializeBuilder = ProtoBuf.newBuilder();
+    //
+    // ProtoBuf.loadProtoFile('res/protobuf/initialize.proto', null, InitializeBuilder);
+    // var initialize = InitializeBuilder.build('bigkenInitialize');
+
+    var ProtoBuf = dcodeIO.ProtoBuf,
+        TestProtobuf = ProtoBuf.loadProtoFile('res/protobuf/initialize.proto').build('bigkenInitialize'),
+        TestProto = TestProtobuf.BINInitializeRequest;
+
+    var testProto = new TestProto({
+        cp : cp,
+        appVersion : appversion,
+        deviceId : device_id,
+        deviceInfo : device_info,
+        country : country,
+        language : language,
+        pakageName : pakageName
+    });
+
+    cc.log(testProto.encode());
+
+    // var initializeSetData = new initialize.BINInitializeRequest();
+    // initializeSetData.cp = cp;
+    // initializeSetData.appVersion = appversion;
+    // initializeSetData.deviceId = device_id;
+    // initializeSetData.deviceInfo = device_info;
+    // initializeSetData.country = country;
+    // initializeSetData.language = language;
+    // initializeSetData.pakageName = pakageName;
+
+    // var encoded = initializeSetData.encode();
+    // encoded.printDebug();
+    //
+    // var unencoded = initialize.BINInitializeRequest.decode(encoded);
+    // cc.log(unencoded.data);
+    // prints 'Hello World'
+
+    // return initializeSetData;
+
+    // var ByteBuffer = dcodeIO.ByteBuffer;
+    //
+    // var bb = new ByteBuffer()
+    //     .writeIString(initializeSetData)
+    //     .flip();
+    var str = testProto.encode();
+    // cc.log(bb.readIString()+" from bytebuffer.js");
+
+    return str;
+
+}
+
+
 var getLoginMessageFromServer = function(username, password)
 {
     cc.log("getLoginMessageFromServer");
     var request = initLoginMessage(username, password);
 
-    cc.log("initLoginMessage", request);
+    var requestMess = requestMessage(request, 2, NetworkManager.LOGIN, "");
 
-    var requestMessage = requestMessageFunc(request, 2, NetworkManager.LOGIN, "");
-
-    return requestMessage;
+    return requestMess;
 }
 
 var initLoginMessage = function(username, password) {
     cc.log("initLoginMessage");
+
+    // var ProtoBuf = dcodeIO.ProtoBuf;
+    // var GameInfoBuilder = ProtoBuf.newBuilder();
+    //
+    // ProtoBuf.loadProtoFile('res/protobuf/login.proto', null, GameInfoBuilder);
+    // var Testing = GameInfoBuilder.build('bigkenLogin');
+    //
+    // cc.log("Testing", Testing);
+    //
+    // var test = new Testing.BINLoginRequest();
+    // test.userName = 'tu_atula';
+    // test.password = 'Buianhtu304!@#';
+    //
+    // // cc.log("test = ", test);
+    //
+    // var encoded = test.encode();
+    // encoded.printDebug();
+    //
+    // var unencoded = Testing.BINLoginRequest.decode(encoded);
+    // cc.log("data = ", unencoded.data);
+    // prints 'Hello World'
 
     // var ProtoBuf = dcodeIO.ProtoBuf,
     //     LoginProtobuf = ProtoBuf.loadProtoFile('src/protobufObject/login.proto').build('bigkenLogin'),
@@ -107,7 +191,7 @@ var initLoginMessage = function(username, password) {
 }
 
 //function request message
-var requestMessageFunc = function(request, os, message_id, session_id) {
+var requestMessage = function(request, os, message_id, session_id) {
     cc.log("requestMessage");
     var size = 32;
 
@@ -118,8 +202,8 @@ var requestMessageFunc = function(request, os, message_id, session_id) {
     //     cocos2d::Director::getInstance()->getEventDispatcher()->setEnabled(false);
     // }
 
-    // var ackBuf = initData(request, os, message_id, session_id, size);
-    var ackBuf = 163572080;
+    var ackBuf = initData(request, os, message_id, session_id, size);
+    // var ackBuf = 152375680;
     //call websocket
     // std::thread *t = new std::thread(&NetworkManager::callNetwork, this, ackBuf, size);
     // var t = new cc.thread(callNetwork, this, ackBuf, size);
@@ -134,60 +218,46 @@ var requestMessageFunc = function(request, os, message_id, session_id) {
 
 var initData = function(request, os, messid, _session, len)
 {
-    // std::vector<char> bytes(_session.begin(), _session.end());
-    var bytes = [ _session ];
-    bytes.push('\0');
-    // //N byte session
-    var session = bytes[0];
-    //2 byte lenSession
-    var lenSession = session.length;
-    cc.log("session:", session);
-    var size = request.size + 11 + lenSession;
-    var ackBuf = new char[size];
 
-    var arrayOut = new ArrayOutputStream(ackBuf, size);
-    var codedOut = new CodedOutputStream(arrayOut);
+    var lenSession = 0;
 
-    var buf = new char[1];
-    buf[0] = os;
-    codedOut.WriteRaw(buf, 1); //write os
-    var dataSize = new char[4];
-    //data size: protobuf + eot + messageid
+    if(_session != null){
+        lenSession = _session.length;
+    }
 
-    var data_size = request.byteLength + 4;
-    dataSize[0] = (data_size >> 24) & 0xFF;
-    dataSize[1] = (data_size >> 16) & 0xFF;
-    dataSize[2] = (data_size >> 8) & 0xFF;
-    dataSize[3] = (data_size >> 0) & 0xFF;
+    var ByteBuffer = dcodeIO.ByteBuffer;
+    var bb = new ByteBuffer(request.capacity() + 11 + lenSession);
 
-    //4 byte data size
-    codedOut.WriteRaw(dataSize, 4);
-    //write data size
-    var char_len_session = new char[2];
-    char_len_session[0] = (lenSession >> 8) & 0xFF;
-    char_len_session[1] = (lenSession >> 0) & 0xFF;
-    //2 byte length session
-    codedOut.WriteRaw(char_len_session, 2);
-    //n byte session
-    codedOut.WriteRaw(session, lenSession);
-    // loginRequest->SerializeToCodedStream(&codedOut);
-    //2 byte messid
-    var mid = new char[2];
-    mid[0] = (messid >> 8) & 0xFF;
-    mid[1] = (messid >> 0) & 0xFF;
+    // var osByte = bb.writeInt32(os,0);
+    bb.writeInt32(os,0);
 
-    codedOut.WriteRaw(mid, 2);
-    //protobuf
-    // request.SerializeToCodedStream(codedOut);
-    request.XMLSerializer(codedOut);
+    // cc.log("osByte =  " + bb.toDebug());
 
-    /*char *eot = new char[2];
-     eot[0] = '\r';
-     eot[1] = '\n';*/
+    var dataSize = request.capacity() + 4;
 
-    codedOut.WriteRaw("\r\n", 2);
-    len = size;
-    return ackBuf;
+    // var dataSizeByte = bb.writeInt32(dataSize,4);
+    bb.writeInt32(dataSize,4);
+
+    // cc.log("dataSizeByte =  " + bb.toDebug());
+
+    // var char_len_session = bb.writeInt16(lenSession, 2);
+    bb.writeInt16(lenSession, 2);
+
+    // cc.log("char_len_session =  " + bb.toDebug());
+
+    // cc.log("os:", os,", message id: ",messid);
+    // var messidByte = bb.writeInt32(messid, 2);
+    bb.writeInt32(messid, 2);
+
+    // var sessionByte = bb.writeUTF8String("test", 16);
+
+    // cc.log("sessionByte:", sessionByte);
+
+    // bb.toString(request, request.capacity(), request.capacity() + 11 + lenSession);
+
+    cc.log("ackBuf = ", bb.toDebug());
+
+    return bb;
 
 }
 
@@ -202,7 +272,7 @@ var callNetwork = function(ackBuf, size) {
 
         ws.onopen = function() {
             cc.log("send");
-            ws.send(ackBuf);
+            ws.send(ackBuf, size);
 
         };
         ws.onmessage = function (e) {
@@ -240,4 +310,35 @@ var callNetwork = function(ackBuf, size) {
     // sleep(NetworkManager::SEND_MESSAGE_DELAY);
 
     return true;
+}
+
+function str2ab(str) {
+    // cc.log("str = ", str.length);
+    var buf = new ArrayBuffer(str.length); // 2 bytes for each char
+    var bufView = new Uint8Array(buf);
+    // cc.log("bufView", bufView);
+    for (var i=0, strLen=str.length; i < strLen; i++) {
+        bufView[i] = str.charCodeAt(i);
+    }
+    // cc.log("buf", bufView);
+    return bufView;
+}
+
+function int2ab(number) {
+    var str = number.toString();
+    var buf = new ArrayBuffer(str.length); // 2 bytes for each char
+    var bufView = new Uint8Array(buf);
+    for (var i=0, strLen=str.length; i < strLen; i++) {
+        bufView[i] = str.charCodeAt(i);
+    }
+    return bufView;
+}
+
+function toArrayBuffer(buf) {
+    var ab = new ArrayBuffer(buf.length);
+    var view = new Uint8Array(ab);
+    for (var i = 0; i < buf.length; ++i) {
+        view[i] = buf[i];
+    }
+    return ab;
 }

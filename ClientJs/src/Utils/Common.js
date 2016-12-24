@@ -115,3 +115,40 @@ var Common = {
     WHEEL_ZONE: 18,
     MINIPOKER_ZONE: 19
 }
+
+var getCp = function() {
+    // if (TEST_ENVIRONMENT)
+    return "1";
+
+}
+
+var getVersionCode = function() {
+    return "8";
+}
+
+var getCountry = function() {
+    // if (TEST_ENVIRONMENT)
+    return "vn";
+
+}
+
+var getLanguage = function() {
+    // if (TEST_ENVIRONMENT)
+    return "vi";
+}
+
+var getDeviceId =function() {
+    /*if (TEST_ENVIRONMENT)
+     return "00000000";*/
+    return "";
+}
+
+var getDeviceInfo = function() {
+    /*if (TEST_ENVIRONMENT)
+     return "Samsung Galaxy S2";*/
+    return "NO_DEVICE";
+}
+
+var getPackageName = function() {
+    return "com.bigken.game.b";
+}
