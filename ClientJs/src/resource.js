@@ -1,4 +1,8 @@
 var res = {
+    FONT_BOLD: "res/fonts/gamevina_thin.ttf",
+    FONT_THIN: "res/fonts/gamevina_thin.ttf",
+    FONT_TITLE: "res/fonts/font_title.otf",
+
     HelloWorld_png : "res/HelloWorld.png",
     item_background: "res/item_background.png",
     sprite_background_login: "res/sprite_background_login.png",

@@ -2,12 +2,33 @@
  * Created by MyPC on 13/12/2016.
  */
 
-var MSpriteCreate = function(textureName, size){
-    var sprite = new cc.Sprite();
-    sprite.setAnchorPoint(cc.p(0,0));
+var MSprite = cc.Sprite.extend({
+
+    ctor: function () {
+        this._super();
+    },
+    getWidth: function () {
+        return this.getContentSize().width;
+    },
+    getHeight: function () {
+        return this.getContentSize().height;
+    }
+});
+
+MSprite.create = function(textureName){
+    var sprite = new MSprite();
     sprite.setTexture(textureName);
-    sprite.setScale(size.width/sprite.getContentSize().width, size.height/sprite.getContentSize().height);
-    sprite.setContentSize(size);
+    sprite.setAnchorPoint(cc.p(0,0));
+
+    return sprite;
+}
+
+MSprite.createWithSize = function(textureName,size){
+    var sprite = new MSprite();
+    sprite.setTexture(textureName);
+    sprite.setAnchorPoint(cc.p(0,0));
+    sprite.setScaleX(size.width/sprite.getWidth());
+    sprite.setScaleY(size.height/sprite.getHeight());
 
     return sprite;
 }
