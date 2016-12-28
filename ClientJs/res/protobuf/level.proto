@@ -1,0 +1,39 @@
+package bigkenLevel;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenLevel";
+
+message BINLevel {
+	required int32 level = 1;
+	required string name = 2;
+	optional int64 cashGift = 3;
+	optional int64 goldGift = 4;
+	required int64 maxExp = 5;
+}
+
+message BINMedal {
+	required int32 medal = 1;
+	required string name = 2;
+	required int32 maxLevel = 3;
+}
+
+//LevelUp 
+//Message được gửi đi khi user lên level
+message BINLevelUpResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+	optional int64 currentExp = 3;
+	optional bool levelUp = 4;
+	optional BINLevel newLevel = 5;
+}
+//End LevelUp 
+
+//Message được gửi đi khi user được huy chương mới
+//MedalUp 
+message BINMedalUpResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+	optional BINMedal newMedal = 3;
+	optional int currentLevel = 4;
+}
+//End MedalUp 
+

@@ -1,0 +1,42 @@
+package bigkenVerify;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenVerify";
+
+//UserVerifyConfig
+
+message BINUserVerifyConfigRequest {
+	required int32 type = 1;//1: SMS, 2 - sms auto, 3-Email, 4-Phone (hiện tại set là 1), 
+}
+
+message BINUserVerifyConfigResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	optional bool userVerified = 3;
+	optional string verifiedPhone = 4;
+	optional string verifiedEmail = 5;
+	optional string verifiedSmsSyntax = 6;
+	optional string verifiedSmsNumber = 7;
+	optional int verifiedSmsCost = 8;
+	optional int verifiedReward = 9;
+	optional string unverifySmsSyntax = 10;
+	optional string unverifySmsNumber = 11;
+	optional int unverifiedSmsCost = 12;
+}
+
+//End UserVerifyConfig
+
+//UserVerify
+
+message BINUserVerifyRequest {
+	required string otp = 1;//mã OTP
+}
+
+message BINUserVerifyResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	optional bool userVerified = 3;//= true(trường hợp verify), = false (trường hợp hủy verify)
+	optional string verifiedPhone = 4;
+	optional string verifiedEmail = 5;
+}
+
+//End UserVerify

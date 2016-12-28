@@ -1,0 +1,12 @@
+package bigkenQuickPlay;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenQuickPlay";
+
+//QuickPlay 
+
+message BINQuickPlayRequest {
+	required string deviceId = 1;
+	optional string deviceInfo = 2;
+}
+
+//End QuickPlay 

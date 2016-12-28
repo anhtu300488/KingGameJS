@@ -1,0 +1,114 @@
+package bigkenPurchaseMoney;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenPurchaseMoney";
+
+//CardConfig
+message BINCardConfigRequest {
+	required int32 type = 1;//mặc định giá trị 1
+}
+
+message BINCardProduct {
+	required int32 productId = 1;
+	required int32 parValue = 2;//giá trị tiền thật
+	required int32 cashValue = 3;//xu nhận được
+	optional string description = 4;
+	optional int promotion = 5;//khuyến mại (%)
+}
+
+message BINCardProvider {
+	required int32 providerId = 1;
+	optional string providerCode = 2;
+	optional string providerName = 3;
+	repeated BINCardProduct products = 4;
+}
+
+message BINCardConfigResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	repeated BINCardProvider providers = 3;//danh sách đầu số
+	optional bool enableSecurityCheck = 4;
+}
+//End CardConfig
+
+//PurchaseMoney 
+//Message được gửi đi khi user nạp thẻ
+
+message BINPurchaseMoneyRequest {
+	required string provider = 1;
+	required string cardSerial = 2;
+	required string cardPin = 3;
+	required string securityKey = 4;
+	required string captcha = 5;
+	optional bool toCash = 6;
+}
+
+message BINPurchaseMoneyResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+}
+
+//End PurchaseMoney 
+
+//SmsConfig
+message BINSmsConfigRequest {
+	required int32 type = 1;//mặc định giá trị 1
+}
+
+message BINSmsSyntax {
+	required int32 syntaxId = 1;
+	required string syntax = 2;
+	required int32 parValue = 3;//giá trị tiền thật
+	required int32 cashValue = 4;//xu nhận được
+	required string targetNumber = 5;
+	optional string description = 6;
+	optional int promotion = 7;//khuyến mại (%)
+}
+
+message BINSmsProvider {
+	required int32 providerId = 1;
+	optional string providerCode = 2;
+	optional string providerName = 3;
+	repeated BINSmsSyntax syntaxes = 4;
+}
+
+message BINSmsNumber {
+	required string number = 1;
+	optional bool sameSyntax = 2;
+	optional int32 dayQuota = 3;//tối đa nạp 1 ngày
+	repeated BINSmsProvider providers = 4;
+}
+
+message BINSmsConfigResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	repeated BINSmsNumber numbers = 3;//danh sách đầu số
+}
+//End SmsConfig
+
+//PurchaseGold
+message BINGoldProduct {
+	required int32 productId = 1;
+	required int32 cashValue = 2;//giá trị tiền thật
+	required int32 goldValue = 3;//xu nhận được
+	optional int promotion = 4;//khuyến mại (%)
+}
+
+message BINGoldConfigRequest {
+	required int32 type = 1;//mặc định giá trị 1
+}
+
+message BINGoldConfigResponse {
+    required bool responseCode = 1;
+    optional string message = 2; 
+	repeated BINGoldProduct goldProducts = 3;//danh sách gói gold
+}
+
+message BINPurchaseGoldRequest {
+	required int32 productId = 1;
+}
+
+message BINPurchaseGoldResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+}
+//PurchaseGold

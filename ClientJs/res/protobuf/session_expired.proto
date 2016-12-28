@@ -1,0 +1,12 @@
+package bigkenSessionExpired;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenSessionExpired";
+
+//SessionExpired 
+
+message BINSessionExpiredResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+}
+
+//End SessionExpired 

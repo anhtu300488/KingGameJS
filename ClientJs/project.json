@@ -13,9 +13,9 @@
 
     "plugin" : {
         "facebook": {
-            "appId" : "1418719121678197",
+            "appId" : "1652860131603109",
             "xfbml" : true,
-            "version" : "v2.2"
+            "version" : "v2.7"
         }
     },
 

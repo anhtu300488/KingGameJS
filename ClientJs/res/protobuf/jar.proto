@@ -1,0 +1,17 @@
+package bigkenJar;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenJar";
+import "map_field_entry.proto";
+
+message BINJarRequest {
+	required int32 zoneId = 1;
+	optional int32 jarType = 2;
+	repeated BINMapFieldEntry args = 3;
+}
+
+message BINJarResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+	optional int64 jarValue = 3;//Giá trị của hũ
+	repeated BINMapFieldEntry args = 4;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file 
+}

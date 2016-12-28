@@ -1,0 +1,19 @@
+package bigkenUserStatus;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenUserStatus";
+
+
+//UserStatus
+
+message BINUserStatusRequest {
+	required int32 type = 1;//mặc định truyền lên 0(lấy tất cả thông tin), 1- lấy thông tin về mail, 2- lấy thông tin bạn bè
+}
+
+message BINUserStatusResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	optional int32 unreadMailCount = 3;
+	optional int32 friendRequestCount = 4;
+}
+
+//End UserStatus

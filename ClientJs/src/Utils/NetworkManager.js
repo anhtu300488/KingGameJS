@@ -86,11 +86,6 @@ var getInitializeMessageFromServer = function(cp, appversion , country, language
 }
 
 var initInitializeMessage = function(cp, appversion, country, language, device_id, device_info, pakageName) {
-    // var ProtoBuf = dcodeIO.ProtoBuf;
-    // var InitializeBuilder = ProtoBuf.newBuilder();
-    //
-    // ProtoBuf.loadProtoFile('res/protobuf/initialize.proto', null, InitializeBuilder);
-    // var initialize = InitializeBuilder.build('bigkenInitialize');
 
     var ProtoBuf = dcodeIO.ProtoBuf,
         TestProtobuf = ProtoBuf.loadProtoFile('res/protobuf/initialize.proto').build('bigkenInitialize'),
@@ -106,33 +101,7 @@ var initInitializeMessage = function(cp, appversion, country, language, device_i
         pakageName : pakageName
     });
 
-    cc.log(testProto.encode());
-
-    // var initializeSetData = new initialize.BINInitializeRequest();
-    // initializeSetData.cp = cp;
-    // initializeSetData.appVersion = appversion;
-    // initializeSetData.deviceId = device_id;
-    // initializeSetData.deviceInfo = device_info;
-    // initializeSetData.country = country;
-    // initializeSetData.language = language;
-    // initializeSetData.pakageName = pakageName;
-
-    // var encoded = initializeSetData.encode();
-    // encoded.printDebug();
-    //
-    // var unencoded = initialize.BINInitializeRequest.decode(encoded);
-    // cc.log(unencoded.data);
-    // prints 'Hello World'
-
-    // return initializeSetData;
-
-    // var ByteBuffer = dcodeIO.ByteBuffer;
-    //
-    // var bb = new ByteBuffer()
-    //     .writeIString(initializeSetData)
-    //     .flip();
     var str = testProto.encode();
-    // cc.log(bb.readIString()+" from bytebuffer.js");
 
     return str;
 
@@ -152,42 +121,16 @@ var getLoginMessageFromServer = function(username, password)
 var initLoginMessage = function(username, password) {
     cc.log("initLoginMessage");
 
-    // var ProtoBuf = dcodeIO.ProtoBuf;
-    // var GameInfoBuilder = ProtoBuf.newBuilder();
-    //
-    // ProtoBuf.loadProtoFile('res/protobuf/login.proto', null, GameInfoBuilder);
-    // var Testing = GameInfoBuilder.build('bigkenLogin');
-    //
-    // cc.log("Testing", Testing);
-    //
-    // var test = new Testing.BINLoginRequest();
-    // test.userName = 'tu_atula';
-    // test.password = 'Buianhtu304!@#';
-    //
-    // // cc.log("test = ", test);
-    //
-    // var encoded = test.encode();
-    // encoded.printDebug();
-    //
-    // var unencoded = Testing.BINLoginRequest.decode(encoded);
-    // cc.log("data = ", unencoded.data);
-    // prints 'Hello World'
-
-    // var ProtoBuf = dcodeIO.ProtoBuf,
-    //     LoginProtobuf = ProtoBuf.loadProtoFile('src/protobufObject/login.proto').build('bigkenLogin'),
-    //     LoginProto = LoginProtobuf.BINLoginRequest;
-    // cc.log("LoginProto:", LoginProto);
-    // var loginProto = new LoginProto({
-    //     userName: username,
-    //     password: password
-    // });
-
-    var LoginProto = {
+    var ProtoBuf = dcodeIO.ProtoBuf,
+        LoginProtobuf = ProtoBuf.loadProtoFile('res/protobuf/login.proto').build('bigkenLogin'),
+        LoginProto = LoginProtobuf.BINLoginRequest;
+    cc.log("LoginProto:", LoginProto);
+    var loginProto = new LoginProto({
         userName: username,
         password: password
-    }
+    });
 
-    return LoginProto;
+    return loginProto.encode();
 }
 
 //function request message
@@ -203,22 +146,15 @@ var requestMessage = function(request, os, message_id, session_id) {
     // }
 
     var ackBuf = initData(request, os, message_id, session_id, size);
-    // var ackBuf = 152375680;
-    //call websocket
-    // std::thread *t = new std::thread(&NetworkManager::callNetwork, this, ackBuf, size);
-    // var t = new cc.thread(callNetwork, this, ackBuf, size);
-    // var t = callNetwork(request, os, message_id, session_id, size);
-    var t = callNetwork(ackBuf, size);
+    cc.log("buffer = ", ackBuf);
+
+    var t = callNetwork(ackBuf);
 
     return t;
-
-    // if (t->joinable())
-    //     t->detach();
 }
 
 var initData = function(request, os, messid, _session, len)
 {
-
     var lenSession = 0;
 
     if(_session != null){
@@ -226,54 +162,57 @@ var initData = function(request, os, messid, _session, len)
     }
 
     var ByteBuffer = dcodeIO.ByteBuffer;
-    var bb = new ByteBuffer(request.capacity() + 11 + lenSession);
+    var size = request.capacity() + 11 + lenSession;
+    var bb = new ByteBuffer(size);
 
-    // var osByte = bb.writeInt32(os,0);
-    bb.writeInt32(os,0);
+    var _offset = 0;
 
-    // cc.log("osByte =  " + bb.toDebug());
+    bb.writeInt8(os, _offset);
+    _offset++;
+
 
     var dataSize = request.capacity() + 4;
 
-    // var dataSizeByte = bb.writeInt32(dataSize,4);
-    bb.writeInt32(dataSize,4);
+     bb.writeInt32(dataSize, _offset);
+     _offset+= 4;
 
-    // cc.log("dataSizeByte =  " + bb.toDebug());
+    // cc.log("bb =  " + bb.toDebug());
 
-    // var char_len_session = bb.writeInt16(lenSession, 2);
-    bb.writeInt16(lenSession, 2);
+    bb.writeInt16(lenSession, _offset);
+    _offset+= 2;
 
-    // cc.log("char_len_session =  " + bb.toDebug());
+    var sessionByte = bb.writeUTF8String(_session, _offset);
+    _offset+= lenSession;
 
-    // cc.log("os:", os,", message id: ",messid);
-    // var messidByte = bb.writeInt32(messid, 2);
-    bb.writeInt32(messid, 2);
+    bb.writeInt16(messid, _offset);
+    _offset+= 2;
 
-    // var sessionByte = bb.writeUTF8String("test", 16);
+    //insert request into bytebuffer
 
-    // cc.log("sessionByte:", sessionByte);
+    bb.append(request, "", _offset);
+    _offset+= request.capacity();
 
-    // bb.toString(request, request.capacity(), request.capacity() + 11 + lenSession);
+    var endParam = "\r\n";
 
-    cc.log("ackBuf = ", bb.toDebug());
+    bb.writeUTF8String(endParam, _offset);
 
-    return bb;
+
+    return bb.toString("binary");
 
 }
 
-var callNetwork = function(ackBuf, size) {
+var callNetwork = function(ackBuf) {
     cc.log("callNetwork");
     //call websocket
     try {
         var url = "ws://"+SERVER_NAME+":"+SERVER_PORT+"/"+PATH;
         // var url = "ws://192.168.100.32:1280/bigken";
-        cc.log("url =", url);
         ws = new WebSocket(url);
-
+        ws.binaryType = "arraybuffer";
+        cc.log("url", url);
         ws.onopen = function() {
             cc.log("send");
-            ws.send(ackBuf, size);
-
+            ws.send(ackBuf);
         };
         ws.onmessage = function (e) {
             console.log("app->srv.ws.onmessage():"+e.data);
@@ -292,53 +231,10 @@ var callNetwork = function(ackBuf, size) {
 
         };
         ws.onerror = function (e) {
-
+            cc.log("error: ", e);
         };
     } catch (e) {
-        console.error('Sorry, the web socket at "%s" is un-available', url);
+        cc.log("error: ", e);
+        cc.error('Sorry, the web socket at "%s" is un-available', url);
     }
-
-    // mtx.lock();
-    //
-    // if (!isConnected()) {
-    //     NetworkManager::getInstance()->connectServer(SERVER_NAME, SERVER_PORT);
-    // }
-    //
-    // mtx.unlock();
-    //
-    // DefaultSocket::getInstance()->sendData(ackBuf, size);
-    // sleep(NetworkManager::SEND_MESSAGE_DELAY);
-
-    return true;
-}
-
-function str2ab(str) {
-    // cc.log("str = ", str.length);
-    var buf = new ArrayBuffer(str.length); // 2 bytes for each char
-    var bufView = new Uint8Array(buf);
-    // cc.log("bufView", bufView);
-    for (var i=0, strLen=str.length; i < strLen; i++) {
-        bufView[i] = str.charCodeAt(i);
-    }
-    // cc.log("buf", bufView);
-    return bufView;
-}
-
-function int2ab(number) {
-    var str = number.toString();
-    var buf = new ArrayBuffer(str.length); // 2 bytes for each char
-    var bufView = new Uint8Array(buf);
-    for (var i=0, strLen=str.length; i < strLen; i++) {
-        bufView[i] = str.charCodeAt(i);
-    }
-    return bufView;
-}
-
-function toArrayBuffer(buf) {
-    var ab = new ArrayBuffer(buf.length);
-    var view = new Uint8Array(ab);
-    for (var i = 0; i < buf.length; ++i) {
-        view[i] = buf[i];
-    }
-    return ab;
 }

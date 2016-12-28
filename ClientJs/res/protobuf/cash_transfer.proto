@@ -1,0 +1,61 @@
+package bigkenCashTransfer;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenCashTransfer";
+
+//CashTransferConfig
+
+message BINCashTransferConfigRequest {
+	required int32 type = 1;//(= 1)
+}
+
+message BINCashTransferConfigResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	optional int64 avaiableCash = 3;
+	optional int32 tax = 4;
+	optional bool enableSecurityCheck = 5;
+}
+
+//End CashTransferConfig
+
+//CashTransfer
+
+message BINCashTransferRequest {
+	required int64 cashValue = 1;
+	required int64 targetUserId = 2;
+	optional string userSecurityKey = 3;
+	optional string captchaSecurityKey = 4;
+	optional string captcha = 5;
+}
+
+message BINCashTransferResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+}
+
+//End CashTransfer
+
+//CashTransferHistory
+message BINCashTransferHistoryRequest {
+	required int32 type = 1;//=1(tiền nhận từ người khác), =2(tiền gửi cho người khác), = 0(cả 2 trường hợp)
+	required int32 firstResult = 2;//index của bản ghi đầu tiên
+	required int32 maxResult = 3;//tổng số bản ghi muốn lấy, firstResult, maxResult < 0 => lấy toàn bộ danh sách
+}
+
+message BINCashTransferHistory {
+	optional int64 logId = 1;
+	optional int64 userId = 2;
+	optional string userName = 3;
+	optional int64 targetUserId = 4;
+	optional string targetUserName = 5;
+	optional int64 cashValue = 6;
+	optional int32 taxValue = 7;
+	optional int64 transferredTime = 8;
+}
+
+message BINCashTransferHistoryResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	repeated BINCashTransferHistory cashTransferHistories = 3;
+}
+//End CashTransferHistory

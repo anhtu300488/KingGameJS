@@ -1,0 +1,42 @@
+package bigkenEnterZone;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenEnterZone";
+
+//EnterZone 
+
+message BINEnterZoneRequest {
+	required int32 zoneId = 1;
+}
+
+message BINRoomConfig {
+	required int32 roomGroupId = 1;
+	optional string roomName = 2;
+	required bool vipRoom = 3;
+	required int32 minCash = 4;
+	required int32 minGold = 5;
+	required int32 minLevel = 6;
+	required int32 roomCapacity = 7;
+	required int32 playerSize = 8;
+	required int32 minBet = 9;
+	required int32 tax = 10;
+	required bool active = 11;
+}
+
+message BINEnterZoneResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+	optional bool enableDisplayRoomList = 3;
+	optional int32 defaultRoomTypeLoad = 4;//loại phòng sẽ load lên đầu tiên khi vào 0: bàn thường (ken), 1: bàn vip (xu), 2 tổng hợp cả 2
+	repeated BINRoomConfig cashRoomConfigs = 5;
+	repeated BINRoomConfig goldRoomConfigs = 6;
+}
+
+message BINExitZoneRequest {
+	required int32 zoneId = 1;
+}
+
+message BINExitZoneResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+}
+//End EnterZone 

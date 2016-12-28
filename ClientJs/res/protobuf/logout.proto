@@ -1,0 +1,16 @@
+package bigkenLogout;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenLogout";
+
+//Logout 
+
+message BINLogoutRequest {
+	required bool doLogout = 1;
+}
+
+message BINLogoutResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+}
+
+//End Logout 

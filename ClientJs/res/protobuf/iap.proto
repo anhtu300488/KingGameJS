@@ -1,0 +1,36 @@
+package bigkenIap;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenIap";
+
+//IapConfig 
+
+message BINIAPConfigRequest {
+	optional int32 type = 1;//(1-android, 2-ios)
+}
+
+message BINIAP {
+	required int32 pId = 1;//productId
+	required int32 parValue = 2;//giá trị tiền thật
+	required int32 cashValue = 3;//xu nhận được
+	optional string description = 4;
+	optional int promotion = 5;//khuyến mại (%)
+}
+
+message BINIAPConfigResponse {
+    required bool responseCode = 1;
+    optional string message = 2; 
+	repeated BINIAP iapProducts = 3;//danh sách đầu số
+}
+
+message BINCompleteIAPRequest {
+	required int32 pId = 1;//productId
+	required string productId = 2;
+	required string packageName = 3;
+	required string purchaseToken = 4;
+}
+
+message BINCompleteIAPResponse {
+    required bool responseCode = 1;
+    optional string message = 2; 
+}
+//End Ping 

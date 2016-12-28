@@ -1,0 +1,30 @@
+package bigkenNotification;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenNotification";
+
+//HeadLine
+
+message BINNews {
+	required string tag = 1;
+	required string displayName = 2;
+	required string action = 3;
+	required string subject = 4;
+}
+
+message BINHeadLineResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	repeated BINNews headlines = 3;
+}
+
+//End HeadLine
+
+//EmergencyNotification
+
+message BINEmergencyNotificationResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	repeated string notifications = 3;
+}
+
+//End EmergencyNotification

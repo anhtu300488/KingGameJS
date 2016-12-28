@@ -1,0 +1,11 @@
+package bigkenCloseConnection;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenCloseConnection";
+
+//CloseConnection
+
+message BINCloseConnectionRequest {
+	required int64 closeTime = 1;
+}
+
+//End CloseConnection

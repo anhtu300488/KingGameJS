@@ -1,0 +1,25 @@
+package bigkenGameConfig;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenGameConfig";
+import "map_field_entry.proto";
+
+//Vòng quay may mắn
+message BINLuckyWheelItem {
+	optional string itemName = 1;//Ten item
+	optional string description = 2;//Mô tả
+	optional int32 emotionId = 3;//Emotion Id tương ứng
+	optional int32 round = 4;//Vòng quay(1: vòng bên trong, 2: vòng bên ngoài)
+	optional int32 value = 5;//Giá trị
+}
+
+//LuckyWheel config
+message BINLuckyWheelConfigRequest {
+	optional int32 round = 1;//vòng quay may mắn có 2 vòng (vòng 1 là xu, vòng 2 là ken)
+}
+
+message BINLuckyWheelConfigResponse {
+	required bool responseCode = 1;
+	optional string message = 2;
+	repeated BINLuckyWheelItem item = 3;
+	repeated BINMapFieldEntry args = 4;//map chứa các thông tin đặc biệt
+}

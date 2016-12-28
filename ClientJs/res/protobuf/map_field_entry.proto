@@ -1,0 +1,12 @@
+package bigkenMapFieldEntry;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenMapFieldEntry";
+
+//MapFieldEntry 
+
+message BINMapFieldEntry {
+	optional string key = 1;
+	optional string value = 2;
+}
+
+//End MapFieldEntry 

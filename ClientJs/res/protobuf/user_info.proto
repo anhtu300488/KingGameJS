@@ -1,7 +1,8 @@
+package bigkenUserInfo;
 option java_package = "com.mi.game.network.data.bin";
-
-//import "map_field_entry.proto";
-//UserInfo 
+option java_outer_classname = "bigkenUserInfo";
+import "level.proto";
+//UserInfo
 
 message BINUserInfo {
 	required int64 userId = 1;

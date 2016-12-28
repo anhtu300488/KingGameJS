@@ -1,0 +1,21 @@
+package bigkenFilterTopUser;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigkenFilterTopUser";
+import "user_info.proto";
+
+//Message đc client gửi lên khi muốn danh sách top đại gia (gold, cash), top cao thủ, top thất thủ, top level
+//FilterTopUser 
+
+message BINFilterTopUserRequest {
+	required int32 firstResult = 1;//index của bản ghi đầu tiên
+	required int32 maxResult = 2;//tổng số bản ghi muốn lấy, firstResult, maxResult < 0 => lấy toàn bộ danh sách
+	optional int32 orderByField = 3;//1: top cash, 2: top gold, 3: total_match, 4: top cao thủ (top total win), 5: top level, 6: top đổi thưởng
+}
+
+message BINFilterTopUserResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+	repeated BINUserInfo topUsers = 3;
+}
+
+//End FilterTopUser 
