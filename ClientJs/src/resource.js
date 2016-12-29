@@ -1,5 +1,16 @@
 var res = {
+    FONT_BOLD: "res/fonts/gamevina_thin.ttf",
+    FONT_THIN: "res/fonts/gamevina_thin.ttf",
+    FONT_TITLE: "res/fonts/font_title.otf",
+
     HelloWorld_png : "res/HelloWorld.png",
+    item_background_png: "res/item_background.png",
+    bg_card_png: "res/bg_card.png",
+    beer_bkg_png: "res/intro/beer_bkg.png",
+    beer_sprite_png: "res/intro/beer_sprite.png",
+    beer_bot_png: "res/intro/beer_bot.png",
+    cloud_png: "res/intro/cloud.png",
+    lua_mach_png: "res/intro/lua_mach.png",
     item_background: "res/item_background.png",
     sprite_background_login: "res/sprite_background_login.png",
     btn_facebook : "res/btn_facebook.png",

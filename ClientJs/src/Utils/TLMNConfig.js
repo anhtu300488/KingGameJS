@@ -6,7 +6,7 @@ var WebSocket = WebSocket || window.WebSocket || window.MozWebSocket;
 var ws = null;
 
 //anh Linh
-var  SERVER_NAME = "192.168.100.250";
+var  SERVER_NAME = "192.168.100.32";
 //const char*  SERVER_NAME = "192.168.100.20";
 // anh Hai
 //const char*  SERVER_NAME = "192.168.100.32";
@@ -19,7 +19,75 @@ var SERVER_PORT = 1280;
 
 var PATH = "bigken";
 
+var GAMECOLOR = {
+    DARK_COLOR: cc.color(0,0,0,180)
+}
+
 var TAG = {
+    LOGIN: {
+        BTN_LOGIN: 1,
+        BTN_LOGIN_FB: 2,
+        BTN_LOGIN_GOOGLE: 3,
+        BTN_REGISTER: 4,
+        BTN_FORGET_PASSWORD: 5,
+        BTN_HOT_LINE: 6,
+        EDIT_BOX_USER_NAME: 7,
+        EDIT_BOX_PASSWORD: 8
+    },
+
+    SHOW_GAME: {
+        BTN_BACK: 1,
+        BTN_HOT_LINE: 2,
+        BTN_AVATAR: 3,
+        BTN_MAIL: 4,
+        BTN_SETTING: 5,
+        BTN_HELP: 6,
+        BTN_TOP_USER: 7,
+        BTN_GET_PRICE: 8,
+        BTN_NOTIFY: 9,
+        BTN_GIFT: 10
+    },
+
+    SCENE_TABLE: {
+
+    },
+
+    TLMN_SCENE:{
+
+    },
+
+    PHOM_SCENE:{
+
+    },
+
+    CHANLE_SCENE:{
+
+    },
+
+    TAMXINGAU_SCENE:{
+
+    },
+
+    MINIPOKER_SCENE:{
+
+    },
+
+    MAUBINH_SCENE:{
+
+    },
+
+    VQMM_SCENE:{
+
+    },
+
+    BACAY_SCENE:{
+
+    },
+
+    MINI_BACAY_SCENE:{
+
+    },
+
     TLMN_SCENE: 100,
     TLMN_BTN_MENU: 101,
     TLMN_BTN_MESSAGE: 102,
@@ -107,6 +175,13 @@ var TAG = {
 
 
 var POPUP = {
+    POPUP_HOT_LINE:{
+        BTN_CLOSE: 1,
+        BTN_HOT_LINE_1: 2,
+        BTN_HOT_LINE_2: 3,
+        BTN_FAN_PAGE: 4
+    },
+
     TAG_FRIEND: 331,
     TAG_USERINFOR: 332,
     TAG_DOITHE: 333,

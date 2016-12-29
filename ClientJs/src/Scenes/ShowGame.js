@@ -13,16 +13,14 @@ var ShowGameLayer = cc.Layer.extend({
 
         var padding = 12;
 
-        var winsize = cc.director.getWinSize();
-
         var spriteBG = new cc.Sprite(res.item_background);
 
         var spriteWidth = spriteBG.getContentSize().width;
 
         var spriteHeight = spriteBG.getContentSize().height;
 
-        var rows = winsize.width/ spriteWidth + 1;
-        var cols = winsize.height/ spriteHeight + 1;
+        var rows = visibleSize.width/ spriteWidth + 1;
+        var cols = visibleSize.height/ spriteHeight + 1;
         for(i = 0; i< rows; i++){
             for(j = 0; j<cols; j++){
                 var itemSpriteBG = new cc.Sprite(res.item_background);
@@ -32,44 +30,34 @@ var ShowGameLayer = cc.Layer.extend({
             }
         }
 
-        var bkg_x = MSpriteCreate(res.BGR_LISTGAMES,winsize);
+        var bkg_x = new MSprite.create(res.BGR_LISTGAMES,visibleSize);
         bkg_x.setPosition(MVec2(0,0));
         this.addChild(bkg_x);
 
-        var btn_back = MButtonCreate(res.btn_back_tlmn,TAG.SHOW_BTN_BACK);
+        var btn_back = MButton.create(res.btn_back_tlmn,TAG.SHOW_BTN_BACK);
         btn_back.setPosition(MVec2(padding - btn_back.getContentSize().height/6,
-            winsize.height - padding - btn_back.getContentSize().height*(1-1/6)));
+            visibleSize.height - padding - btn_back.getContentSize().height*(1-1/6)));
         btn_back.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_back);
 
-        // var btn_back = new ccui.Button(res.btn_back_tlmn);
-        // btn_back.setPosition(MVec2(padding - btn_back.getContentSize().height/6,
-        //     winsize.height - padding - btn_back.getContentSize().height*(1-1/6)));
-        // btn_back.loadTextureNormal(res.btn_back_tlmn);
-        // btn_back.setZoomScale(0.02);
-        // btn_back.setAnchorPoint(cc.p(0,0));
-        // btn_back.setTag(TAG.SHOW_BTN_BACK);
-        // btn_back.addTouchEventListener(this.menuCallBack, this);
-        // this.addChild(btn_back);
-
         //phone
-        var btn_phone = MButtonCreate(res.TABLE_BTN_PHONE,TAG.SHOW_BTN_PHONE);
+        var btn_phone = MButton.create(res.TABLE_BTN_PHONE,TAG.SHOW_BTN_PHONE);
         btn_phone.setPosition(MVec2(padding + btn_phone.getContentSize().width + padding,
-            winsize.height - padding - btn_phone.getContentSize().height));
+            visibleSize.height - padding - btn_phone.getContentSize().height));
         btn_phone.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_phone);
 
         //btn cai dat
-        var btn_caidat = MButtonCreate(res.btn_caidat, TAG.SHOW_BTN_CAIDAT);
-        btn_caidat.setPosition(MVec2(winsize.width - padding - btn_caidat.getContentSize().width,
-            winsize.height - padding - btn_caidat.getContentSize().height));
+        var btn_caidat = MButton.create(res.btn_caidat, TAG.SHOW_BTN_CAIDAT);
+        btn_caidat.setPosition(MVec2(visibleSize.width - padding - btn_caidat.getContentSize().width,
+            visibleSize.height - padding - btn_caidat.getContentSize().height));
         btn_caidat.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_caidat);
 
         //btn hop thu
-        var btn_hopthu = MButtonCreate(res.TABLE_BTN_HOPTHU, TAG.SHOW_GAME_HOPTHU);
+        var btn_hopthu = MButton.create(res.TABLE_BTN_HOPTHU, TAG.SHOW_GAME_HOPTHU);
         btn_hopthu.setPosition(cc.p(btn_caidat.getPositionX() - padding - btn_hopthu.getContentSize().width,
-            originY + winsize.height - padding - btn_hopthu.getContentSize().height));
+            originY + visibleSize.height - padding - btn_hopthu.getContentSize().height));
         btn_hopthu.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_hopthu);
 
@@ -87,7 +75,7 @@ var ShowGameLayer = cc.Layer.extend({
 
         // avartar
         var avatar_id = 100000;
-        var btn_avatar = MButtonCreate( cc.formatStr("res/avatar%d.png", avatar_id), TAG.SHOW_BTN_AVATAR);
+        var btn_avatar = MButton.create( cc.formatStr("res/avatar%d.png", avatar_id), TAG.SHOW_BTN_AVATAR);
         btn_avatar.setAnchorPoint(cc.p(0.5,0.5));
         btn_avatar.setPosition(cc.p(bk_avatar.getPositionX() + bk_avatar.getContentSize().width / 2,
             bk_avatar.getPositionY() - bk_avatar.getContentSize().height / 2));
@@ -96,28 +84,25 @@ var ShowGameLayer = cc.Layer.extend({
 
         //info
         var user_id = 1;
-        var label_id = MLabelCreate(cc.formatStr("ID: %d", user_id), bk_avatar.getContentSize().height / 4, true);
+        var label_id = MLabel.create(cc.formatStr("ID: %d", user_id), bk_avatar.getContentSize().height / 4, true);
         label_id.setAnchorPoint(cc.p(0,1));
         label_id.setPosition(cc.p(btn_avatar.getPositionX() + btn_avatar.getContentSize().width / 2 + padding, btn_avatar.getPositionY()));
         this.addChild(label_id);
 
-
-
         //ten hien thi
         var userName = 'Tu_Atula';
-        var label_name = MLabelCreate(userName, bk_avatar.getContentSize().height / 4, true);
+        var label_name = MLabel.create(userName, bk_avatar.getContentSize().height / 4, true);
         label_name.setPosition(cc.p(btn_avatar.getPositionX() + btn_avatar.getContentSize().width / 2 + padding,
             btn_phone.getPositionY() + btn_phone.getContentSize().height / 2));
         this.addChild(label_name);
-
 
         var widthName = label_name.getContentSize().width > label_id.getContentSize().width ? label_name.getContentSize().width : label_id.getContentSize().width;
 
         var widthXuKen = btn_hopthu.getPositionX() - (label_name.getPositionX() + widthName + 3 * padding);
 
         //ken
-        var _bgr_ken = MButtonCreate(res.SPRITE_BK_XUKEN, TAG.SHOW_BTN_NAPXU);
-        // _bgr_ken.setTag(TAG.SHOW_BTN_NAPXU);
+        var _bgr_ken = MButton.create(res.SPRITE_BK_XUKEN,TAG.SHOW_BTN_NAPKEN);
+        _bgr_ken.setTag(TAG.SHOW_BTN_NAPXU);
         // _bgr_ken.addTouchEventListener();
         var scale_xuken = (widthXuKen / 2) / (_bgr_ken.getContentSize().width);
         _bgr_ken.setScaleX(scale_xuken);
@@ -136,8 +121,7 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(sprite_napken);
 
         //xu
-        var _bgr_xu = MButtonCreate(res.SPRITE_BK_XUKEN, TAG.SHOW_BTN_NAPKEN);
-        // _bgr_xu.setTag(TAG.SHOW_BTN_NAPKEN);
+        var _bgr_xu = MButton.create(res.SPRITE_BK_XUKEN,TAG.SHOW_BTN_NAPXU);
         // _bgr_xu.addTouchEventListener();
         _bgr_xu.setScaleX(scale_xuken);
         _bgr_xu.setPosition(cc.p(_bgr_ken.getPositionX() - padding - _bgr_xu.getContentSize().width * scale_xuken,
@@ -155,26 +139,32 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(sprite_napxu);
 
         var sprite_thongtin = new cc.Sprite(res.SPRITE_THONGTIN);
-        sprite_thongtin.setPosition(cc.p(originX + winsize.width / 2 - sprite_thongtin.getContentSize().width / 2,
-            btn_avatar.getPositionY() - btn_avatar.getContentSize().height - padding));
+        sprite_thongtin.setAnchorPoint(cc.p(0,0));
+        sprite_thongtin.setPosition(cc.p(originX + visibleSize.width / 2 - sprite_thongtin.getContentSize().width / 2,
+            btn_avatar.getPositionY() - bk_avatar.getContentSize().height - padding));
         this.addChild(sprite_thongtin);
 
+        cc.log("avatar-y:", btn_avatar.getPositionY());
+
+        cc.log("btn_avatar-height:", btn_avatar.getContentSize().height);
+
         var bkg_navigationbar = new cc.Sprite(res.BGR_UNDERLINE);
-        bkg_navigationbar.setScale(winsize.width / bkg_navigationbar.getContentSize().width, 1);
-        bkg_navigationbar.setPosition(MVec2(0, 0));
+        bkg_navigationbar.setAnchorPoint(cc.p(0,0));
+        bkg_navigationbar.setScaleX(visibleSize.width / bkg_navigationbar.getContentSize().width);
+        bkg_navigationbar.setPosition(MVec2(0,0));
         this.addChild(bkg_navigationbar); //left
 
         // doi thuong
         var icon_doithuong_text = res.btn_tro_giup;
-        var btn_doithuong = createExtends(icon_doithuong_text, "", 30, TAG.SHOW_BTN_DOI_THUONG);
-        btn_doithuong.setPosition(MVec2(winsize.width / 2 - btn_doithuong.getContentSize().width / 2, 0));
+        var btn_doithuong = MButton.create(icon_doithuong_text, "", 30, TAG.SHOW_BTN_DOI_THUONG);
+        btn_doithuong.setPosition(MVec2(visibleSize.width / 2 - btn_doithuong.getContentSize().width / 2, 0));
         // btn_doithuong.addTouchEventListener();
         this.addChild(btn_doithuong);
 
         // thong bao
-        var btn_thongbao = createExtendsBottom(res.ICON_BTN_THONGBAO, "Thông báo", 30, TAG.SHOW_GAME_THONGBAO);
+        var btn_thongbao = MButton.createExtendsBottom(res.ICON_BTN_THONGBAO, "Thông báo", 30, TAG.SHOW_GAME_THONGBAO);
 
-        btn_thongbao.setPosition(MVec2(winsize.width * 5 / 8, bkg_navigationbar.getContentSize().height / 2 - btn_thongbao.getContentSize().height / 2));
+        btn_thongbao.setPosition(MVec2(visibleSize.width * 5 / 8, bkg_navigationbar.getContentSize().height / 2 - btn_thongbao.getContentSize().height / 2));
         // btn_thongbao.addTouchEventListener();
         this.addChild(btn_thongbao);
 
@@ -184,39 +174,39 @@ var ShowGameLayer = cc.Layer.extend({
         btn_thongbao.addChild(sprite_new_notify);
 
         // chat
-        var btn_chat = createExtendsBottom(res.ICON_CHAT, "Chat", 30, TAG.SHOW_BTN_MESSAGE);
-        btn_chat.setPosition(cc.p(originX + winsize.width * 6 / 8, btn_thongbao.getPositionY()));
+        var btn_chat = MButton.createExtendsBottom(res.ICON_CHAT, "Chat", 30, TAG.SHOW_BTN_MESSAGE);
+        btn_chat.setPosition(cc.p(originX + visibleSize.width * 6 / 8, btn_thongbao.getPositionY()));
         // btn_chat.addTouchEventListener();
         this.addChild(btn_chat);
 
         // giftcode
-        var btn_giftcode = createExtendsBottom(res.ICON_GIFTCODE, "Quà tặng", 30, TAG.SHOW_BTN_GIFTCODE);
-        btn_giftcode.setPosition(cc.p(originX + winsize.width * 7 / 8 + 10, btn_thongbao.getPositionY()));
+        var btn_giftcode = MButton.createExtendsBottom(res.ICON_GIFTCODE, "Quà tặng", 30, TAG.SHOW_BTN_GIFTCODE);
+        btn_giftcode.setPosition(cc.p(originX + visibleSize.width * 7 / 8 + 10, btn_thongbao.getPositionY()));
         // btn_giftcode.addTouchEventListener();
         this.addChild(btn_giftcode);
 
         //huong dan
-        var btn_help = createExtendsBottom(res.ICON_HELP, "Hướng dẫn", 30, TAG.SHOW_BTN_TROGIUP);
+        var btn_help = MButton.createExtendsBottom(res.ICON_HELP, "Hướng dẫn", 30, TAG.SHOW_BTN_TROGIUP);
         btn_help.setZoomScale(0.2);
-        btn_help.setPosition(cc.p(originX + winsize.width * 1 / 8 - btn_help.getContentSize().width, btn_thongbao.getPositionY()));
+        btn_help.setPosition(cc.p(originX + visibleSize.width * 1 / 8 - btn_help.getContentSize().width, btn_thongbao.getPositionY()));
         // btn_help.addTouchEventListener();
         this.addChild(btn_help);
 
         //xep hang
-        var btn_xephang = createExtendsBottom(res.ICON_TOP, "Xếp hạng", 30, TAG.SHOW_BTN_XEPHANG);
-        btn_xephang.setPosition(cc.p(originX + winsize.width * 2 / 8 - btn_xephang.getContentSize().width, btn_thongbao.getPositionY()));
+        var btn_xephang = MButton.createExtendsBottom(res.ICON_TOP, "Xếp hạng", 30, TAG.SHOW_BTN_XEPHANG);
+        btn_xephang.setPosition(cc.p(originX + visibleSize.width * 2 / 8 - btn_xephang.getContentSize().width, btn_thongbao.getPositionY()));
         // btn_xephang.addTouchEventListener();
         this.addChild(btn_xephang);
 
         // banbe
-        var btn_friend = createExtendsBottom(res.ICON_FRINED, "Bạn bè", 30, TAG.SHOW_BTN_FRIEND);
-        btn_friend.setPosition(cc.p(originX + winsize.width * 3 / 8 - btn_friend.getContentSize().width, btn_thongbao.getPositionY()));
+        var btn_friend = MButton.createExtendsBottom(res.ICON_FRINED, "Bạn bè", 30, TAG.SHOW_BTN_FRIEND);
+        btn_friend.setPosition(cc.p(originX + visibleSize.width * 3 / 8 - btn_friend.getContentSize().width, btn_thongbao.getPositionY()));
         // btn_friend.addTouchEventListener();
         this.addChild(btn_friend);
 
         //==================================== scroll view - game button
 
-        var scollFrameSize = new cc.Size(winsize.width,sprite_thongtin.getPositionY() + sprite_thongtin.getContentSize().height - bkg_navigationbar.getContentSize().height);
+        var scollFrameSize = new cc.Size(visibleSize.width,sprite_thongtin.getPositionY() + sprite_thongtin.getContentSize().height - bkg_navigationbar.getContentSize().height);
         cc.log("scollFrameSize", scollFrameSize);
         var scrollView = new ccui.ScrollView();
         scrollView.setContentSize(scollFrameSize);
@@ -248,7 +238,7 @@ var ShowGameLayer = cc.Layer.extend({
             Common.WHEEL_ZONE, Common.PHOM_ZONE, Common.MAUBINH_ZONE,
             Common.BACAY_ZONE, Common.LIENG_ZONE,Common.XITO_ZONE];
 
-        var button_size = new cc.Size(winsize.width * 0.22, winsize.width * 0.22 * 356 / 270.0);  //361 / 310.0f
+        var button_size = new cc.Size(visibleSize.width * 0.22, visibleSize.width * 0.22 * 356 / 270.0);  //361 / 310.0f
         var distance_button = (scollFrameSize.width - 4.2*button_size.width) / 8;
 
         var enableGameIds = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
@@ -262,7 +252,7 @@ var ShowGameLayer = cc.Layer.extend({
                 }
             }
 
-            var game_button = createWidthSize(nameTabButton[i], button_size, tagTabButton[i]);
+            var game_button = MButton.createWidthSize(nameTabButton[i], button_size, tagTabButton[i]);
             if (!isFound){
                 game_button.setBright(false);
             }
@@ -285,7 +275,6 @@ var ShowGameLayer = cc.Layer.extend({
         cc.log("TAG.SHOW_BTN_FRIEND");
         if(type == ccui.Widget.TOUCH_ENDED) {
             var tag = sender.tag;
-            cc.log("TAG: ", sender);
             // SoundManager::getInstance()->playSound("sounds/button_click.mp3");
             switch (tag) {
                 case TAG.SHOW_BTN_FRIEND:
@@ -431,17 +420,11 @@ var ShowGameLayer = cc.Layer.extend({
                 case TAG.SHOW_BTN_PHONE:
                     if(this.getChildByTag(POPUP.TAG_HOTLINE) == null){
                         cc.log("TAG.SHOW_BTN_PHONE");
-                        // var m_popupHotLine = PopupHotLineCreate();
-                        // m_popupHotLine->setTag(POPUP_TAG_HOTLINE);
-                        // addChild(m_popupHotLine,INDEX_POPUP);
-                        // m_popupHotLine->appear();
 
-                        // cc.director.pushScene(new PopupHotLineScene());
-                        // this.addChild(new PopupHotLineLayer());
-
-                        var popupHotLine = new PopupHotLineLayer();
-                        this.addChild(popupHotLine);
-                        // // popupHotLine.appear();
+                        var pop = new PopupHotLine();
+                        pop.setPosition(MVec2(0,-height));
+                        pop.appear();
+                        this.addChild(pop);
 
                     }
                     break;
