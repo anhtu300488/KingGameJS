@@ -1,6 +1,6 @@
-package bigkenPrepareNewMatch;
+package bigken.preparenewmatch;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenPrepareNewMatch";
+option java_outer_classname = "bigken.preparenewmatch";
 
 //PrepareNewMatch
 //Message được server gửi đi ván chơi kết thúc, chuẩn bị cho ván mới

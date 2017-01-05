@@ -6,7 +6,7 @@ var WebSocket = WebSocket || window.WebSocket || window.MozWebSocket;
 var ws = null;
 
 //anh Linh
-var  SERVER_NAME = "192.168.100.32";
+var  SERVER_NAME = "192.168.100.250";
 //const char*  SERVER_NAME = "192.168.100.20";
 // anh Hai
 //const char*  SERVER_NAME = "192.168.100.32";

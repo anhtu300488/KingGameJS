@@ -1,6 +1,6 @@
-package bigkenChangeRule;
+package bigken.changerule;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenChangeRule";
+option java_outer_classname = "bigken.changerule";
 import "map_field_entry.proto";
 
 //ChangeRule 
@@ -14,7 +14,7 @@ import "map_field_entry.proto";
 	//key = gameMode, value = Kiểu chơi (1: truyền thống, 2: ngẫu nhiên, 3: solo)
 message BINChangeRuleRequest {
 	required int32 roomIndex = 1;
-	repeated BINMapFieldEntry args = 2;
+	repeated mapfieldentry.BINMapFieldEntry args = 2;
 }
 
 //
@@ -22,7 +22,7 @@ message BINChangeRuleRequest {
 message BINChangeRuleResponse {
     required bool responseCode = 1;
     optional string message = 2;
-	repeated BINMapFieldEntry args = 3;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file 
+	repeated mapfieldentry.BINMapFieldEntry args = 3;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
 }
 
 //End ChangeRule 

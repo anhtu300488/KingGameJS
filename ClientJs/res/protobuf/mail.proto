@@ -1,6 +1,6 @@
-package bigkenMail;
+package bigken.mail;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenMail";
+option java_outer_classname = "bigken.mail";
 
 //Mail 
 

@@ -1,6 +1,6 @@
-package bigkenCaptcha;
+package bigken.captcha;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenCaptcha";
+option java_outer_classname = "bigken.captcha";
 
 //Captcha 
 //Message được gửi đi khi user thay đổi cấu hình

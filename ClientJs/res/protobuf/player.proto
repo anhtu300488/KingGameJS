@@ -1,6 +1,6 @@
-package bigkenPlayer;
+package bigken.player;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenPlayer";
+option java_outer_classname = "bigken.player";
 import "map_field_entry.proto";
 
 //import "map_field_entry.proto";
@@ -17,7 +17,7 @@ message BINPlayer {
 	required bool ready = 8;
 	required bool exitAfterMatchEnd = 9;
 	required int32 tableIndex = 10;
-	repeated BINMapFieldEntry args = 11;
+	repeated mapfieldentry.BINMapFieldEntry args = 11;
 }
 
 //End Player 

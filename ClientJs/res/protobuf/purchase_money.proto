@@ -1,6 +1,6 @@
-package bigkenPurchaseMoney;
+package bigken.purchasemoney;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenPurchaseMoney";
+option java_outer_classname = "bigken.purchasemoney";
 
 //CardConfig
 message BINCardConfigRequest {

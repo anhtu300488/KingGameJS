@@ -1,6 +1,6 @@
-package bigkenEnterZone;
+package bigken.enterzone;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenEnterZone";
+option java_outer_classname = "bigken.enterzone";
 
 //EnterZone 
 

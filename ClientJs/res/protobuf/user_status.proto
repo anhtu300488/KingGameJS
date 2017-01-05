@@ -1,6 +1,6 @@
-package bigkenUserStatus;
+package bigken.userstatus;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenUserStatus";
+option java_outer_classname = "bigken.userstatus";
 
 
 //UserStatus

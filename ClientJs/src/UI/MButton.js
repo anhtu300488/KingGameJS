@@ -8,10 +8,10 @@ var MButton = ccui.Button.extend({
         this._super(); 
     },  
     getWidth: function () { 
-        return this.getContentSize().width; 
+        return this.getNormalTextureSize().width;
     },  
     getHeight: function () { 
-        return this.getContentSize().height;
+        return this.getNormalTextureSize().height;
      }
   });
 
@@ -34,6 +34,19 @@ var MButton = ccui.Button.extend({
     btn.setTitleFontName(res.FONT_BOLD); 
     btn.setTag(tag);  
     return btn; 
+}
+
+MButton.createTextSizeTag = function(text,size,tag) {
+    var btn = new MButton();
+    btn.setZoomScale(0.02);
+    btn.setAnchorPoint(cc.p(0,0));
+    btn.setTitleText(text);
+    btn.setTitleFontSize(size);
+    btn.setTitleFontName("fonts/gamevina.otf");
+    btn.setTag(tag);
+
+    return btn;
+
 }
 // var MCreate = function(textureName, text, size, tag){
 //     var btn = new ccui.Button();
@@ -73,9 +86,9 @@ MButton.createExtends = function(textureName,text,size,tag){
     btn.setAnchorPoint(cc.p(0,0));
     btn.setTag(tag);
     if (text != ""){
-        var label = MLabel.create(text, res.FONT_THIN, btn.getContentSize().height / 1.5);
+        var label = MLabel.create(text, res.FONT_THIN, btn.getHeight() / 1.5);
         label.setAnchorPoint(cc.p(0, 0));
-        label.setPosition(btn.getContentSize().width + 5, 0);
+        label.setPosition(btn.getWidth() + 5, 0);
         btn.addChild(label);
     }
     return btn;

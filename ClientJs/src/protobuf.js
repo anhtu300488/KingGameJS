@@ -5147,7 +5147,10 @@
      */
     ProtoBuf.protoFromFile = ProtoBuf.loadProtoFile; // Legacy
 
-
+    // modified supersuraccoon
+    ProtoBuf.protoFromContents = function(filename, builder, contents) {
+        return contents === null ? null : ProtoBuf.loadProto(contents, builder, filename);
+    };
     /**
      * Constructs a new empty Builder.
      * @param {Object.<string,*>=} options Builder options, defaults to global options set on ProtoBuf

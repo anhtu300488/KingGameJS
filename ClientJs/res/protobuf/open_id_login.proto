@@ -1,6 +1,6 @@
-package bigkenOpenIdLogin;
+package bigken.openidlogin;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenOpenIdLogin";
+option java_outer_classname = "bigken.openidlogin";
 
 //Open Id Login 
 

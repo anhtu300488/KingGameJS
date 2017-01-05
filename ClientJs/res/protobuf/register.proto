@@ -1,6 +1,6 @@
-package bigkenRegister;
+package bigken.register;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenRegister";
+option java_outer_classname = "bigken.register";
 
 message BINRegisterRequest {
 	required string userName = 1;

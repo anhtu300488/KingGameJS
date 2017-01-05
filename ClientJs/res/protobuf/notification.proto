@@ -1,6 +1,6 @@
-package bigkenNotification;
+package bigken.notification;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenNotification";
+option java_outer_classname = "bigken.notification";
 
 //HeadLine
 

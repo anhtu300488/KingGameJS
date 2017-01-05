@@ -1,6 +1,6 @@
-package bigkenTextEmoticon;
+package bigken.textemoticon;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenTextEmoticon";
+option java_outer_classname = "bigken.textemoticon";
 
 //TextEmoticon 
 //Message được gửi đi khi có icon biểu cảm được gửi

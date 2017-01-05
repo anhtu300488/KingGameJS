@@ -1,6 +1,6 @@
-package bigkenIap;
+package bigken.iap;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenIap";
+option java_outer_classname = "bigken.iap";
 
 //IapConfig 
 

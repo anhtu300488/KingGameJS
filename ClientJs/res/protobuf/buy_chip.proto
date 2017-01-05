@@ -1,6 +1,6 @@
-package bigkenBuyChip;
+package bigken.buychip;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenBuyChip";
+option java_outer_classname = "bigken.buychip";
 import "map_field_entry.proto";
 
 message BINBuyChipRequest {
@@ -12,5 +12,5 @@ message BINBuyChipResponse {
 	required bool responseCode = 1;
 	optional string message = 2;
 	optional int64 chipNumber = 3;//Số chip đang có
-	repeated BINMapFieldEntry args = 4;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file 
+	repeated mapfieldentry.BINMapFieldEntry args = 4;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
 }

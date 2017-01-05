@@ -1,6 +1,6 @@
-package bigkenUpdateUserInfo;
+package bigken.updateuserinfo;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenUpdateUserInfo";
+option java_outer_classname = "bigken.updateuserinfo";
 
 //UpdateUserInfo 
 //Message được gửi đi khi user muốn thay đổi thông tin cá nhân

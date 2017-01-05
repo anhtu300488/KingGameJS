@@ -1,6 +1,6 @@
-package bigkenLockRoom;
+package bigken.lockroom;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenLockRoom";
+option java_outer_classname = "bigken.lockroom";
 
 //LockRoom
 //Message được client gửi đi khi muốn khóa/mở phòng.

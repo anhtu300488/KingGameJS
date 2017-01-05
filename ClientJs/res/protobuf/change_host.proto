@@ -1,6 +1,6 @@
-package bigkenChangeHost;
+package bigken.changehost;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenChangeHost";
+option java_outer_classname = "bigken.changehost";
 import "map_field_entry.proto";
 
 // Change_host
@@ -18,7 +18,7 @@ message BINChangeHostResponse {
     optional string message = 2;
     optional int64 hostId = 3;//nếu hostId = -1 -> server làm cái
     optional int32 responseType = 4;// 1 - doi chu phong, 2 - yeu cau ban chuong, 3 - yeu cau mua chuong
-	repeated BINMapFieldEntry args = 5;//map chứa các thông tin đặc biệt cho từng game
+	repeated mapfieldentry.BINMapFieldEntry args = 5;//map chứa các thông tin đặc biệt cho từng game
 }
 
 // End Change_host

@@ -1,6 +1,6 @@
-package bigkenFilterRoom;
+package bigken.filterroom;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenFilterRoom";
+option java_outer_classname = "bigken.filterroom";
 
 //FilterRoom 
 

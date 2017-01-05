@@ -1,6 +1,6 @@
-package bigkenFilterAvatar;
+package bigken.filteravatar;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenFilterAvatar";
+option java_outer_classname = "bigken.filteravatar";
 
 //Message đc gửi khi client chọn màn hình thay avatar = > gửi request danh sách avatar
 //FilterAvatar 

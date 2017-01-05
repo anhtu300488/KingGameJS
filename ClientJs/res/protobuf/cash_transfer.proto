@@ -1,6 +1,6 @@
-package bigkenCashTransfer;
+package bigken.cashtransfer;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenCashTransfer";
+option java_outer_classname = "bigken.cashtransfer";
 
 //CashTransferConfig
 

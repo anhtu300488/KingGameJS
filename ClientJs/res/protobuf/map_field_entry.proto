@@ -1,6 +1,6 @@
-package bigkenMapFieldEntry;
+package bigken.mapfieldentry;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenMapFieldEntry";
+option java_outer_classname = "bigken.mapfieldentry";
 
 //MapFieldEntry 
 

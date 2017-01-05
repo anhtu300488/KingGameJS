@@ -123,7 +123,7 @@ var getCp = function() {
 }
 
 var getVersionCode = function() {
-    return "8";
+    return "9";
 }
 
 var getCountry = function() {
@@ -140,7 +140,7 @@ var getLanguage = function() {
 var getDeviceId =function() {
     /*if (TEST_ENVIRONMENT)
      return "00000000";*/
-    return "";
+    return "00000000";
 }
 
 var getDeviceInfo = function() {

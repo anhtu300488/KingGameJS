@@ -1,6 +1,6 @@
-package bigkenUpdateMoney;
+package bigken.updatemoney;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenUpdateMoney";
+option java_outer_classname = "bigken.updatemoney";
 
 //UpdateMoney 
 //Message được gửi đi khi có thay đổi dòng tiền của người chơi ( cộng thêm hoặc trừ đi )

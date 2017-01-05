@@ -1,6 +1,6 @@
-package bigkenInviteToPlay;
+package bigken.invitetoplay;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenInviteToPlay";
+option java_outer_classname = "bigken.invitetoplay";
 import "user_info.proto";
 import "filter_room.proto";
 
@@ -16,7 +16,7 @@ message BINLookUpUserToInviteRequest {
 message BINLookUpUserToInviteResponse {
 	required bool responseCode = 1;
     optional string message = 2;
-	repeated BINUserInfo suggestUsers = 3;
+	repeated userinfo.BINUserInfo suggestUsers = 3;
 }
 
 //End LookUpUserToInvite 
@@ -31,7 +31,7 @@ message BINInviteToRoomResponse {
     optional string message = 2;
 	optional int64 inviterUserId = 3;
 	optional string inviterUserName = 4;
-	optional BINRoomPlay roomPlay = 5;
+	optional filterroom.BINRoomPlay roomPlay = 5;
 }
 //End InviteToRoom
 

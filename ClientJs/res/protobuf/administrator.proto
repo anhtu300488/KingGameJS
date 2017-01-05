@@ -1,6 +1,6 @@
-package bigkenAdministrator;
+package bigken.administrator;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenAdministrator";
+option java_outer_classname = "bigken.administrator";
 
 //KillRoom 
 //Message được gửi đi khi admin muốn xóa 1 phòng

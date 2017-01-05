@@ -1,6 +1,6 @@
-package bigkenVerify;
+package bigken.verify;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenVerify";
+option java_outer_classname = "bigken.verify";
 
 //UserVerifyConfig
 

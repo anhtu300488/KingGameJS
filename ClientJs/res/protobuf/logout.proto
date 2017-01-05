@@ -1,6 +1,6 @@
-package bigkenLogout;
+package bigken.logout;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenLogout";
+option java_outer_classname = "bigken.logout";
 
 //Logout 
 

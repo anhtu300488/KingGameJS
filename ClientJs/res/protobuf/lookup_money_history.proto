@@ -1,6 +1,6 @@
-package bigkenLookUpMoneyHistory;
+package bigken.lookupmoneyhistory;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenLookUpMoneyHistory";
+option java_outer_classname = "bigken.lookupmoneyhistory";
 
 //LookUpMoneyHistory
 //Message được gửi đi khi user muốn xem lịch sử dòng cash

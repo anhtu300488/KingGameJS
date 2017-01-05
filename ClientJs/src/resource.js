@@ -65,7 +65,8 @@ var res = {
     RS_TITLE_POPUP: "res/sprite_title_popup.png",
     IMAGE_CLOSE: "res/ic_button_close.png",
     popup_girl_hotline: "res/popup_hotline/girl_hotline.png",
-    popup_btn_call: "res/popup_hotline/btn_call.png"
+    popup_btn_call: "res/popup_hotline/btn_call.png",
+    LOGIN_SPRITE_BIGKEN: "res/sprite_bigken.png"
 };
 
 var g_resources = [];

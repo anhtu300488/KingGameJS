@@ -1,6 +1,6 @@
-package bigkenUpdateUserSetting;
+package bigken.updateusersetting;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenUpdateUserSetting";
+option java_outer_classname = "bigken.updateusersetting";
 
 //UpdateUserSetting 
 //Message được gửi đi khi user thay đổi cấu hình

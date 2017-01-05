@@ -1,6 +1,6 @@
-package bigkenBuyTurn;
+package bigken.buyturn;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenBuyTurn";
+option java_outer_classname = "bigken.buyturn";
 import "map_field_entry.proto";
 
 message BINBuyTurnRequest {
@@ -12,5 +12,5 @@ message BINBuyTurnResponse {
     required bool responseCode = 1;
     optional string message = 2;
 	optional int32 turnNumber = 3;//Số lượt muốn mua
-	repeated BINMapFieldEntry args = 4;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file 
+	repeated mapfieldentry.BINMapFieldEntry args = 4;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
 }

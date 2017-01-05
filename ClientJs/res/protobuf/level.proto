@@ -1,6 +1,6 @@
-package bigkenLevel;
+package bigken.level;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenLevel";
+option java_outer_classname = "bigken.level";
 
 message BINLevel {
 	required int32 level = 1;
@@ -33,7 +33,7 @@ message BINMedalUpResponse {
     required bool responseCode = 1;
     optional string message = 2;
 	optional BINMedal newMedal = 3;
-	optional int currentLevel = 4;
+	optional int32 currentLevel = 4;
 }
 //End MedalUp 
 

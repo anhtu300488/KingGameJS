@@ -1,8 +1,8 @@
-package bigkenLogin;
+package bigken.login;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenLogin";
+option java_outer_classname = "bigken.login";
 import "user_info.proto";
-//Login 
+//Login
 
 message BINLoginRequest {
 	required string userName = 1;
@@ -12,11 +12,13 @@ message BINLoginRequest {
 message BINLoginResponse {
     required bool responseCode = 1;
     optional string message = 2;
-    optional BINUserInfo userInfo = 3;
-	optional BINUserSetting userSetting = 4;
+    optional userinfo.BINUserInfo userInfo = 3;
+	optional userinfo.BINUserSetting userSetting = 4;
 	optional string sessionId = 5;
 	optional bool hasPlayingMatch = 6;//nếu = true => có ván chơi đang chơi dở => chờ để xử lý đưa lại vào bàn
 	optional bool enableDebugLag = 7;
+	optional bool enableEvent = 8;
+	optional bool enableNotification = 9;
 }
 
 //End Login 

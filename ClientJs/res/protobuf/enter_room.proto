@@ -1,6 +1,6 @@
-package bigkenEnterRoom;
+package bigken.enterroom;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenEnterRoom";
+option java_outer_classname = "bigken.enterroom";
 import "map_field_entry.proto";
 import "filter_room.proto";
 import "player.proto";
@@ -45,14 +45,14 @@ message BINEnterRoomResponse {
     required bool responseCode = 1;
     optional string message = 2;
 	optional int32 zoneId = 3;
-	optional BINRoomPlay roomPlay = 4;
+	optional filterroom.BINRoomPlay roomPlay = 4;
 	optional bool roomIsPlaying = 5;//trạng thái của phòng hiện tại đang chơi hay ko
-	repeated BINPlayer playingPlayers = 6;
-	repeated BINPlayer waitingPlayers = 7;
+	repeated player.BINPlayer playingPlayers = 6;
+	repeated player.BINPlayer waitingPlayers = 7;
 	optional int64 ownerUserId = 8;
 	optional int64 currentTurnUserId = 9;
 	optional int32 enterRoomStatus = 10;//1-nguoi choi, 2-ngoi cho, 3-da la nguoi choi roi
-	repeated BINMapFieldEntry args = 11;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
+	repeated mapfieldentry.BINMapFieldEntry args = 11;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
 }
 
 //Message gửi đi khi client vào phòng bằng cách chọn mức cược (trường hợp enableDisplayRoomList = false -> không hiển thị danh sách phòng mà chỉ hiện thị các mức cược)
@@ -65,7 +65,7 @@ message BINEnterRoomGroupRequest {
 message BINPlayerEnterRoomResponse {
     required bool responseCode = 1;
     optional string message = 2;
-	optional BINPlayer player = 3;
+	optional player.BINPlayer player = 3;
 	optional int32 enterRoomStatus = 4;//1-nguoi choi, 2-ngoi cho, 3-da la nguoi choi roi
 	optional int32 changeOwnerRoomCd = 5;//changeOwnerRoomCd > 0 đếm ngược để thay chủ bàn
 }

@@ -1,6 +1,6 @@
-package bigkenInitialize;
+package bigken.initialize;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenInitialize";
+option java_outer_classname = "bigken.initialize";
 
 //Initialize
 

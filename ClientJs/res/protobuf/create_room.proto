@@ -1,6 +1,6 @@
-package bigkenCreateRoom;
+package bigken.createroom;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenCreateRoom";
+option java_outer_classname = "bigken.createroom";
 import "filter_room.proto";
 import "player.proto";
 
@@ -19,8 +19,8 @@ message BINCreateRoomRequest {
 message BINCreateRoomResponse {
     required bool responseCode = 1;
     optional string message = 2;
-	optional BINRoomPlay roomPlay = 3;
-	optional BINPlayer myPlayer = 4;
+	optional filterroom.BINRoomPlay roomPlay = 3;
+	optional player.BINPlayer myPlayer = 4;
 }
 
 //End CreateRoom 

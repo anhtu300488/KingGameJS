@@ -1,6 +1,6 @@
-package bigkenLookUpGameHistory;
+package bigken.lookupgamehistory;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenLookUpGameHistory";
+option java_outer_classname = "bigken.lookupgamehistory";
 import "map_field_entry.proto";
 
 //LookUpGameHistory
@@ -16,7 +16,7 @@ message BINLookUpGameHistoryRequest {
 	required int32 maxResult = 2;//tổng số bản ghi muốn lấy, firstResult, maxResult < 0 => lấy toàn bộ danh sách
 	optional int32 orderByField = 3;//trường sắp xếp
 	optional bool asc = 4;//sắp xếp tăng dần
-	repeated BINMapFieldEntry args = 5;
+	repeated mapfieldentry.BINMapFieldEntry args = 5;
 }
 
 
@@ -54,7 +54,7 @@ message BINLookUpGameHistoryResponse {
     required bool responseCode = 1;
     optional string message = 2;
 	repeated BINGameHistory histories = 3;
-	repeated BINMapFieldEntry args = 4;
+	repeated mapfieldentry.BINMapFieldEntry args = 4;
 }
 
 //End LookUpMoneyHistory 

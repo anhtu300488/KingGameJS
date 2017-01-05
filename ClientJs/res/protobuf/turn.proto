@@ -1,6 +1,6 @@
-package bigkenTurn;
+package bigken.turn;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenTurn";
+option java_outer_classname = "bigken.turn";
 import "map_field_entry.proto";
 
 //Turn 
@@ -46,7 +46,7 @@ import "map_field_entry.proto";
 		//key = betGateInfo, value (thông tin các cửa đặt, định dạng 0-số tiền-số người đặt, 1-số tiền-số người đặt, 10-số tiền-số người đặt, 11-số tiền-số người đặt (0: id cửa xỉu bên cash, 1: id cửa tài bên cash, 10: id cửa xỉu bên gold, 11: id cửa tài bên )
 message BINTurnRequest {
 	required int32 roomIndex = 1;
-	repeated BINMapFieldEntry args = 2;
+	repeated mapfieldentry.BINMapFieldEntry args = 2;
 }
 
 //
@@ -58,7 +58,7 @@ message BINTurnResponse {
 	optional int64 nextTurnUserId = 4;//id người đánh kế tiếp
 	optional bool matchEnd = 5;// = true: kết thúc ván (trường hợp người đánh hiện tại hết bài)
 	optional int countDownTimer = 6;//thời gian đếm ngược, phụ thuộc vào tham số matchEnd (matchEnd = true: thời gian countDown đến khi nhận được message matchEnd, matchEnd = false: countDown cho người đánh tiếp theo)
-	repeated BINMapFieldEntry args = 7;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file 
+	repeated mapfieldentry.BINMapFieldEntry args = 7;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
 }
 
 //End Turn 

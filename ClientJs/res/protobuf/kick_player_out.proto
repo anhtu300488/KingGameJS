@@ -1,6 +1,6 @@
-package bigkenKickPlayerOut;
+package bigken.kickplayerout;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenKickPlayerOut";
+option java_outer_classname = "bigken.kickplayerout";
 
 //KickPlayerOut
 //Message được gửi đi khi user muốn thay đổi thông tin cá nhân

@@ -1,6 +1,6 @@
-package bigkenUserInfo;
+package bigken.userinfo;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenUserInfo";
+option java_outer_classname = "bigken.userinfo";
 import "level.proto";
 //UserInfo
 
@@ -11,8 +11,8 @@ message BINUserInfo {
 	optional int32 avatarId = 4;
 	optional int32 sex = 5;
 	optional int32 age = 6;
-	optional BINLevel level = 7;
-	optional BINMedal medal = 8;
+	optional level.BINLevel level = 7;
+	optional level.BINMedal medal = 8;
 	optional int64 trustedIndex = 9;
 	optional int64 exp = 10;
 	optional int64 cash = 11;

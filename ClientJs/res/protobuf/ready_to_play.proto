@@ -1,6 +1,6 @@
-package bigkenReadyToPlay;
+package bigken.readytoplay;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenReadyToPlay";
+option java_outer_classname = "bigken.readytoplay";
 import "map_field_entry.proto";
 
 //ReadyToPlay
@@ -17,7 +17,7 @@ message BINReadyToPlayResponse {
 	optional int64 readyUserId = 3;//id của người chơi sẵn sàng
 	optional int32 tableIndex = 4;//vị trí mà người chơi ngồi
 	optional int32 countDownTimer = 5;//thời gian đếm ngược
-	repeated BINMapFieldEntry args = 6;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
+	repeated mapfieldentry.BINMapFieldEntry args = 6;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
 }
 
 //End ReadyToPlay 

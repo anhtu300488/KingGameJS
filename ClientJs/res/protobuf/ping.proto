@@ -1,6 +1,6 @@
-package bigkenPing;
+package bigken.ping;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenPing";
+option java_outer_classname = "bigken.ping";
 
 //Ping 
 

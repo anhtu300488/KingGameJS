@@ -1,6 +1,6 @@
-package bigkenFriend;
+package bigken.friend;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenFriend";
+option java_outer_classname = "bigken.friend";
 import "user_info.proto";
 
 //FilterFriend
@@ -14,7 +14,7 @@ message BINFilterFriendRequest {
 message BINFilterFriendResponse {
     required bool responseCode = 1;
     optional string message = 2;
-	repeated BINUserInfo currentFriends = 3;
+	repeated userinfo.BINUserInfo currentFriends = 3;
 }
 
 //End FilterFriend 
@@ -35,7 +35,7 @@ message BINAddFriendResponse {
 //FilterAddFriend
 message BINAddFriend {
 	required int32 requestId = 1;
-	required BINUserInfo senderUser = 2;
+	required userinfo.BINUserInfo senderUser = 2;
 }
 
 message BINFilterAddFriendRequest {
@@ -76,7 +76,7 @@ message BINFindUserRequest {
 message BINFindUserResponse {
 	required bool responseCode = 1;
     optional string message = 2;
-	repeated BINUserInfo userInfos = 3;
+	repeated userinfo.BINUserInfo userInfos = 3;
 }
 //End FindUser
 
@@ -89,7 +89,7 @@ message BINFindUserByIdRequest {
 message BINFindUserByIdResponse {
 	required bool responseCode = 1;
     optional string message = 2;
-	optional BINUserInfo userInfo = 3;
+	optional userinfo.BINUserInfo userInfo = 3;
 }
 
 //End FindUserById
@@ -103,7 +103,7 @@ message BINViewUserInfoRequest {
 message BINViewUserInfoResponse {
 	required bool responseCode = 1;
     optional string message = 2;
-	optional BINUserInfo userInfo = 3;
+	optional userinfo.BINUserInfo userInfo = 3;
 	optional int friendStatus = 4;//0 : ko là gì của nhau, 1-là bạn bè, 2-đã gửi yêu cầu kết bạn, 3- có yêu cầu kết bạn
 }
 //End ViewUserInfo

@@ -46,6 +46,11 @@
         "src/UI/MLabel.js",
         "src/UI/MSprite.js",
         "src/UI/Popup.js",
-        "src/Popups/PopupHotLine.js"
+        "src/UI/MEditBox.js",
+        "src/Popups/PopupHotLine.js",
+        "src/protobufObject/BINInitializeResponse.js",
+        "src/protobufObject/BINLevelUpResponse.js",
+        "src/protobufObject/BINLoginResponse.js",
+        "src/protobufObject/BINMedalUpResponse.js"
     ]
 }

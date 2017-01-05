@@ -1,6 +1,6 @@
-package bigkenMatchEnd;
+package bigken.matchend;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenMatchEnd";
+option java_outer_classname = "bigken.matchend";
 import "map_field_entry.proto";
 import "text_emoticon.proto";
 
@@ -22,8 +22,8 @@ message BINMatchEndResponse {
 	repeated int64 winningUserIds = 3;//List userId thắng ván chơi (có những game có nhiều hơn 1 người chiến thắng)
 	repeated int64 losingUserIds = 4;//List userId thua ván chơi
 	repeated int64 drawUserIds = 5;//List userId hòa ván chơi
-	repeated BINTextEmoticon textEmoticons = 6;//text hiển thị cho mỗi người chơi(ví dụ lý do thắng, thua)
+	repeated textemoticon.BINTextEmoticon textEmoticons = 6;//text hiển thị cho mỗi người chơi(ví dụ lý do thắng, thua)
 	optional int32 countDownTimer = 7;
-	repeated BINMapFieldEntry args = 8;//map chứa các thông tin đặc biệt cho từng game
+	repeated mapfieldentry.BINMapFieldEntry args = 8;//map chứa các thông tin đặc biệt cho từng game
 }
 //End MatchEnd 

@@ -1,6 +1,6 @@
-package bigkenStartMatch;
+package bigken.startmatch;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenStartMatch";
+option java_outer_classname = "bigken.startmatch";
 import "map_field_entry.proto";
 
 //StartMatch 
@@ -16,7 +16,7 @@ message BINStartMatchResponse {
     optional string message = 2;
 	optional int32 countDownTimer = 3;	//thời gian đếm ngược sau khi ấn bắt đầu. thời gian này để người chơi có thể nhìn bài và chuẩn bị
 	optional int64 firstTurnUserId = 4;	//id của người đánh đầu tiên
-	repeated BINMapFieldEntry args = 5;
+	repeated mapfieldentry.BINMapFieldEntry args = 5;
 }
 
 //args map chứa các thông tin thêm với từng game

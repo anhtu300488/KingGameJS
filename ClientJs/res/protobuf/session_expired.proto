@@ -1,6 +1,6 @@
-package bigkenSessionExpired;
+package bigken.sessionexpired;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenSessionExpired";
+option java_outer_classname = "bigken.sessionexpired";
 
 //SessionExpired 
 

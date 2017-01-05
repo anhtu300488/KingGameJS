@@ -1,6 +1,6 @@
-package bigkenMatchBegin;
+package bigken.matchbegin;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenMatchBegin";
+option java_outer_classname = "bigken.matchbegin";
 
 //MatchBegin
 //Message được gửi đi sau khi start match, server kiểm tra các điều kiện cần thiết và trả về  BINMatchBeginResponse cho client

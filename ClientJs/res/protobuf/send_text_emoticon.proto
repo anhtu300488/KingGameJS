@@ -1,6 +1,6 @@
-package bigkenSendTextEmoticon;
+package bigken.sendtextemoticon;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenSendTextEmoticon";
+option java_outer_classname = "bigken.sendtextemoticon";
 
 //SendTextEmoticon
 //Message được gửi đi khi user muốn ném biểu tượng vào người chơi

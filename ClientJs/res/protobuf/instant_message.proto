@@ -1,6 +1,6 @@
-package bigkenInstantMessage;
+package bigken.instantmessage;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenInstantMessage";
+option java_outer_classname = "bigken.instantmessage";
 
 //InstantMessage
 //Message được client gửi đi khi người dùng gửi message chat.

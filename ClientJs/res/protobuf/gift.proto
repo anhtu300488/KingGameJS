@@ -1,6 +1,6 @@
-package bigkenGift;
+package bigken.gift;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenGift";
+option java_outer_classname = "bigken.gift";
 import "map_field_entry.proto";
 
 //RedeemGiftCode
@@ -14,7 +14,7 @@ message BINRedeemGiftCodeResponse {
     required bool responseCode = 1;
     optional string message = 2;
 	optional bool success = 3;
-	repeated BINMapFieldEntry args = 4;//key = cash, value = (giá trị Xu nhận đc, nếu không có hoặc <=0 thì ko thông báo), key = gold (giá trị Ken nhận đc)
+	repeated mapfieldentry.BINMapFieldEntry args = 4;//key = cash, value = (giá trị Xu nhận đc, nếu không có hoặc <=0 thì ko thông báo), key = gold (giá trị Ken nhận đc)
 }
 
 //End RedeemGiftCode

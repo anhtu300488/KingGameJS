@@ -16,14 +16,16 @@ var LoginLayer = cc.Layer.extend({
         this._super();
 
         var spriteBG = new cc.Sprite(res.item_background);
+
         var spriteWidth = spriteBG.getContentSize().width;
+
         var spriteHeight = spriteBG.getContentSize().height;
 
-        var rows = width/ spriteWidth + 1;
-        var cols = height/ spriteHeight + 1;
+        var rows = visibleSize.width/ spriteWidth + 1;
+        var cols = visibleSize.height/ spriteHeight + 1;
         for(i = 0; i< rows; i++){
             for(j = 0; j<cols; j++){
-                var itemSpriteBG = MSprite.create(res.item_background);
+                var itemSpriteBG = new cc.Sprite(res.item_background);
                 var centerPos = cc.p(spriteBG.x + i*spriteWidth, spriteBG.y + j*spriteHeight);
                 itemSpriteBG.setPosition(centerPos);
                 this.addChild(itemSpriteBG);
@@ -65,50 +67,53 @@ var LoginLayer = cc.Layer.extend({
         pageView.addEventListener(this.pageViewEvent, this);
         this.addChild(pageView);
 
-        var btn_login_facebook = MButton.createWithText(res.btn_facebook,"Login Facebook",2);
-        btn_login_facebook.setPosition(cc.p(width-btn_login_facebook.getWidth() *5/4,
-            height/2-btn_login_facebook.getHeight() *3-20*3));
+        var btn_login_facebook = MButton.createWithText(res.btn_facebook,TXT.LOGIN_BTN_FACEBOOK,TAG.LOGIN.BTN_LOGIN_FB);
+        btn_login_facebook.setPosition(MVec2(width-btn_login_facebook.getWidth() *5/4, height/2-btn_login_facebook.getHeight() *3-20*3));
+        btn_login_facebook.setZoomScale(0.01);
         btn_login_facebook.addTouchEventListener(this.touchEvent, this);
         this.addChild(btn_login_facebook);
 
         //choi ngay
-        var btn_playnow = MButton.create(res.btn_choingay_login,"Play Nows",3);
-        btn_playnow.setPosition(cc.p(btn_login_facebook.getPosition().x,
-            btn_login_facebook.getPosition().y
-            +btn_login_facebook.getHeight()+15));
+        var btn_playnow = MButton.createWithText(res.btn_choingay_login,TXT.LOGIN_BTN_PLAYNOW,TAG.LOGIN.BTN_LOGIN_GOOGLE);
+        btn_playnow.setPosition(cc.p(btn_login_facebook.getPosition().x, btn_login_facebook.getPosition().y + btn_login_facebook.getHeight()+15));
+        btn_playnow.setBright(false);
         // btn_playnow.addTouchEventListener(this.touchEvent, this);
         this.addChild(btn_playnow);
 
         //đăng nhập
-        var btn_login = MButton.create(res.btn_dangnhap,"Đăng nhập",1);
-        btn_login.setPosition(cc.p(btn_playnow.getPosition().x,
-            btn_playnow.getPosition().y+btn_playnow.getHeight()+15));
+        var btn_login = MButton.createWithText(res.btn_dangnhap,TXT.LOGIN_BTN_LOGIN ,TAG.LOGIN.BTN_LOGIN);
+        btn_login.setPosition(cc.p(btn_playnow.getPosition().x, btn_playnow.getPosition().y + btn_playnow.getHeight()+15));
         btn_login.addTouchEventListener(this.touchEvent, this);
         this.addChild(btn_login);
 
         //đăng ký
-        var btn_register = new ccui.Button(res.btn_dang_ky);
-        btn_register.setAnchorPoint(cc.p(0,0));
-        btn_register.setTitleText("Đăng Ký");
-        btn_register.setTitleFontSize(btn_login_facebook.getContentSize().height*0.4);
-        btn_register.setPosition(cc.p(btn_playnow.getPosition().x+btn_playnow.getContentSize().width
-            -btn_register.getContentSize().width,
-            btn_login.getPosition().y));
+        var btn_register = MButton.createWithText(res.btn_dang_ky, TXT.LOGIN_BTN_REGISTER , TAG.LOGIN.BTN_REGISTER);
+        btn_register.setPosition(cc.p(btn_playnow.getPosition().x + btn_playnow.getWidth() - btn_register.getWidth(), btn_login.getPosition().y));
         // btn_register.addTouchEventListener(this.touchEvent, this);
         this.addChild(btn_register);
 
+        //quen mk
+        var fogotPassword = MButton.createTextSizeTag("Quên mật khẩu?",20,TAG.LOGIN.BTN_FORGET_PASSWORD);
+        cc.log("fogotPassword", fogotPassword.getWidth());
+        fogotPassword.setPosition(cc.p(btn_playnow.getPosition().x + btn_playnow.getWidth() - fogotPassword.getWidth()-5, btn_register.getPosition().y+btn_register.getHeight()+15));
+        // fogotPassword.addTouchEventListener( this.touchEvent, this);
+        this.addChild(fogotPassword);
+
+        //========================= Text Field
+
+        // Textfield mat khau
         var editBackgroundMatKhau = MSprite.create(res.edit_password);
-        editBackgroundMatKhau.setPosition(cc.p(btn_register.getPosition().x,
-            btn_register.getPosition().y + btn_register.getContentSize().height + 100));
+        editBackgroundMatKhau.setPosition(cc.p(btn_playnow.getPositionX(),
+            btn_playnow.getPositionY() + btn_playnow.getHeight() + 100));
         this.addChild(editBackgroundMatKhau);
 
         var fontSize = editBackgroundMatKhau.getContentSize().height / 3;
 
-        this.eboxNhapMK = new cc.EditBox(cc.size(350, 100), cc.Scale9Sprite.create(res.edit_login_null), cc.Scale9Sprite.create(res.edit_login_null));
+        this.eboxNhapMK = new cc.EditBox(cc.size(453, 73), cc.Scale9Sprite.create(res.edit_login_null), cc.Scale9Sprite.create(res.edit_login_null));
         this.eboxNhapMK.setPlaceHolder("Nhập Mật Khẩu");
         this.eboxNhapMK.setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD);
-        this.eboxNhapMK.setPosition(cc.p(editBackgroundMatKhau.getPosition().x + editBackgroundMatKhau.getContentSize().width - btn_register.getContentSize().width * 2,
-            editBackgroundMatKhau.getPosition().y));
+        this.eboxNhapMK.setPosition(cc.p(editBackgroundMatKhau.getPositionX() + editBackgroundMatKhau.getWidth() - btn_register.getWidth() * 2,
+            editBackgroundMatKhau.getPositionY()));
         this.eboxNhapMK.setPlaceholderFontSize(fontSize);
         this.eboxNhapMK.setFontSize(fontSize);
         this.eboxNhapMK.setMaxLength(12);
@@ -116,22 +121,58 @@ var LoginLayer = cc.Layer.extend({
         this.eboxNhapMK.setDelegate(this);
         this.addChild(this.eboxNhapMK,1);
 
+        cc.log("x =", editBackgroundMatKhau.getPositionX());
+
+        cc.log("y =", editBackgroundMatKhau.getPositionY());
+
         var editBackgroundTaiKhoan = MSprite.create(res.edit_password);
-        editBackgroundTaiKhoan.setPosition(cc.p(btn_register.getPosition().x,
-            btn_register.getPosition().y + btn_register.getContentSize().height + 200));
+        editBackgroundTaiKhoan.setPosition(cc.p(btn_playnow.getPosition().x,
+            btn_playnow.getPosition().y + btn_playnow.getHeight() + 200));
         this.addChild(editBackgroundTaiKhoan);
 
-        this.eboxNhapTK = new cc.EditBox(cc.size(350, 100), cc.Scale9Sprite.create(res.edit_login_null), cc.Scale9Sprite.create(res.edit_login_null));
+        this.eboxNhapTK = new cc.EditBox(cc.size(453, 73), cc.Scale9Sprite.create(res.edit_login_null), cc.Scale9Sprite.create(res.edit_login_null));
         this.eboxNhapTK.setPlaceHolder("Nhập Tài Khoản");
         this.eboxNhapTK.setPlaceholderFontSize(fontSize);
         this.eboxNhapTK.setFontSize(fontSize);
         this.eboxNhapTK.setInputFlag(cc.EDITBOX_INPUT_FLAG_INITIAL_CAPS_ALL_CHARACTERS);
-        this.eboxNhapTK.setPosition(cc.p(editBackgroundTaiKhoan.getPosition().x + editBackgroundTaiKhoan.getContentSize().width - btn_register.getContentSize().width * 2,
-            editBackgroundTaiKhoan.getPosition().y));
+        this.eboxNhapTK.setPosition(cc.p(editBackgroundTaiKhoan.getPositionX() + editBackgroundTaiKhoan.getWidth() - btn_register.getWidth() * 2,
+            editBackgroundTaiKhoan.getPositionY()));
         this.eboxNhapTK.setMaxLength(12);
         this.eboxNhapTK.setFontColor({"r": 50, "g": 50, "b": 50});
         this.eboxNhapTK.setDelegate(this);
         this.addChild(this.eboxNhapTK,1);
+
+        // Textfield mat khau
+        // var background_matkhau = MSprite.create(res.edit_password);
+        //
+        // cc.log("background_matkhau", background_matkhau.getContentSize());
+        //
+        // var edit_matkhau = new cc.EditBox(cc.size(453, 73), cc.Scale9Sprite.create(res.edit_password), cc.Scale9Sprite.create(res.edit_password));
+        // edit_matkhau.setPosition(cc.p(btn_playnow.getPosition().x, fogotPassword.getPosition().y+fogotPassword.getHeight()+10));
+        // edit_matkhau.setPlaceHolder("  Nhập mật khẩu");
+        // edit_matkhau.setMaxLength(12);
+        // edit_matkhau.setTag(TAG.LOGIN.EDIT_BOX_PASSWORD);
+        // edit_matkhau.setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD);
+        // edit_matkhau.setDelegate(this);
+        // // edit_matkhau.setName("user_password");
+        //
+        // // Textfield tai khoan
+        // var edit_user = new cc.EditBox(cc.size(453, 73), cc.Scale9Sprite.create(res.edit_password), cc.Scale9Sprite.create(res.edit_password));
+        // edit_user.setPosition(cc.p(edit_matkhau.getPosition().x,
+        //     edit_matkhau.getPosition().y+background_matkhau.getHeight()+10));
+        // edit_user.setPlaceHolder("  Nhập tên");
+        // edit_user.setTag(TAG.LOGIN.EDIT_BOX_USER_NAME);
+        // edit_user.setMaxLength(12);
+        // edit_user.setDelegate(this);
+        // // edit_user.setName("user_name");
+        //
+        // var bigken = MSprite.create(res.LOGIN_SPRITE_BIGKEN);
+        // bigken.setPosition(btn_playnow.getPosition().x+btn_playnow.getWidth()/2-bigken.getWidth()/2,
+        //     edit_user.getPosition().y+edit_user.getContentSize().height+25);
+        //
+        // this.addChild(edit_matkhau);
+        // this.addChild(edit_user);
+        // this.addChild(bigken);
 
         return true;
 

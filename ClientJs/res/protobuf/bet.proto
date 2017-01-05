@@ -1,6 +1,6 @@
-package bigkenBet;
+package bigken.bet;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenBet";
+option java_outer_classname = "bigken.bet";
 import "map_field_entry.proto";
 
 //Bet 
@@ -37,7 +37,7 @@ message BINBetResponse {
 	optional int betType = 4;
 	optional int64 betMoney = 5;
 	optional int64 targetUserId = 6;//userId của người muốn cược riêng (ví dụ đánh biên trong 3 cây)
-	repeated BINMapFieldEntry args = 7;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file 
+	repeated mapfieldentry.BINMapFieldEntry args = 7;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
 }
 
 //End Bet
@@ -61,6 +61,6 @@ message BINExtraBetRequest {
 message BINExtraBetResponse {
     required bool responseCode = 1;
     optional string message = 2;
-	repeated BINMapFieldEntry args = 3;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file 
+	repeated mapfieldentry.BINMapFieldEntry args = 3;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
 }
 //End ExtraBet

@@ -1,6 +1,6 @@
-package bigkenExchange;
+package bigken.exchange;
 option java_package = "com.mi.game.network.data.bin";
-option java_outer_classname = "bigkenExchange";
+option java_outer_classname = "bigken.exchange";
 
 //AssetConfig 
 //Message được gửi đi khi user thay đổi cấu hình

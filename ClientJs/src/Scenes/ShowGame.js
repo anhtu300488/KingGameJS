@@ -30,7 +30,7 @@ var ShowGameLayer = cc.Layer.extend({
             }
         }
 
-        var bkg_x = new MSprite.create(res.BGR_LISTGAMES,visibleSize);
+        var bkg_x = MSprite.createWithSize(res.BGR_LISTGAMES,visibleSize);
         bkg_x.setPosition(MVec2(0,0));
         this.addChild(bkg_x);
 
@@ -67,7 +67,7 @@ var ShowGameLayer = cc.Layer.extend({
         // btn_hopthu.addChild(sprite_new_mail);
         //
         //bg avatar
-        var bk_avatar = new cc.Sprite(res.TABLE_BK_AVATAR);
+        var bk_avatar = MSprite.create(res.TABLE_BK_AVATAR);
         bk_avatar.setAnchorPoint(cc.p(0,1));
         bk_avatar.setPosition(cc.p(btn_phone.getPositionX() + btn_phone.getContentSize().width + padding,
             btn_phone.getPositionY() + btn_phone.getContentSize().height));
@@ -86,19 +86,24 @@ var ShowGameLayer = cc.Layer.extend({
         var user_id = 1;
         var label_id = MLabel.create(cc.formatStr("ID: %d", user_id), bk_avatar.getContentSize().height / 4, true);
         label_id.setAnchorPoint(cc.p(0,1));
-        label_id.setPosition(cc.p(btn_avatar.getPositionX() + btn_avatar.getContentSize().width / 2 + padding, btn_avatar.getPositionY()));
+        label_id.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width + padding, btn_avatar.getPositionY()));
         this.addChild(label_id);
 
         //ten hien thi
         var userName = 'Tu_Atula';
         var label_name = MLabel.create(userName, bk_avatar.getContentSize().height / 4, true);
-        label_name.setPosition(cc.p(btn_avatar.getPositionX() + btn_avatar.getContentSize().width / 2 + padding,
+        label_name.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width + padding,
             btn_phone.getPositionY() + btn_phone.getContentSize().height / 2));
         this.addChild(label_name);
+
+
 
         var widthName = label_name.getContentSize().width > label_id.getContentSize().width ? label_name.getContentSize().width : label_id.getContentSize().width;
 
         var widthXuKen = btn_hopthu.getPositionX() - (label_name.getPositionX() + widthName + 3 * padding);
+
+        cc.log("widthXuKen x: ", widthXuKen);
+
 
         //ken
         var _bgr_ken = MButton.create(res.SPRITE_BK_XUKEN,TAG.SHOW_BTN_NAPKEN);
@@ -110,12 +115,12 @@ var ShowGameLayer = cc.Layer.extend({
             btn_hopthu.getPositionY() + btn_hopthu.getContentSize().height / 2 - _bgr_ken.getContentSize().height / 2));
         this.addChild(_bgr_ken);
 
-        var sprite_ken = new cc.Sprite(res.TABLE_SPRITE_KEN);
+        var sprite_ken = MSprite.create(res.TABLE_SPRITE_KEN);
         sprite_ken.setPosition(cc.p(_bgr_ken.getPositionX() + _bgr_ken.getContentSize().width * scale_xuken - sprite_ken.getContentSize().width - 5,
             _bgr_ken.getPositionY() + _bgr_ken.getContentSize().height / 2 - sprite_ken.getContentSize().height / 2));
         this.addChild(sprite_ken);
 
-        var sprite_napken = new cc.Sprite(res.TABLE_SPRITE_NAPKEN);
+        var sprite_napken = MSprite.create(res.TABLE_SPRITE_NAPKEN);
         sprite_napken.setPosition(cc.p(_bgr_ken.getPositionX() + 5,
             _bgr_ken.getPositionY() + _bgr_ken.getContentSize().height / 2 - sprite_napken.getContentSize().height / 2));
         this.addChild(sprite_napken);
@@ -128,27 +133,23 @@ var ShowGameLayer = cc.Layer.extend({
             btn_hopthu.getPositionY() + btn_hopthu.getContentSize().height / 2 - _bgr_ken.getContentSize().height / 2));
         this.addChild(_bgr_xu);
 
-        var sprite_xu = new cc.Sprite(res.SPRITE_XU);
+        var sprite_xu = MSprite.create(res.SPRITE_XU);
         sprite_xu.setPosition(cc.p(_bgr_xu.getPositionX() + _bgr_xu.getContentSize().width * scale_xuken - sprite_xu.getContentSize().width - 5,
             _bgr_xu.getPositionY() + _bgr_xu.getContentSize().height / 2 - sprite_xu.getContentSize().height / 2));
         this.addChild(sprite_xu);
 
-        var sprite_napxu = new cc.Sprite(res.TABLE_SPRITE_NAPXU);
+        var sprite_napxu = MSprite.create(res.TABLE_SPRITE_NAPXU);
         sprite_napxu.setPosition(cc.p(_bgr_xu.getPositionX() + 5,
             _bgr_xu.getPositionY() + _bgr_xu.getContentSize().height / 2 - sprite_napxu.getContentSize().height / 2));
         this.addChild(sprite_napxu);
 
-        var sprite_thongtin = new cc.Sprite(res.SPRITE_THONGTIN);
+        var sprite_thongtin = MSprite.create(res.SPRITE_THONGTIN);
         sprite_thongtin.setAnchorPoint(cc.p(0,0));
         sprite_thongtin.setPosition(cc.p(originX + visibleSize.width / 2 - sprite_thongtin.getContentSize().width / 2,
             btn_avatar.getPositionY() - bk_avatar.getContentSize().height - padding));
         this.addChild(sprite_thongtin);
 
-        cc.log("avatar-y:", btn_avatar.getPositionY());
-
-        cc.log("btn_avatar-height:", btn_avatar.getContentSize().height);
-
-        var bkg_navigationbar = new cc.Sprite(res.BGR_UNDERLINE);
+        var bkg_navigationbar = MSprite.create(res.BGR_UNDERLINE);
         bkg_navigationbar.setAnchorPoint(cc.p(0,0));
         bkg_navigationbar.setScaleX(visibleSize.width / bkg_navigationbar.getContentSize().width);
         bkg_navigationbar.setPosition(MVec2(0,0));
@@ -169,7 +170,7 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(btn_thongbao);
 
 
-        var sprite_new_notify = new cc.Sprite(res.new_notify);
+        var sprite_new_notify = MSprite.create(res.new_notify);
         sprite_new_notify.setPosition(cc.p(btn_thongbao.getContentSize().width - sprite_new_notify.getContentSize().width/2.0,0.75*btn_thongbao.getContentSize().height));
         btn_thongbao.addChild(sprite_new_notify);
 
