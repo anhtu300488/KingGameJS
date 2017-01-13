@@ -282,64 +282,71 @@ var initData = function(request, os, messid, _session, len)
 
 var callNetwork = function(ackBuf) {
     // sendData(ackBuf);
-    cc.log("ws", ws);
-    cc.log("ws.readyState", ws.readyState);
-    cc.log("ws.OPEN", ws.OPEN);
+    // cc.log("ws", ws);
+    // cc.log("ws.readyState", ws.readyState);
+    // cc.log("ws.OPEN", ws.OPEN);
     // if(ws.readyState  === ws.OPEN){
     //     cc.log("ws.OPEN", ws.readyState);
         // doSend(ackBuf);
-    setDataBuf(ackBuf);
+    // connectSocket(ackBuf);
     // protoBuf.dataBuf(ackBuf);
     // }
+
+    // ws.onopen = function(e) {
+    //     cc.log("send");
+        cc.log("status", ws.readyState);
+        ws.send(ackBuf);
+    // };
 
     sleep(NetworkManager.SEND_MESSAGE_DELAY);
 }
 
 //Gui du lieu
-var sendData = function(ackBuf) {
-    cc.log("sendData");
-    //call websocket
-    try {
-        var url = "ws://"+SERVER_NAME+":"+SERVER_PORT+"/"+PATH;
-        // var url = "ws://192.168.100.32:1280/bigken";
-        ws = new WebSocket(url);
-        ws.binaryType = "arraybuffer";
-        cc.log("url", url);
-        ws.onopen = function() {
-            cc.log("send");
-            ws.send(ackBuf);
-        };
-        ws.onmessage = function (e) {
-            cc.log("e.data.byteLength", e.data.byteLength);
-            if( (e.data!==null || e.data !== 'undefined') && e.data.byteLength !== 'undefined')
-            {
-                var listMessages = parseFrom(e.data, e.data.byteLength);
-
-                var messageid = listMessages['messageid'];
-
-                cc.log("messageid", messageid);
-
-                switch (messageid){
-                    case NetworkManager.INITIALIZE:
-                        cc.director.runScene(new LoginScene());
-                        break;
-                    // default:
-                    //     cc.director.runScene(new LoginScene());
-                    //     break;
-                }
-            }
-        };
-        ws.onclose = function (e) {
-            setTimeout(function(){sendData()}, 120);
-        };
-        ws.onerror = function (e) {
-            cc.log("error: ", e);
-        };
-    } catch (e) {
-        cc.log("error: ", e);
-        cc.error('Sorry, the web socket at "%s" is un-available', url);
-    }
-}
+// var sendData = function(ackBuf) {
+//     cc.log("sendData");
+//     //call websocket
+//     try {
+//         var url = "ws://"+SERVER_NAME+":"+SERVER_PORT+"/"+PATH;
+//         // var url = "ws://192.168.100.32:1280/bigken";
+//         ws = new WebSocket(url);
+//         ws.binaryType = "arraybuffer";
+//         cc.log("url", url);
+//         ws.onopen = function() {
+//             cc.log("send");
+//             ws.send(ackBuf);
+//         };
+//         ws.onmessage = function (e) {
+//             cc.log("data", e);
+//             cc.log("e.data.byteLength", e.data.byteLength);
+//             if( (e.data!==null || e.data !== 'undefined') && e.data.byteLength !== 'undefined')
+//             {
+//                 var listMessages = parseFrom(e.data, e.data.byteLength);
+//
+//                 var messageid = listMessages['messageid'];
+//
+//                 cc.log("messageid", messageid);
+//
+//                 switch (messageid){
+//                     case NetworkManager.INITIALIZE:
+//                         cc.director.runScene(new LoginScene());
+//                         break;
+//                     // default:
+//                     //     cc.director.runScene(new LoginScene());
+//                     //     break;
+//                 }
+//             }
+//         };
+//         ws.onclose = function (e) {
+//             setTimeout(function(){sendData()}, 120);
+//         };
+//         ws.onerror = function (e) {
+//             cc.log("error: ", e);
+//         };
+//     } catch (e) {
+//         cc.log("error: ", e);
+//         cc.error('Sorry, the web socket at "%s" is un-available', url);
+//     }
+// }
 
 var parseFrom = function(read_str, len)
 {
@@ -835,7 +842,8 @@ var connect = function() {
         _disconnected = false;
         if (!isConnected()) {
             cc.log("connectServer");
-            connectServer(SERVER_NAME, SERVER_PORT);
+            // connectServer(SERVER_NAME, SERVER_PORT);
+            connectServer();
         }
 
         // mtx.unlock();
@@ -864,9 +872,11 @@ var isDisconnected = function() {
     return _disconnected;
 }
 
-var connectServer = function(ip,port) {
+// var connectServer = function(ip,port) {
+var connectServer = function() {
     cc.log("connectSocket");
-    connectSocket(ip, port);
+    var data = null;
+    connectSocket(data);
     // return _connected;
 }
 
@@ -929,4 +939,28 @@ var handlerMessage = function(){
     listEvent.clear();
     _isHandleMessage = false;
 }
+
+ws.onmessage = function(e) {
+    // called when the server sends a message to the client.
+    // msg.data contains the message.
+    cc.log("data 1", e);
+    if(e.data!==null || e.data !== 'undefined')
+    {
+        var listMessages = parseFrom(e.data, e.data.byteLength);
+
+        var messageid = listMessages['messageid'];
+
+        cc.log("messageid", messageid);
+
+        switch (messageid){
+            case NetworkManager.INITIALIZE:
+                //call init response function
+                cc.director.runScene(new LoginScene());
+                break;
+            // default:
+            //     cc.director.runScene(new LoginScene());
+            //     break;
+        }
+    }
+};
 
