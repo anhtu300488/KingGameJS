@@ -730,14 +730,6 @@ var getTypeMessage = function(msg, messageid, protoBufVar) {
     return msg;
 }
 
-var setInitialize = function(is_initialized) {
-    _initialized = is_initialized;
-}
-
-var isInitialized = function() {
-    return _initialized;
-}
-
 var getPingMessageFromServer = function(disconnect_time) {
     var request = initPingMessage(disconnect_time);
     var size;
@@ -955,7 +947,8 @@ ws.onmessage = function(e) {
         switch (messageid){
             case NetworkManager.INITIALIZE:
                 //call init response function
-                cc.director.runScene(new LoginScene());
+                initialMessageResponseHandler(listMessages);
+                // cc.director.runScene(new LoginScene());
                 break;
             // default:
             //     cc.director.runScene(new LoginScene());
@@ -964,3 +957,10 @@ ws.onmessage = function(e) {
     }
 };
 
+var setInitialize = function(is_initialized) {
+    _initialized = is_initialized;
+}
+
+var isInitialized = function() {
+    return _initialized;
+}

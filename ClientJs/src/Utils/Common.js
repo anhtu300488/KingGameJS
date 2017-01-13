@@ -94,6 +94,14 @@ var setZoneId = function(zoneId) {
     _zoneId = zoneId;
 }
 
+var setGameState = function(state) {
+    this.state = state;
+}
+
+var getGameState = function() {
+    return this.state;
+}
+
 var Common = {
     FACEBOOK_CHANNEL: 1,
     GOOGLE_CHANNEL: 2,
@@ -153,7 +161,122 @@ var getPackageName = function() {
     return "com.bigken.game.b";
 }
 
+var getAppVersion = function() {
+    //if (TEST_ENVIRONMENT)
+    //return "1";
+    // #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    //     return NativeUtility::appVersion();
+    // #endif
+    // #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    //     return GetVersionApp();
+    // #endif
+    return "1";
+}
+
 var sleep = function(milliseconds)
 {
     cc.delayTime(milliseconds);
+}
+
+var setEnablePurchaseCash = function(_enablePurchaseCash) {
+    this._enablePurChaseCash = _enablePurchaseCash;
+}
+
+var isEnabledPurchaseCash = function() {
+    return this._enablePurChaseCash;
+}
+
+var setEnableTopup = function(_enableTopup) {
+    this._enableTopup = _enableTopup;
+}
+
+var isEnabledTopup = function() {
+    return _enableTopup;
+}
+
+var setServerAppVersion = function(version){
+    this.appVersionFromSever = version;
+}
+
+var getServerAppVersion = function(){
+    return this.appVersionFromSever;
+}
+
+var setFanpageUrl = function(fanpageUrl){
+    this._fanpageUrl = fanpageUrl;
+}
+
+var getFanpageUrl = function(){
+    return this._fanpageUrl;
+}
+
+var setWebsiteUrl = function(websiteUrl){
+    this._websiteUrl = websiteUrl;
+}
+
+var getWebsiteUrl = function(){
+    return this._websiteUrl;
+}
+
+var setHotLines =function(hotlines){
+    this._hotlines = hotlines;
+}
+
+var getHotLines=function(){
+    return this._hotlines;
+}
+
+var setEnableCashToGold = function(enableCashToGold){
+    this._enableCashToGold = enableCashToGold;
+}
+
+var getEnableCashToGold = function(){
+    return this._enableCashToGold;
+}
+
+var setCashToGoldRatio = function(cashToGoldRatio){
+    this._cashToGoldRatio = cashToGoldRatio;
+}
+
+var getCashToGoldRatio = function(){
+    return this._cashToGoldRatio;
+}
+
+var setEnableQuickPlay = function(enableQuickPlay){
+    this._enableQuickPlay = enableQuickPlay;
+}
+
+var getEnableQuickPlay = function(){
+    return this._enableQuickPlay;
+}
+
+var setEnableCashTranfer = function(enableCashTransfer) {
+    this._enableCashTransfer = enableCashTransfer;
+}
+
+var getEnableCashTransfer = function() {
+    return this._enableCashTransfer;
+}
+
+var setEnableGiftCode = function(enableGiftCode){
+    this.enableGiftCode = enableGiftCode;
+}
+
+var isEnableGiftCode = function(){
+    return this.enableGiftCode;
+}
+
+var setResetPwSmsSyntax = function(resetPwSmsSyntax){
+    this.resetPwSmsSyntax = resetPwSmsSyntax;
+}
+
+var getResetPwSmsSyntax = function(){
+    return this.resetPwSmsSyntax;
+}
+
+var setEnableGameIds = function(gameids) {
+    this.enableGameIds = gameids;
+}
+var getEnableGameIds = function() {
+    return this.enableGameIds;
 }

@@ -216,88 +216,90 @@ var BaseScene_connect = function() {
     }
 }
 
-// var initialMessageResponseHandler = function() {
-//     var init_response = BINInitializeResponse();
-//     //get list event
-//     // checkEvent(NetworkManager.INITIALIZE);
-//
-//     if (init_response != 0) {
-//         cc.log("init response: ", init_response);
-//         setInitialize(init_response.responsecode());
-//         if (init_response.responsecode()) {
-//             Common::getInstance()->setEnablePurchaseCash(init_response->enablepurchasecash());
-//             Common::getInstance()->setEnableTopup(init_response->enabletopup());
-//             int serverAppVersion = Common::getInstance()->convertStringToInt(init_response->currentappversion());
-//             Common::getInstance()->setServerAppVersion(serverAppVersion);
-//             Common::getInstance()->setFanpageUrl(init_response->fanpageurl());
-//             Common::getInstance()->setWebsiteUrl(init_response->websiteurl());
-//             vector<string> hotlines;
-//             for (int i = 0; i < init_response->hotlines_size(); i++){
-//                 hotlines.push_back(init_response->hotlines(i));
-//             }
-//
-//             Common::getInstance()->setHotLines(hotlines);
-//             Common::getInstance()->setEnableCashToGold(init_response->enablecashtogold());
-//             Common::getInstance()->setCashToGoldRatio(init_response->cashtogoldratio());
-//             Common::getInstance()->setEnableQuickPlay(init_response->enablequickplay());
-//             Common::getInstance()->setEnableCashTranfer(init_response->enablecashtransfer());
-//             Common::getInstance()->setEnableGiftCode(init_response->enablegiftcode());
-//             Common::getInstance()->setResetPwSmsSyntax(init_response->resetpwsmssyntax());
-//
-//             /*Set enable game ids*/
-//             vector<int> _gameIds;
-//             for (int i = 0; i < init_response->enablegameids_size(); i++) {
-//                 _gameIds.push_back(init_response->enablegameids(i));
-//             }
-//             Common::getInstance()->setEnableGameIds(_gameIds);
-//
-//             int app_version = Common::getInstance()->getVersionCode();
-//             CCLOG("app version code: %d", app_version);
-//             CCLOG("app version serverAppVersion: %d", serverAppVersion);
-//
-//             if (app_version < serverAppVersion) {
-//                 class InitializeOnEventListener : public OnEvenListener<BINInitializeResponse*> {
-//                     public:
-//                         void onEvent(int eventType, BINInitializeResponse* sender) override {
-//                     if (eventType == OnEvenListener::EVENT_CONFIRM_OK) {
-//                         Common::getInstance()->openUrl(url);
-//                     }
-//                     else if (eventType == OnEvenListener::EVENT_CANCEL_CONFIRM) {
-//                         BaseScene::goGame();
-//                     }
-//                 };
-//                 void onEventClickMessageBox(int enventType) override {
-//
-//                 };  //su kien khi an vao nut ok cua popupm essage box
-//
-//                 void setUrl(string url) { this->url = url; }
-//                 private:
-//                     string url;
-//             } *b = new InitializeOnEventListener();
-//                 b->setUrl(init_response->downloadurl());
-//                 bool force_update = init_response->forceupdate();
-//                 if (force_update) {
-//                     Common::getInstance()->setForceUpdate(true);
-//                     NodeConfirm<BINInitializeResponse*> *nodeConfirm =
-//                         NodeConfirm<BINInitializeResponse*>::create(b, "Cập nhật",
-//                             init_response->message(),
-//                             NodeConfirm<BINInitializeResponse*>::MESSAGEBOX_TYPE);
-//                     nodeConfirm->setSender(init_response);
-//                     nodeConfirm->showDlg();
-//                     return;
-//                 }
-//                 else {
-//                     Common::getInstance()->setUpdateMessage(init_response->message());
-//                 }
-//             }
-//             goGame();
-//             //restore session
-//         }else {
-//             PopupMessageBox* popupMessage = new PopupMessageBox();
-//             popupMessage->showPopup(init_response->message());
-//         }
-//     }
-// }
+var initialMessageResponseHandler = function(listMessages) {
+    // var init_response = BINInitializeResponse();
+    //get list event
+    // checkEvent(NetworkManager.INITIALIZE);
+    cc.log("get list message", listMessages.responseCode);
+
+    if (listMessages != 0) {
+        setInitialize(listMessages.responseCode);
+        if (listMessages.responseCode) {
+            setEnablePurchaseCash(listMessages.enablePurchaseCash);
+            setEnableTopup(listMessages.enableTopup);
+            var serverAppVersion = listMessages.currentAppVersion;
+            setServerAppVersion(serverAppVersion);
+            setFanpageUrl(listMessages.fanpageUrl);
+            setWebsiteUrl(listMessages.websiteUrl);
+            var hotlines = [];
+            cc.log("hotline size", listMessages.hotlines.length);
+            for (i = 0; i < listMessages.hotlines.length; i++){
+                hotlines.push(listMessages.hotlines[i]);
+            }
+
+
+            setHotLines(hotlines);
+            setEnableCashToGold(listMessages.enableCashToGold);
+            setCashToGoldRatio(listMessages.cashToGoldRatio);
+            setEnableQuickPlay(listMessages.enableQuickPlay);
+            setEnableCashTranfer(listMessages.enableCashTransfer);
+            setEnableGiftCode(listMessages.enableGiftCode);
+            setResetPwSmsSyntax(listMessages.resetPwSmsSyntax);
+
+            /*Set enable game ids*/
+            var _gameIds = [];
+            for (i = 0; i < listMessages.enableGameIds.length; i++) {
+                _gameIds.push(listMessages.enableGameIds[i]);
+            }
+            setEnableGameIds(_gameIds);
+
+            var app_version = getVersionCode();
+            cc.log("app version code: ", app_version);
+            cc.log("app version serverAppVersion: ", serverAppVersion);
+
+            // if (app_version < serverAppVersion) {
+            //     class InitializeOnEventListener : public OnEvenListener<BINInitializeResponse*> {
+            //         public:
+            //             void onEvent(int eventType, BINInitializeResponse* sender) override {
+            //         if (eventType == OnEvenListener::EVENT_CONFIRM_OK) {
+            //             Common::getInstance()->openUrl(url);
+            //         }
+            //         else if (eventType == OnEvenListener::EVENT_CANCEL_CONFIRM) {
+            //             BaseScene::goGame();
+            //         }
+            //     };
+            //     void onEventClickMessageBox(int enventType) override {
+            //
+            //     };  //su kien khi an vao nut ok cua popupm essage box
+            //
+            //     void setUrl(string url) { this->url = url; }
+            //     private:
+            //         string url;
+            // } *b = new InitializeOnEventListener();
+            //     b->setUrl(init_response->downloadurl());
+            //     bool force_update = init_response->forceupdate();
+            //     if (force_update) {
+            //         Common::getInstance()->setForceUpdate(true);
+            //         NodeConfirm<BINInitializeResponse*> *nodeConfirm =
+            //             NodeConfirm<BINInitializeResponse*>::create(b, "Cập nhật",
+            //                 init_response->message(),
+            //                 NodeConfirm<BINInitializeResponse*>::MESSAGEBOX_TYPE);
+            //         nodeConfirm->setSender(init_response);
+            //         nodeConfirm->showDlg();
+            //         return;
+            //     }
+            //     else {
+            //         Common::getInstance()->setUpdateMessage(init_response->message());
+            //     }
+            // }
+            goGame();
+            //restore session
+        }else {
+            // PopupMessageBox* popupMessage = new PopupMessageBox();
+            // popupMessage->showPopup(init_response->message());
+        }
+    }
+}
 
 // var update = function(delta) {
 //     initialMessageResponseHandler();
@@ -332,12 +334,12 @@ var BaseScene_connect = function() {
 // }
 
 var goGame = function() {
-    // if (Common::getInstance()->getGameState() == GAME_STATE.INTRO) {
+    // if (getGameState() == GAME_STATE.INTRO) {
         var scene = new LoginScene();
         cc.director.runScene(scene);
     // }
     // else {
-    //     NetworkManager::getInstance()->sendPingAndReceiveMessage(
-    //         (int)NetworkManager::getInstance()->getDisconnectedTime());
+    //     sendPingAndReceiveMessage(
+    //         getDisconnectedTime());
     // }
 }

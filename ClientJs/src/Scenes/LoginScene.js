@@ -70,33 +70,33 @@ var LoginLayer = cc.Layer.extend({
         var btn_login_facebook = MButton.createWithText(res.btn_facebook,TXT.LOGIN_BTN_FACEBOOK,TAG.LOGIN.BTN_LOGIN_FB);
         btn_login_facebook.setPosition(MVec2(width-btn_login_facebook.getWidth() *5/4, height/2-btn_login_facebook.getHeight() *3-20*3));
         btn_login_facebook.setZoomScale(0.01);
-        btn_login_facebook.addTouchEventListener(this.touchEvent, this);
+        btn_login_facebook.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_login_facebook);
 
         //choi ngay
         var btn_playnow = MButton.createWithText(res.btn_choingay_login,TXT.LOGIN_BTN_PLAYNOW,TAG.LOGIN.BTN_LOGIN_GOOGLE);
         btn_playnow.setPosition(cc.p(btn_login_facebook.getPosition().x, btn_login_facebook.getPosition().y + btn_login_facebook.getHeight()+15));
         btn_playnow.setBright(false);
-        // btn_playnow.addTouchEventListener(this.touchEvent, this);
+        // btn_playnow.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_playnow);
 
         //đăng nhập
         var btn_login = MButton.createWithText(res.btn_dangnhap,TXT.LOGIN_BTN_LOGIN ,TAG.LOGIN.BTN_LOGIN);
         btn_login.setPosition(cc.p(btn_playnow.getPosition().x, btn_playnow.getPosition().y + btn_playnow.getHeight()+15));
-        btn_login.addTouchEventListener(this.touchEvent, this);
+        btn_login.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_login);
 
         //đăng ký
         var btn_register = MButton.createWithText(res.btn_dang_ky, TXT.LOGIN_BTN_REGISTER , TAG.LOGIN.BTN_REGISTER);
         btn_register.setPosition(cc.p(btn_playnow.getPosition().x + btn_playnow.getWidth() - btn_register.getWidth(), btn_login.getPosition().y));
-        // btn_register.addTouchEventListener(this.touchEvent, this);
+        // btn_register.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_register);
 
         //quen mk
         var fogotPassword = MButton.createTextSizeTag("Quên mật khẩu?",20,TAG.LOGIN.BTN_FORGET_PASSWORD);
         cc.log("fogotPassword", fogotPassword.getWidth());
         fogotPassword.setPosition(cc.p(btn_playnow.getPosition().x + btn_playnow.getWidth() - fogotPassword.getWidth()-5, btn_register.getPosition().y+btn_register.getHeight()+15));
-        // fogotPassword.addTouchEventListener( this.touchEvent, this);
+        // fogotPassword.addTouchEventListener( this.menuCallBack, this);
         this.addChild(fogotPassword);
 
         //========================= Text Field
@@ -173,11 +173,29 @@ var LoginLayer = cc.Layer.extend({
         // this.addChild(edit_matkhau);
         // this.addChild(edit_user);
         // this.addChild(bigken);
+        cc.log("version ", getAppVersion());
+        //version
+        var version_txt = MLabel.create("version "+getAppVersion(),editBackgroundMatKhau.getHeight()/3);
+        version_txt.setPosition(MVec2(width-version_txt.getWidth()-15,
+            height-15-version_txt.getHeight()));
+
+        //hotline
+        var hotlines = getHotLines();
+        var hotline = MButton.create("res/hotline_login.png","Hotline : " + (hotlines.length > 0 ? hotlines[0] : ""),
+            editBackgroundMatKhau.getHeight() / 2, TAG.LOGIN.BTN_HOT_LINE);
+        //auto hotline_txt = MLabel::create("Hotline : " + (hotlines.size() > 0 ? hotlines[0] : ""), background_matkhau->getHeight() / 3);
+        hotline.setPosition(MVec2(5,height-hotline.getHeight()));
+        hotline.setTitleFontName(res.FONT_THIN);
+        hotline.setTitleFontSize(editBackgroundMatKhau.getHeight()/3);
+        hotline.addTouchEventListener( this.menuCallBack,this);
+
+        this.addChild(hotline);
+        this.addChild(version_txt);
 
         return true;
 
     },
-    touchEvent: function(sender, type)
+    menuCallBack: function(sender, type)
     {
         if (type == ccui.Widget.TOUCH_ENDED){
             switch(sender.tag) {
