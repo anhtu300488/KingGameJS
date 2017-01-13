@@ -121,7 +121,11 @@ var Common = {
     XOCDIA_ZONE: 15,
     TAMXINGAU_ZONE: 17,
     WHEEL_ZONE: 18,
-    MINIPOKER_ZONE: 19
+    MINIPOKER_ZONE: 19,
+
+    KEY_SESSION_ID : "key_session_id",
+    KEY_USER_ID : "key_user_id",
+    NO_DEVICE : "NO_DEVICE"
 }
 
 var getCp = function() {

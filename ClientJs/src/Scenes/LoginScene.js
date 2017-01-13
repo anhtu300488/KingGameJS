@@ -291,3 +291,61 @@ var LoginScene = cc.Scene.extend({
         this.addChild(layer);
     }
 });
+
+var loginResponseHandler = function(loginresponse) {
+    // BINLoginResponse* loginresponse = (BINLoginResponse *)Common::getInstance()->checkEvent(NetworkManager::LOGIN);
+    if (loginresponse != 0) {
+        cc.log("loginresponse", loginresponse);
+        // if (loginresponse.responseCode) {
+        //     if (loginType == FB_LOGIN)
+        //         tryLoginFacebook = false;
+        //     var session_id = loginresponse.sessionId;
+        //     setStringForKey(Common.KEY_SESSION_ID,
+        //         loginresponse.sessionId);
+        //     setSessionId(session_id);
+        //
+        //     setIntegerForKey(Common.KEY_USER_ID,
+        //         loginresponse.userInfo.userId);
+        //
+        //     cc.log("xxx");
+        //     setHasPlayingMatch(loginresponse.hasPlayingMatch);
+        //     // if (loginresponse->has_userinfo()) {
+        //     //     LoginScene::saveUserInfo(loginresponse->userinfo());
+        //     // }
+        //     // if (loginresponse->has_usersetting()) {
+        //     //     LoginScene::saveUserSetting(loginresponse->usersetting());
+        //     // }
+        //
+        //     if (!isHasPlayingMatch()) {
+        //         setPrefString(USER_NAME, edit_user->getText());
+        //         setPrefString(USER_PASSWORD, edit_matkhau->getText());
+        //         var showgame = ShowGame::createScene(loginresponse->message(), true);
+        //         REPLACESCENE(0.1f, showgame);
+        //     }
+        // }
+        // else {
+        //     if (loginType == FB_LOGIN) {
+        //         cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ACCESS_TOKEN);
+        //         cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ID);
+        //         cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_FIRST_NAME);
+        //         cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_LAST_NAME);
+        //         if (tryLoginFacebook) {
+        //             PopupMessageBox* popupMessage = new PopupMessageBox();
+        //             popupMessage->showPopup(loginresponse->message().c_str());
+        //         }
+        //         else {
+        //             tryLoginFacebook = true;
+        //             Common::getInstance()->loginFacebook();
+        //         }
+        //         return;
+        //     }
+        //
+        //     PopupMessageBox* popupMessage = new PopupMessageBox();
+        //     popupMessage->showPopup(loginresponse->message().c_str());
+        // }
+        // // Code kill room index
+        // if (Common::getInstance()->getUserName() == "sanglx") {
+        //     NetworkManager::getInstance()->getKillRoomMessageFromServer(4, 10);
+        // }
+    }
+}

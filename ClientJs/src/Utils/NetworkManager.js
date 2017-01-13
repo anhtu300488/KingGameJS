@@ -468,9 +468,9 @@ var getTypeMessage = function(msg, messageid, protoBufVar) {
         // case NetworkManager.REGISTER:
         //     msg = new BINRegisterResponse();
         //     break;
-        // case NetworkManager.LOGIN:
-        //     msg = new BINLoginResponse();
-        //     break;
+        case NetworkManager.LOGIN:
+            msg = new BINLoginResponse(protoBufVar);
+            break;
         // case NetworkManager.EXPIRED_SESSION:
         //     msg = new BINSessionExpiredResponse();
         //     break;
@@ -948,7 +948,10 @@ ws.onmessage = function(e) {
             case NetworkManager.INITIALIZE:
                 //call init response function
                 initialMessageResponseHandler(listMessages);
-                // cc.director.runScene(new LoginScene());
+                break;
+            case NetworkManager.LOGIN:
+                //call init response function
+                loginResponseHandler(listMessages);
                 break;
             // default:
             //     cc.director.runScene(new LoginScene());
