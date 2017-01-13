@@ -9,11 +9,43 @@ var origin = cc.director.getVisibleOrigin();
 var originX = origin.x;
 var originY = origin.y;
 
+
+
 cc.log("ox/oy:" + originX + "/" +originY);
 
 var MVec2 = function (x,y) {
     return cc.p(originX+x, originY+y);
 }
+
+var databuf = null;
+
+var setDataBuf = function(is_databuf) {
+    databuf = is_databuf;
+}
+
+var getDataBuf = function() {
+    return databuf;
+}
+
+// var protoBuf = {
+//     _databuf : 123,
+//     get dataBuf() {
+//         return this._databuf;
+//     },
+//     set dataBuf (_databuf) {
+//         cc.log("2");
+//         this.dataBuf = _databuf;
+//     }
+// };
+
+// var protoBuf = function()
+// {
+//     this.databuf = false;
+//     this.getDataBuffer = function() { return this.databuf; }
+//     this.setDataBuffer = function(val) { this.databuf = val; }
+// }
+
+
 
 // var loadAllProto = function () {
     var ProtoBuf = dcodeIO.ProtoBuf;
@@ -150,3 +182,158 @@ var MVec2 = function (x,y) {
 //     return Bigken;
 //
 // }
+
+var BaseScene_connect = function() {
+    cc.log("isConnected", isConnected());
+    if (isConnected()) {
+        cc.log("isConnected", isConnected());
+        closeConnection();
+    }
+
+    connect();
+
+    if (isConnected()) {
+        cc.log("isConnected", isConnected());
+        // setListening(true);
+        // listenData();
+
+        getInitializeMessageFromServer(getCp(), getVersionCode(), getDeviceId(), getDeviceInfo(), getCountry(), getLanguage(), getPackageName());
+        // getPingMessageFromServer(0);
+    } else {
+        // var scene = cocos2d::Director::getInstance()->getRunningScene();
+        // if(scene->getChildByTag(TAG_POPUP_RECONNECT) == nullptr){
+        //     auto reconnect = PopupReconnect::create();
+        //     scene->addChild(reconnect);
+        //     reconnect->showPopup();
+        // }else{
+        //     auto reconnect = (PopupReconnect*)scene->getChildByTag(TAG_POPUP_RECONNECT);
+        //     reconnect->showPopup();
+        // }
+    }
+}
+
+// var initialMessageResponseHandler = function() {
+//     var init_response = BINInitializeResponse();
+//     //get list event
+//     // checkEvent(NetworkManager.INITIALIZE);
+//
+//     if (init_response != 0) {
+//         cc.log("init response: ", init_response);
+//         setInitialize(init_response.responsecode());
+//         if (init_response.responsecode()) {
+//             Common::getInstance()->setEnablePurchaseCash(init_response->enablepurchasecash());
+//             Common::getInstance()->setEnableTopup(init_response->enabletopup());
+//             int serverAppVersion = Common::getInstance()->convertStringToInt(init_response->currentappversion());
+//             Common::getInstance()->setServerAppVersion(serverAppVersion);
+//             Common::getInstance()->setFanpageUrl(init_response->fanpageurl());
+//             Common::getInstance()->setWebsiteUrl(init_response->websiteurl());
+//             vector<string> hotlines;
+//             for (int i = 0; i < init_response->hotlines_size(); i++){
+//                 hotlines.push_back(init_response->hotlines(i));
+//             }
+//
+//             Common::getInstance()->setHotLines(hotlines);
+//             Common::getInstance()->setEnableCashToGold(init_response->enablecashtogold());
+//             Common::getInstance()->setCashToGoldRatio(init_response->cashtogoldratio());
+//             Common::getInstance()->setEnableQuickPlay(init_response->enablequickplay());
+//             Common::getInstance()->setEnableCashTranfer(init_response->enablecashtransfer());
+//             Common::getInstance()->setEnableGiftCode(init_response->enablegiftcode());
+//             Common::getInstance()->setResetPwSmsSyntax(init_response->resetpwsmssyntax());
+//
+//             /*Set enable game ids*/
+//             vector<int> _gameIds;
+//             for (int i = 0; i < init_response->enablegameids_size(); i++) {
+//                 _gameIds.push_back(init_response->enablegameids(i));
+//             }
+//             Common::getInstance()->setEnableGameIds(_gameIds);
+//
+//             int app_version = Common::getInstance()->getVersionCode();
+//             CCLOG("app version code: %d", app_version);
+//             CCLOG("app version serverAppVersion: %d", serverAppVersion);
+//
+//             if (app_version < serverAppVersion) {
+//                 class InitializeOnEventListener : public OnEvenListener<BINInitializeResponse*> {
+//                     public:
+//                         void onEvent(int eventType, BINInitializeResponse* sender) override {
+//                     if (eventType == OnEvenListener::EVENT_CONFIRM_OK) {
+//                         Common::getInstance()->openUrl(url);
+//                     }
+//                     else if (eventType == OnEvenListener::EVENT_CANCEL_CONFIRM) {
+//                         BaseScene::goGame();
+//                     }
+//                 };
+//                 void onEventClickMessageBox(int enventType) override {
+//
+//                 };  //su kien khi an vao nut ok cua popupm essage box
+//
+//                 void setUrl(string url) { this->url = url; }
+//                 private:
+//                     string url;
+//             } *b = new InitializeOnEventListener();
+//                 b->setUrl(init_response->downloadurl());
+//                 bool force_update = init_response->forceupdate();
+//                 if (force_update) {
+//                     Common::getInstance()->setForceUpdate(true);
+//                     NodeConfirm<BINInitializeResponse*> *nodeConfirm =
+//                         NodeConfirm<BINInitializeResponse*>::create(b, "Cập nhật",
+//                             init_response->message(),
+//                             NodeConfirm<BINInitializeResponse*>::MESSAGEBOX_TYPE);
+//                     nodeConfirm->setSender(init_response);
+//                     nodeConfirm->showDlg();
+//                     return;
+//                 }
+//                 else {
+//                     Common::getInstance()->setUpdateMessage(init_response->message());
+//                 }
+//             }
+//             goGame();
+//             //restore session
+//         }else {
+//             PopupMessageBox* popupMessage = new PopupMessageBox();
+//             popupMessage->showPopup(init_response->message());
+//         }
+//     }
+// }
+
+// var update = function(delta) {
+//     initialMessageResponseHandler();
+//
+//     var pingresponse = (BINPingResponse*)Common::getInstance()->checkEvent(NetworkManager.PING);
+//     if (pingresponse != 0) {
+//         cc.log("ping response: %s", pingresponse->DebugString().c_str());
+//         if (pingresponse->disconnect()) {
+//             cocos2d::UserDefault::getInstance()->deleteValueForKey(Common::getInstance()
+//                 ->KEY_SESSION_ID);
+//             Common::getInstance()->setSessionId("-1");
+//             this->showToast(pingresponse->message().c_str(), 2);
+//             //close connection
+//             if (NetworkManager::getInstance()->isConnected())
+//                 NetworkManager::getInstance()->closeConnection();
+//             this->scheduleOnce(schedule_selector(BaseScene::goToIntroScene), 2.0f);
+//         }
+//         else {
+//             //TODO:SangLX
+//         }
+//     }
+//
+//     getEmergencyNotificationResponse();
+//
+//     //level up
+//     levelResponseHandler();
+//
+//     //huy chuong up
+//     medalResonseHandler();
+//
+//     getIapCompleteResponse();
+// }
+
+var goGame = function() {
+    // if (Common::getInstance()->getGameState() == GAME_STATE.INTRO) {
+        var scene = new LoginScene();
+        cc.director.runScene(scene);
+    // }
+    // else {
+    //     NetworkManager::getInstance()->sendPingAndReceiveMessage(
+    //         (int)NetworkManager::getInstance()->getDisconnectedTime());
+    // }
+}

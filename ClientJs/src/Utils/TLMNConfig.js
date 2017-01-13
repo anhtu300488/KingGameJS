@@ -202,3 +202,12 @@ var POPUP = {
     TAG_HELP_TO_PLAY: 348,
     TAG_CHANGE_AVATAR: 349
 }
+
+var GAME_STATE = {
+    INTRO : 1,
+    LOGIN_SCENE : 2,
+    REGISTER_SCENE : 2,
+    SHOW_GAME : 3,
+    SCENE_TABLE : 4,
+    IN_GAME : 5
+};

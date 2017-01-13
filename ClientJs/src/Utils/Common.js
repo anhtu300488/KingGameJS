@@ -152,3 +152,8 @@ var getDeviceInfo = function() {
 var getPackageName = function() {
     return "com.bigken.game.b";
 }
+
+var sleep = function(milliseconds)
+{
+    cc.delayTime(milliseconds);
+}

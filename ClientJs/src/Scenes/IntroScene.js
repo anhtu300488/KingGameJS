@@ -84,23 +84,24 @@ var IntroLayer = cc.Layer.extend({
         //check init
         // cc.log("start connection");
         // cc.director.runScene(new IntroScene());
-        var cp = getCp(),
-            appversion = getVersionCode(),
-            device_id = getDeviceId(),
-            device_info = getDeviceInfo(),
-            country = getCountry(),
-            language = getLanguage(),
-            pakageName = getPackageName();
-
-        getInitializeMessageFromServer(cp, appversion , device_id, device_info, country, language, pakageName);
+        // var cp = getCp(),
+        //     appversion = getVersionCode(),
+        //     device_id = getDeviceId(),
+        //     device_info = getDeviceInfo(),
+        //     country = getCountry(),
+        //     language = getLanguage(),
+        //     pakageName = getPackageName();
+        //
+        // getInitializeMessageFromServer(cp, appversion , device_id, device_info, country, language, pakageName);
         
-        // this.scheduleOnce(this.gotoLoginScene,3,"login");
+        this.scheduleOnce(this.gotoLoginScene,3,"login");
 
         return true;
     },
     
     gotoLoginScene: function () {
-        cc.director.runScene(new LoginScene());
+        BaseScene_connect();
+        // cc.director.runScene(new LoginScene());
     }
 });
 

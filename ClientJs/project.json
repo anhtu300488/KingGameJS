@@ -42,6 +42,7 @@
         "src/Utils/common.js",
         "src/Utils/LocalString.js",
         "src/Utils/NetworkManager.js",
+        "src/Utils/DefaultSocket.js",
         "src/UI/MButton.js",
         "src/UI/MLabel.js",
         "src/UI/MSprite.js",
