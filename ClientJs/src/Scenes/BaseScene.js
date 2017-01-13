@@ -17,7 +17,7 @@ var MVec2 = function (x,y) {
     return cc.p(originX+x, originY+y);
 }
 
-var databuf = null;
+var databuf;
 
 var setDataBuf = function(is_databuf) {
     databuf = is_databuf;
@@ -189,15 +189,19 @@ var BaseScene_connect = function() {
         cc.log("isConnected", isConnected());
         closeConnection();
     }
-
-    connect();
+    if(ws.readyState === ws.OPEN){
+        setConnected(true);
+    }
+    // connect();
 
     if (isConnected()) {
         cc.log("isConnected", isConnected());
         // setListening(true);
         // listenData();
-
-        getInitializeMessageFromServer(getCp(), getVersionCode(), getDeviceId(), getDeviceInfo(), getCountry(), getLanguage(), getPackageName());
+        cc.log("status", ws.readyState);
+        if(ws.readyState === ws.OPEN){
+            getInitializeMessageFromServer(getCp(), getVersionCode(), getDeviceId(), getDeviceInfo(), getCountry(), getLanguage(), getPackageName());
+        }
         // getPingMessageFromServer(0);
     } else {
         // var scene = cocos2d::Director::getInstance()->getRunningScene();

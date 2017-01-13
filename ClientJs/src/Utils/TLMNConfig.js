@@ -3,7 +3,8 @@
  */
 
 var WebSocket = WebSocket || window.WebSocket || window.MozWebSocket;
-var ws = null;
+// var ws = null;
+
 
 //anh Linh
 var  SERVER_NAME = "192.168.100.250";
@@ -18,6 +19,20 @@ var  SERVER_NAME = "192.168.100.250";
 var SERVER_PORT = 1280;
 
 var PATH = "bigken";
+
+var url = "ws://"+SERVER_NAME+":"+SERVER_PORT+"/"+PATH;
+var ws = new WebSocket(url);
+ws.binaryType = "arraybuffer";
+// ws.onopen = function() {
+//     // called when connection is opened
+// };
+// ws.onerror = function(e) {
+//     // called in case of error, when connection is broken in example
+// };
+// ws.onclose = function() {
+//     // called when connexion is closed
+// };
+
 
 var GAMECOLOR = {
     DARK_COLOR: cc.color(0,0,0,180)
