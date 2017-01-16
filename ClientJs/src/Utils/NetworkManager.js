@@ -441,8 +441,13 @@ var parseFrom = function(read_str, len)
 
                 if (response != 0) {
                     left_byte_size -= (data_size_block + 2);
-                    listMessages = response;
-                    listMessages['messageid'] = messageid;
+                    cc.log("response: " + response + ", messageid:" + messageid);
+                    var pair = {
+                        message_id: messageid,
+                        response: response
+                    };
+                    listMessages.push(pair);
+                    cc.log("list message size: " + listMessages.length);
                 }
                 else {
                     cc.error("unknown message");
@@ -455,7 +460,6 @@ var parseFrom = function(read_str, len)
     if (lenPacket > 0) {
         cc.log("NetworkManager: error packet length = 0");
     }
-
 
     return listMessages;
 }

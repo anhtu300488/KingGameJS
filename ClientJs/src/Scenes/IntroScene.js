@@ -6,6 +6,7 @@ var IntroLayer = cc.Layer.extend({
         // 1. super init first
         this._super();
 
+
         // var winsize = cc.director.getWinSize();
         //
         // //create the background image and position it at the center of screen
@@ -95,6 +96,7 @@ var IntroLayer = cc.Layer.extend({
         // getInitializeMessageFromServer(cp, appversion , device_id, device_info, country, language, pakageName);
         
         this.scheduleOnce(this.gotoLoginScene,3,"login");
+        ws.onmessage = this.ongamestatus.bind(this);
 
         return true;
     },
@@ -102,6 +104,29 @@ var IntroLayer = cc.Layer.extend({
     gotoLoginScene: function () {
         BaseScene_connect();
         // cc.director.runScene(new LoginScene());
+    },
+    ongamestatus: function(e) {
+        cc.log("data 1", e);
+        if(e.data!==null || e.data !== 'undefined')
+        {
+            var listMessages = parseFrom(e.data, e.data.byteLength);
+            while(listMessages.length > 0) {
+                var buffer = listMessages.shift();
+                this.handleMessage(buffer);
+            }
+        }
+    },
+    handleMessage: function(e) {
+        var buffer = e;
+        switch (buffer.message_id) {
+            case NetworkManager.INITIALIZE:
+                var msg = buffer.response;
+                cc.log("message :" , msg);
+                if(msg.responseCode) {
+                    cc.director.runScene(new LoginScene());
+                }
+                break;
+        }
     }
 });
 
