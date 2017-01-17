@@ -7,7 +7,7 @@ var IntroLayer = cc.Layer.extend({
         this._super();
 
 
-        var spriteBG = new cc.Sprite(res.COMMON.SPRITE_ITEM_BACKGROUND);
+        var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
 
         var spriteWidth = spriteBG.getContentSize().width;
 
@@ -17,7 +17,7 @@ var IntroLayer = cc.Layer.extend({
         var cols = visibleSize.height/ spriteHeight + 1;
         for(var i = 0; i< rows; i++){
             for(var j = 0; j<cols; j++){
-                var itemSpriteBG = new cc.Sprite(res.COMMON.SPRITE_ITEM_BACKGROUND);
+                var itemSpriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
                 var centerPos = cc.p(spriteBG.x + i*spriteWidth, spriteBG.y + j*spriteHeight);
                 itemSpriteBG.setPosition(centerPos);
                 this.addChild(itemSpriteBG);

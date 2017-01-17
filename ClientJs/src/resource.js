@@ -5,32 +5,26 @@ var res = {
         FONT_TITLE: "res/fonts/font_title.ttf",
     },
 
-    COMMON:{
-        SPRITE_ITEM_BACKGROUND: "res/item_background.png",
-        BTN_BLUE: "res/btn_blue.png",
-        BTN_GREEN: "res/btn_green.png",
-        BTN_YELLOW: "res/btn_yellow.png",
-        BTN_CYAN: "res/btn_cyan.png"
-    },
+    COMMON_SPRITE_ITEM_BACKGROUND: "res/item_background.png",
+    COMMON_BTN_BLUE: "res/btn_blue.png",
+    COMMON_BTN_GREEN: "res/btn_green.png",
+    COMMON_BTN_YELLOW: "res/btn_yellow.png",
+    COMMON_BTN_CYAN: "res/btn_cyan.png",
 
-    INTRO:{
-        SPRITE_BG_CARD: "res/intro/bg_card.png",
-        SPRITE_BIA: "res/intro/beer_bkg.png",
-        SPRITE_BOT_BIA: "res/intro/beer_bot.png",
-        SPRITE_LUA_MACH: "res/intro/lua_mach.png"
-    },
+    INTRO_SPRITE_BG_CARD: "res/intro/bg_card.png",
+    INTRO_SPRITE_BIA: "res/intro/beer_bkg.png",
+    INTRO_SPRITE_BOT_BIA: "res/intro/beer_bot.png",
+    INTRO_SPRITE_LUA_MACH: "res/intro/lua_mach.png",
 
-    LOGIN:{
-        BTN_FACEBOOK: "res/btn_facebook.png",
-        BTN_GOOGLE: "res/btn_google.png",
-        BTN_LOGIN: "res/btn_dangnhap.png",
-        BTN_REGISTER: "res/btn_dang_ky.png",
-        BTN_CHOI_NGAY: "res/btn_choingay_login.png",
-        SPRITE_EDIT_BOX: "res/sprite_edit_box.png",
-        SPRITE_EDIT_BOX_NULL: "res/edit_box_null.png",
-        SPRITE_GIRL: "res/sprite_cogai.png",
-        SPRITE_LIGHT: "res/sprite_background_login.png"
-    },
+    LOGIN_BTN_FACEBOOK: "res/btn_facebook.png",
+    LOGIN_BTN_GOOGLE: "res/btn_google.png",
+    LOGIN_BTN_LOGIN: "res/btn_dangnhap.png",
+    LOGIN_BTN_REGISTER: "res/btn_dang_ky.png",
+    LOGIN_SPRITE_EDIT_BOX: "res/edit_box.png",
+    LOGIN_SPRITE_EDIT_BOX_NULL: "res/edit_box_null.png",
+    LOGIN_BTN_CHOI_NGAY: "res/btn_choingay_login.png",
+    LOGIN_SPRITE_GIRL: "res/sprite_cogai.png",
+    LOGIN_SPRITE_LIGHT: "res/sprite_background_login.png",
 
     SHOW_GAME:{
 
