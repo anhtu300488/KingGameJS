@@ -7,32 +7,28 @@ var IntroLayer = cc.Layer.extend({
         this._super();
 
 
-        // var winsize = cc.director.getWinSize();
-        //
-        // //create the background image and position it at the center of screen
-        //
-        // var spriteBG = MSprite.create(res.item_background_png);
-        //
-        // var spriteWidth = spriteBG.getContentSize().width;
-        //
-        // var spriteHeight = spriteBG.getContentSize().height;
-        //
-        // var rows = winsize.width/ spriteWidth + 1;
-        // var cols = winsize.height/ spriteHeight + 1;
-        // for(i = 0; i< rows; i++){
-        //     for(j = 0; j<cols; j++){
-        //         var itemSpriteBG = MSprite.create(res.item_background_png);
-        //         var centerPos = cc.p(spriteBG.x + i*spriteWidth, spriteBG.y + j*spriteHeight);
-        //         itemSpriteBG.setPosition(centerPos);
-        //         this.addChild(itemSpriteBG);
-        //     }
-        // }
-        //
-        // var itemSpriteBGCard = MSprite.create(res.bg_card_png);
-        // var centerPosCard = cc.p(winsize.width/2, winsize.height/2);
-        // itemSpriteBGCard.setPosition(centerPosCard);
-        // this.addChild(itemSpriteBGCard);
-        //
+        var spriteBG = new cc.Sprite(res.COMMON.SPRITE_ITEM_BACKGROUND);
+
+        var spriteWidth = spriteBG.getContentSize().width;
+
+        var spriteHeight = spriteBG.getContentSize().height;
+
+        var rows = visibleSize.width/ spriteWidth + 1;
+        var cols = visibleSize.height/ spriteHeight + 1;
+        for(var i = 0; i< rows; i++){
+            for(var j = 0; j<cols; j++){
+                var itemSpriteBG = new cc.Sprite(res.COMMON.SPRITE_ITEM_BACKGROUND);
+                var centerPos = cc.p(spriteBG.x + i*spriteWidth, spriteBG.y + j*spriteHeight);
+                itemSpriteBG.setPosition(centerPos);
+                this.addChild(itemSpriteBG);
+            }
+        }
+
+        var itemSpriteBGCard = MSprite.create(res.bg_card_png);
+        var centerPosCard = MVec2(width/2, height/2);
+        itemSpriteBGCard.setPosition(centerPosCard);
+        this.addChild(itemSpriteBGCard);
+
         // var target = MSprite.create(res.beer_bkg_png); /*child to clip*/
         // var mask = MSprite.create(res.beer_sprite_png); /*mask*/
         //

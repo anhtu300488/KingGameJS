@@ -34,6 +34,11 @@ ws.binaryType = "arraybuffer";
 //             setTimeout(function(){sendData()}, 120);
 //         };
 
+var LOGIN_STATE = {
+    NORMAL_LOGIN : 1,
+    FB_LOGIN : 2,
+    GG_LOGIN : 3
+}
 
 var GAMECOLOR = {
     DARK_COLOR: cc.color(0,0,0,180)
@@ -205,6 +210,13 @@ var POPUP = {
         BTN_HOT_LINE_1: 2,
         BTN_HOT_LINE_2: 3,
         BTN_FAN_PAGE: 4
+    },
+
+    POPUP_MESSAGE_BOX:{
+        BTN_OK: 1,
+        BTN_CANCEL: 2,
+        BTN_CLOSE: 3,
+        LBL_MESSAGE: 4
     },
 
     TAG_FRIEND: 331,

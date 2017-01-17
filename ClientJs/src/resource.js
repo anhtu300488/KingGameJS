@@ -1,7 +1,51 @@
 var res = {
-    FONT_BOLD: "res/fonts/gamevina_thin.ttf",
-    FONT_THIN: "res/fonts/gamevina_thin.ttf",
-    FONT_TITLE: "res/fonts/font_title.otf",
+    FONT:{
+        FONT_BOLD: "res/fonts/gamevina_bold.ttf",
+        FONT_THIN: "res/fonts/gamevina_thin.ttf",
+        FONT_TITLE: "res/fonts/font_title.ttf",
+    },
+
+    COMMON:{
+        SPRITE_ITEM_BACKGROUND: "res/item_background.png",
+        BTN_BLUE: "res/btn_blue.png",
+        BTN_GREEN: "res/btn_green.png",
+        BTN_YELLOW: "res/btn_yellow.png",
+        BTN_CYAN: "res/btn_cyan.png"
+    },
+
+    INTRO:{
+        SPRITE_BG_CARD: "res/intro/bg_card.png",
+        SPRITE_BIA: "res/intro/beer_bkg.png",
+        SPRITE_BOT_BIA: "res/intro/beer_bot.png",
+        SPRITE_LUA_MACH: "res/intro/lua_mach.png"
+    },
+
+    LOGIN:{
+        BTN_FACEBOOK: "res/btn_facebook.png",
+        BTN_GOOGLE: "res/btn_google.png",
+        BTN_LOGIN: "res/btn_dangnhap.png",
+        BTN_REGISTER: "res/btn_dang_ky.png",
+        BTN_CHOI_NGAY: "res/btn_choingay_login.png",
+        SPRITE_EDIT_BOX: "res/sprite_edit_box.png",
+        SPRITE_EDIT_BOX_NULL: "res/edit_box_null.png",
+        SPRITE_GIRL: "res/sprite_cogai.png",
+        SPRITE_LIGHT: "res/sprite_background_login.png"
+    },
+
+    SHOW_GAME:{
+
+    },
+
+    TABLE:{
+
+    },
+
+    IN_GAME:{
+
+    },
+
+    /*
+     */
 
     HelloWorld_png : "res/HelloWorld.png",
     item_background_png: "res/item_background.png",
