@@ -3,10 +3,11 @@
  */
 var BINLoginResponse = function (protoBufVar) {
     var ProtoBuf = dcodeIO.ProtoBuf,
-        BinParamProtobuf = ProtoBuf.loadProtoFile('res/protobuf/login.proto').build('bigken.login'),
-        BinParamProto = BinParamProtobuf.BINLoginResponse;
+        ParamProtobuf = ProtoBuf.loadProtoFile('res/protobuf/login.proto').build('bigken.login'),
+        ParamProto = ParamProtobuf.BINLoginResponse;
 
-    var protoBufData = BinParamProto.decode(protoBufVar);
+    var protoBufDatabase = ParamProto.decode(protoBufVar);
 
-    return protoBufData;
+
+    return protoBufDatabase;
 }

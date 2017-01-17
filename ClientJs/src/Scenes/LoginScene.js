@@ -89,7 +89,7 @@ var LoginLayer = cc.Layer.extend({
         //đăng ký
         var btn_register = MButton.createWithText(res.btn_dang_ky, TXT.LOGIN_BTN_REGISTER , TAG.LOGIN.BTN_REGISTER);
         btn_register.setPosition(cc.p(btn_playnow.getPosition().x + btn_playnow.getWidth() - btn_register.getWidth(), btn_login.getPosition().y));
-        // btn_register.addTouchEventListener(this.menuCallBack, this);
+        btn_register.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_register);
 
         //quen mk
@@ -192,6 +192,8 @@ var LoginLayer = cc.Layer.extend({
         this.addChild(hotline);
         this.addChild(version_txt);
 
+        ws.onmessage = this.loginongamestatus.bind(this);
+
         return true;
 
     },
@@ -199,11 +201,14 @@ var LoginLayer = cc.Layer.extend({
     {
         if (type == ccui.Widget.TOUCH_ENDED){
             switch(sender.tag) {
-                case 1:
+                case TAG.LOGIN.BTN_LOGIN:
                     this.login();
                     break;
-                case 2:
+                case TAG.LOGIN.BTN_LOGIN_FB:
                     this.loginFacebook();
+                    break;
+                case TAG.LOGIN.BTN_REGISTER:
+                    cc.director.runScene(new RegisterScene());
                     break;
                 default:
                     break;
@@ -281,6 +286,27 @@ var LoginLayer = cc.Layer.extend({
             }
         });
 
+    },
+    loginongamestatus: function(e) {
+        cc.log("data 1", e);
+        if(e.data!==null || e.data !== 'undefined')
+        {
+            var listMessages = parseFrom(e.data, e.data.byteLength);
+            while(listMessages.length > 0) {
+                var buffer = listMessages.shift();
+                this.loginhandleMessage(buffer);
+            }
+        }
+    },
+    loginhandleMessage: function(e) {
+        var buffer = e;
+        switch (buffer.message_id) {
+            case NetworkManager.LOGIN:
+                cc.log("message :" , msg);
+                var msg = buffer.response;
+                loginResponseHandler(msg);
+                break;
+        }
     }
 });
 
@@ -296,56 +322,109 @@ var loginResponseHandler = function(loginresponse) {
     // BINLoginResponse* loginresponse = (BINLoginResponse *)Common::getInstance()->checkEvent(NetworkManager::LOGIN);
     if (loginresponse != 0) {
         cc.log("loginresponse", loginresponse);
-        // if (loginresponse.responseCode) {
-        //     if (loginType == FB_LOGIN)
-        //         tryLoginFacebook = false;
-        //     var session_id = loginresponse.sessionId;
-        //     setStringForKey(Common.KEY_SESSION_ID,
-        //         loginresponse.sessionId);
-        //     setSessionId(session_id);
-        //
-        //     setIntegerForKey(Common.KEY_USER_ID,
-        //         loginresponse.userInfo.userId);
-        //
-        //     cc.log("xxx");
-        //     setHasPlayingMatch(loginresponse.hasPlayingMatch);
-        //     // if (loginresponse->has_userinfo()) {
-        //     //     LoginScene::saveUserInfo(loginresponse->userinfo());
-        //     // }
-        //     // if (loginresponse->has_usersetting()) {
-        //     //     LoginScene::saveUserSetting(loginresponse->usersetting());
-        //     // }
-        //
-        //     if (!isHasPlayingMatch()) {
-        //         setPrefString(USER_NAME, edit_user->getText());
-        //         setPrefString(USER_PASSWORD, edit_matkhau->getText());
-        //         var showgame = ShowGame::createScene(loginresponse->message(), true);
-        //         REPLACESCENE(0.1f, showgame);
-        //     }
-        // }
-        // else {
-        //     if (loginType == FB_LOGIN) {
-        //         cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ACCESS_TOKEN);
-        //         cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ID);
-        //         cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_FIRST_NAME);
-        //         cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_LAST_NAME);
-        //         if (tryLoginFacebook) {
-        //             PopupMessageBox* popupMessage = new PopupMessageBox();
-        //             popupMessage->showPopup(loginresponse->message().c_str());
-        //         }
-        //         else {
-        //             tryLoginFacebook = true;
-        //             Common::getInstance()->loginFacebook();
-        //         }
-        //         return;
-        //     }
-        //
-        //     PopupMessageBox* popupMessage = new PopupMessageBox();
-        //     popupMessage->showPopup(loginresponse->message().c_str());
-        // }
+        if (loginresponse.responseCode) {
+            // if (loginType == FB_LOGIN)
+            //     tryLoginFacebook = false;
+            var session_id = loginresponse.sessionId;
+            // setStringForKey(Common.KEY_SESSION_ID,
+            //     loginresponse.sessionId);
+            setSessionId(session_id);
+
+            // setIntegerForKey(Common.KEY_USER_ID,
+            //     loginresponse.userInfo.userId);
+
+
+            setHasPlayingMatch(loginresponse.hasPlayingMatch);
+            // if (loginresponse.has_userinfo) {
+                saveUserInfo(loginresponse.userInfo);
+            // }
+            // if (loginresponse.has_usersetting) {
+                saveUserSetting(loginresponse.userSetting);
+            // }
+
+            if (!isHasPlayingMatch()) {
+                // setPrefString(USER_NAME, edit_user->getText());
+                // setPrefString(USER_PASSWORD, edit_matkhau->getText());
+                var showgame = new ShowGameScene();
+                cc.director.runScene(showgame);
+                // var showgame = ShowGame::createScene(loginresponse.message, true);
+                // REPLACESCENE(0.1, showgame);
+            }
+        }
+        else {
+            // if (loginType == FB_LOGIN) {
+            //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ACCESS_TOKEN);
+            //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ID);
+            //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_FIRST_NAME);
+            //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_LAST_NAME);
+            //     if (tryLoginFacebook) {
+            //         PopupMessageBox* popupMessage = new PopupMessageBox();
+            //         popupMessage->showPopup(loginresponse->message().c_str());
+            //     }
+            //     else {
+            //         tryLoginFacebook = true;
+            //         Common::getInstance()->loginFacebook();
+            //     }
+            //     return;
+            // }
+            //
+            // PopupMessageBox* popupMessage = new PopupMessageBox();
+            // popupMessage->showPopup(loginresponse->message().c_str());
+        }
         // // Code kill room index
         // if (Common::getInstance()->getUserName() == "sanglx") {
         //     NetworkManager::getInstance()->getKillRoomMessageFromServer(4, 10);
         // }
     }
+}
+
+var saveUserInfo = function(userInfo) {
+    setUserName(userInfo.userName);
+    // if (userInfo.displayName) {
+        setDisplayName(userInfo.displayName);
+    // }
+
+    // if (userInfo.has_level()) {
+        setLevel(userInfo.level);
+    // }
+
+    // if (userInfo.has_cash()) {
+        setCash(userInfo.cash);
+    // }
+
+    // if (userInfo.has_gold()) {
+        setGold(userInfo.gold);
+    // }
+
+    // if (userInfo.has_avatarid()) {
+        setAvatarId(userInfo.avatarId);
+    // }
+
+    // if (userInfo.has_mobile()){
+        setPhoneNunber(userInfo.mobile);
+    // }
+
+    // if (userInfo.has_accountverified()){
+        setAccountVerify(userInfo.accountVerified);
+    // }
+
+    // if (userInfo.has_disablecashtransaction()){
+        setDisableCashTransaction(userInfo.disableCashTransaction);
+    // }
+
+    // if (userInfo.has_securitykeyset()){
+        setSecurityKeySeted(userInfo.securityKeySet);
+    // }
+}
+
+var saveUserSetting = function(userSetting) {
+    // if (userSetting.has_autoready()) {
+        setAutoReady(userSetting.autoReady);
+        // setPrefs(AUTOREADY, userSetting.autoReady);
+    // }
+
+    // if (userSetting.has_autodenyinvitation()) {
+        setAutoDenyInvitation(userSetting.autoDenyInvitation);
+        // setPrefs(DENY_INVITES, userSetting.autoDenyInvitation);
+    // }
 }

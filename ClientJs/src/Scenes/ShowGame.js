@@ -74,7 +74,8 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(bk_avatar);
 
         // avartar
-        var avatar_id = 100000;
+        // var avatar_id = 100000;
+        var avatar_id = getAvatarId() ? getAvatarId() : 100000;
         var btn_avatar = MButton.create( cc.formatStr("res/avatar%d.png", avatar_id), TAG.SHOW_BTN_AVATAR);
         btn_avatar.setAnchorPoint(cc.p(0.5,0.5));
         btn_avatar.setPosition(cc.p(bk_avatar.getPositionX() + bk_avatar.getContentSize().width / 2,
@@ -90,7 +91,8 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(label_id);
 
         //ten hien thi
-        var userName = 'Tu_Atula';
+        // var userName = 'Tu_Atula';
+        var userName = getDisplayName() ? getDisplayName() : 'Tu_Atula';
         var label_name = MLabel.create(userName, bk_avatar.getContentSize().height / 4, true);
         label_name.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width + padding,
             btn_phone.getPositionY() + btn_phone.getContentSize().height / 2));
@@ -156,7 +158,8 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(bkg_navigationbar); //left
 
         // doi thuong
-        var icon_doithuong_text = res.btn_tro_giup;
+        // var icon_doithuong_text = res.btn_tro_giup;
+        var icon_doithuong_text = getServerAppVersion() < 0 ? "res/btn_tro_giup.png" : res.ICON_DOI_THUONG;
         var btn_doithuong = MButton.create(icon_doithuong_text, "", 30, TAG.SHOW_BTN_DOI_THUONG);
         btn_doithuong.setPosition(MVec2(visibleSize.width / 2 - btn_doithuong.getContentSize().width / 2, 0));
         // btn_doithuong.addTouchEventListener();
@@ -242,7 +245,10 @@ var ShowGameLayer = cc.Layer.extend({
         var button_size = new cc.Size(visibleSize.width * 0.22, visibleSize.width * 0.22 * 356 / 270.0);  //361 / 310.0f
         var distance_button = (scollFrameSize.width - 4.2*button_size.width) / 8;
 
-        var enableGameIds = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
+        // var enableGameIds = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
+        var enableGameIds = getEnableGameIds();
+
+        cc.log("enableGameIds", enableGameIds);
 
         for (i = 0; i < nameTabButton.length; i++){
             var isFound = false;
@@ -453,6 +459,48 @@ var ShowGameLayer = cc.Layer.extend({
         // nodeConfirm.show(true);
         // return;
         cc.director.runScene(new LoginScene());
+    }, gameItemCallBack: function(sender, type) {
+        // if (type == ccui.Widget.TOUCH_BEGAN) {
+        //     auto btnSelect = ((MButton*) sender);
+        //     btnSelect->runAction(Sequence::create(ScaleTo::create(0.1f, 1.27f),
+        //     ScaleTo::create(0.1f, 1.1f),ScaleTo::create(0.1f, 1.25f),NULL));
+        //     btnSelect->setLocalZOrder(1);
+        //
+        //     Vector<Node*> children = scrollView->getChildren();
+        //     for (int i = 0; i < children.size(); i++) {
+        //         MButton* button = dynamic_cast<MButton*>(children.at(i));
+        //         if (button != nullptr && btnSelect->getTag() != button->getTag()) {
+        //             button->runAction(ScaleTo::create(0.1f, 1.0f));
+        //             button->setLocalZOrder(0);
+        //         }
+        //     }
+        // }
+
+        if(type == ccui.Widget.TOUCH_ENDED){
+            var gameTag = sender.tag;
+            setGameTag(gameTag);
+            // SoundManager::getInstance()->playSound("sounds/button_click.mp3");
+            var isFound = false;
+            // for (game_id : Common::getInstance()->getEnableGameIds()) {
+            //     if (Common::getInstance()->getZoneId() == game_id) {
+            //         isFound = true;
+            //         break;
+            //     }
+            // }
+            var isFound = false;
+            var enableGameIds = getEnableGameIds();
+            for ( j = 0; j < enableGameIds.length; j++) {
+                if (enableGameIds[j] == getZoneId()) {
+                    isFound = true;
+                    break;
+                }
+            }
+            if (!isFound) {
+                // showToast("Game sắp ra mắt", 3);
+                return;
+            }
+            getEnterZoneMessageFromServer(getZoneId());
+        }
     }
 });
 

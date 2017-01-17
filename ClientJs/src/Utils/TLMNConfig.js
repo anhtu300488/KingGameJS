@@ -20,7 +20,8 @@ var SERVER_PORT = 1280;
 
 var PATH = "bigken";
 
-var url = "ws://"+SERVER_NAME+":"+SERVER_PORT+"/"+PATH;
+// var url = "ws://"+SERVER_NAME+":"+SERVER_PORT+"/"+PATH;
+var url = "ws://192.168.100.250:1280/bigken";
 var ws = new WebSocket(url);
 ws.binaryType = "arraybuffer";
 // ws.onopen = function() {
@@ -29,9 +30,9 @@ ws.binaryType = "arraybuffer";
 // ws.onerror = function(e) {
 //     // called in case of error, when connection is broken in example
 // };
-// ws.onclose = function() {
-//     // called when connexion is closed
-// };
+//         ws.onclose = function (e) {
+//             setTimeout(function(){sendData()}, 120);
+//         };
 
 
 var GAMECOLOR = {
@@ -184,7 +185,16 @@ var TAG = {
     XOCDIA_ZONE: 15,
     TAMXINGAU_ZONE: 17,
     WHEEL_ZONE: 18,
-    MINIPOKER_ZONE: 19
+    MINIPOKER_ZONE: 19,
+
+    //REG
+    REG_SCENE: 40,
+    REG_BTN_REGISTER: 41,
+    REG_BTN_BACK: 42,
+    REG_EDITBOX_NHAP_MATKHAU: 43,
+    REG_EDITBOX_NHAPLAI_MATKHAU: 44,
+    REG_EDITBOX_NHAP_SDT: 45,
+    REG_EDITBOX_NHAP_TEN: 46
 }
 
 
@@ -226,3 +236,38 @@ var GAME_STATE = {
     SCENE_TABLE : 4,
     IN_GAME : 5
 };
+
+var REGISTER = {
+    //register
+    MAX_LENGTH_USERNAME: 12,
+    MIN_LENGTH_USERNAME: 3,
+    MAX_LENGTH_PASSWORD: 12,
+    MIN_LENGTH_PASSWORD: 6,
+    MIN_LENGTH_SERIA: 10,
+    MAX_LENGTH_SERIA: 20,
+    MAX_LENGTH_SDT: 15,
+
+    TAG_MAIL_CONTENT: 280,
+    TAG_MAIL_DEL: 281,
+    TAG_MAIL_READ: 282,
+    TAG_MAIL_RECV: 283,
+    TAG_MAIL_VIEW_READ: 284,
+    TAG_MAIL_HOME: 285
+};
+
+var LOGIN = {
+    BTN_GOOGLE: "btn_google.png",
+    BTN_DANGKY: "btn_dang_ky.png",
+    BTN_DANGNHAP: "btn_dangnhap.png",
+    BTN_FACEBOOK: "btn_facebook.png",
+    BTN_HOTLINE: "btn_hotline.png",
+    BTN_PHONE: "btn_phone.png",
+    CHECK_BOX: "check_box.png",
+    CHECKEDIT_PASSWORD: "checkedit_password.png",
+    SPRITE_GIRL: "sprite_cogai.png",
+    EDIT_PASSWORD: "edit_password.png",
+    SPRITE_BIGKEN: "sprite_bigken.png",
+    BTN_BUTTON: "btn_button.png",
+    SPRITE_CARD: "sprite_card.png"
+};
+

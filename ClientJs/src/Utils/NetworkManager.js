@@ -281,72 +281,9 @@ var initData = function(request, os, messid, _session, len)
 }
 
 var callNetwork = function(ackBuf) {
-    // sendData(ackBuf);
-    // cc.log("ws", ws);
-    // cc.log("ws.readyState", ws.readyState);
-    // cc.log("ws.OPEN", ws.OPEN);
-    // if(ws.readyState  === ws.OPEN){
-    //     cc.log("ws.OPEN", ws.readyState);
-        // doSend(ackBuf);
-    // connectSocket(ackBuf);
-    // protoBuf.dataBuf(ackBuf);
-    // }
-
-    // ws.onopen = function(e) {
-    //     cc.log("send");
-        cc.log("status", ws.readyState);
-        ws.send(ackBuf);
-    // };
-
-    sleep(NetworkManager.SEND_MESSAGE_DELAY);
+    cc.log("status", ws.readyState);
+    ws.send(ackBuf);
 }
-
-//Gui du lieu
-// var sendData = function(ackBuf) {
-//     cc.log("sendData");
-//     //call websocket
-//     try {
-//         var url = "ws://"+SERVER_NAME+":"+SERVER_PORT+"/"+PATH;
-//         // var url = "ws://192.168.100.32:1280/bigken";
-//         ws = new WebSocket(url);
-//         ws.binaryType = "arraybuffer";
-//         cc.log("url", url);
-//         ws.onopen = function() {
-//             cc.log("send");
-//             ws.send(ackBuf);
-//         };
-//         ws.onmessage = function (e) {
-//             cc.log("data", e);
-//             cc.log("e.data.byteLength", e.data.byteLength);
-//             if( (e.data!==null || e.data !== 'undefined') && e.data.byteLength !== 'undefined')
-//             {
-//                 var listMessages = parseFrom(e.data, e.data.byteLength);
-//
-//                 var messageid = listMessages['messageid'];
-//
-//                 cc.log("messageid", messageid);
-//
-//                 switch (messageid){
-//                     case NetworkManager.INITIALIZE:
-//                         cc.director.runScene(new LoginScene());
-//                         break;
-//                     // default:
-//                     //     cc.director.runScene(new LoginScene());
-//                     //     break;
-//                 }
-//             }
-//         };
-//         ws.onclose = function (e) {
-//             setTimeout(function(){sendData()}, 120);
-//         };
-//         ws.onerror = function (e) {
-//             cc.log("error: ", e);
-//         };
-//     } catch (e) {
-//         cc.log("error: ", e);
-//         cc.error('Sorry, the web socket at "%s" is un-available', url);
-//     }
-// }
 
 var parseFrom = function(read_str, len)
 {
@@ -377,6 +314,7 @@ var parseFrom = function(read_str, len)
 
         /*if is_compress = 1 */
         if (is_compress == 1) {
+            cc.log("zip");
             var left_block = bb.copy(_offset);
             var dataUnzip = cc.unzip(left_block);
             // google::protobuf::io::CodedInputStream::Limit msgLimit =
@@ -413,6 +351,7 @@ var parseFrom = function(read_str, len)
             // }
         }
         else {
+            cc.log("unzip");
             /* if is_compression = 0 */
             while (left_byte_size > 0) {
                 //read protobuf + data_size_block + mid
@@ -437,7 +376,11 @@ var parseFrom = function(read_str, len)
 
                 cc.log("protoBufVar = ", protoBufVar);
 
+                cc.log("messageid:" + messageid);
+
                 response = getTypeMessage(response, messageid, protoBufVar);
+
+                cc.log("response: " + response + ", messageid:" + messageid);
 
                 if (response != 0) {
                     left_byte_size -= (data_size_block + 2);
@@ -748,109 +691,6 @@ var getPingMessageFromServer = function(disconnect_time) {
 
 }
 
-var recvMessage = function() {
-
-    var listMessages;
-    firstTimeDisconnect = -1;
-    _isRecvMessage = true;
-
-    while (isListening()) {
-        cc.log("recvMessage");
-        if (!isConnected())  {
-            break;
-        }
-
-        // var canRead = islengthBuffer();
-        // var canRead = lengthBufferReader;
-        cc.log("canRead", canRead);
-        if (canRead > 0) {
-            cc.log(">0");
-            _disconnected = false;
-            // connectTime = new Date().toLocaleTimeString();
-            // bufferRead.resize(canRead);
-            // lstBuffer.push(bufferRead);
-            // firstTimeDisconnect = -1;
-        }
-        else {
-            cc.log("<0");
-            _disconnected = true;
-        //     current_time = new Date().toLocaleTimeString();
-        //     disconnect_duration =  current_time - connectTime;
-        //     CCLOG("disconnect duration :%lld", disconnect_duration);
-        //
-        //     if (disconnect_duration + NetworkManager::EPS <= NetworkManager::MAX_CONNECTION) {
-        //
-        //         if(firstTimeDisconnect == -1)
-        //             firstTimeDisconnect = current_time;
-        //
-        //         if(current_time - firstTimeDisconnect >= NetworkManager::MAX_LAG_TIME) {
-        //
-        //             if (isConnected()) {
-        //                 closeConnection();
-        //             }
-        //             //run in UI thread
-        //             Director::getInstance()->getScheduler()->performFunctionInCocosThread([&]{
-        //                 auto scene = cocos2d::Director::getInstance()->getRunningScene();
-        //                 if(scene->getChildByTag(TAG_POPUP_RECONNECT) == nullptr){
-        //                     auto reconnect = PopupReconnect::create();
-        //                     scene->addChild(reconnect);
-        //                     reconnect->showPopup();
-        //                 }else{
-        //                     auto reconnect = (PopupReconnect*)scene->getChildByTag(TAG_POPUP_RECONNECT);
-        //                     reconnect->showPopup();
-        //                 }
-        //             });
-        //         }
-        //
-        //     }
-        //
-        //     if ((disconnect_duration + NetworkManager::EPS > NetworkManager::MAX_CONNECTION)) {
-        //         //handle packet loss, timeout
-        //         if (isConnected()) {
-        //             closeConnection();
-        //         }
-        //
-        //         //run in UI thread
-        //         Director::getInstance()->getScheduler()->performFunctionInCocosThread([&]{
-        //             auto scene = cocos2d::Director::getInstance()->getRunningScene();
-        //             if(scene->getChildByTag(TAG_POPUP_RECONNECT) == nullptr){
-        //                 auto reconnect = PopupReconnect::create();
-        //                 scene->addChild(reconnect);
-        //                 reconnect->showPopup();
-        //             }else{
-        //                 auto reconnect = (PopupReconnect*)scene->getChildByTag(TAG_POPUP_RECONNECT);
-        //                 reconnect->showPopup();
-        //             }
-        //         });
-        //     }
-        //     disconnect_time = current_time;
-        }
-        // Common::getInstance()->sleep(DATA_DELAY);
-    }
-    _isRecvMessage = false;
-
-    cc.log("recv message");
-}
-
-var connect = function() {
-    try {
-        // mtx.lock();
-        _disconnected = false;
-        if (!isConnected()) {
-            cc.log("connectServer");
-            // connectServer(SERVER_NAME, SERVER_PORT);
-            connectServer();
-        }
-
-        // mtx.unlock();
-    }
-    catch (e) {
-        cc.log("Can not connected server, try again!");
-        // mtx.unlock();
-    }
-
-}
-
 var isConnected = function(){
     return _connected;
 }
@@ -868,101 +708,11 @@ var isDisconnected = function() {
     return _disconnected;
 }
 
-// var connectServer = function(ip,port) {
-var connectServer = function() {
-    cc.log("connectSocket");
-    var data = null;
-    connectSocket(data);
-    // return _connected;
-}
-
-var setListening = function(_isListening) {
-    listening = _isListening;
-}
-
-var isListening = function() {
-    return listening;
-}
-
 var closeConnection = function() {
-    setListening(false);
     _connected = false;
     ws.onclose();
     setDisconnected(true);
 }
-
-var listenData = function() {
-    cc.log("Listen data");
-    if (!_isRecvMessage) {
-        recvMessage();
-    }
-
-    cc.log("handle data");
-    if (!_isHandleMessage) {
-        handlerMessage();
-    }
-}
-
-var setHanderMessage = function(_isHandleMessage) {
-    _isHandleMessage = _isHandleMessage;
-}
-
-var isHandleMessage = function() {
-    return _isHandleMessage;
-}
-
-var handlerMessage = function(){
-    _isHandleMessage = true;
-    while (isListening()) {
-        cc.log("handerMessage");
-        // mtx.lock();
-        while (!lstBuffer.empty()) {
-            var buffer = lstBuffer.front();
-            if (buffer.size() > 0) {
-                var listMessages = parseFrom(buffer, buffer.size());
-                if (listMessages.size() > 0) {
-                    for (i = 0; i < listMessages.size(); i++) {
-                        listEvent.push(listMessages[i]);
-                    }
-                }
-            }
-            lstBuffer.pop();
-        }
-        // mtx.unlock();
-        // Common::getInstance()->sleep(DATA_DELAY);
-
-    }
-    listEvent.clear();
-    _isHandleMessage = false;
-}
-
-ws.onmessage = function(e) {
-    // called when the server sends a message to the client.
-    // msg.data contains the message.
-    cc.log("data 1", e);
-    if(e.data!==null || e.data !== 'undefined')
-    {
-        var listMessages = parseFrom(e.data, e.data.byteLength);
-
-        var messageid = listMessages['messageid'];
-
-        cc.log("messageid", messageid);
-
-        switch (messageid){
-            case NetworkManager.INITIALIZE:
-                //call init response function
-                initialMessageResponseHandler(listMessages);
-                break;
-            case NetworkManager.LOGIN:
-                //call init response function
-                loginResponseHandler(listMessages);
-                break;
-            // default:
-            //     cc.director.runScene(new LoginScene());
-            //     break;
-        }
-    }
-};
 
 var setInitialize = function(is_initialized) {
     _initialized = is_initialized;
@@ -971,3 +721,17 @@ var setInitialize = function(is_initialized) {
 var isInitialized = function() {
     return _initialized;
 }
+
+var getEnterZoneMessageFromServer = function(zoneId) {
+    var request = new BINEnterZoneRequest();
+    request.setZoneId(zoneId);
+    requestMessage(request, getOS(),NetworkManager.ENTER_ZONE, getSessionId());
+}
+
+// var getFilterRoomMessageFromServer = function(zone_id, roomType,
+//     int first_result, int max_result, int orderByField, bool asc) {
+//     google::protobuf::Message *request = initFilterRoomMessage(zone_id,
+//         roomType, first_result, max_result, orderByField, asc);
+//     requestMessage(request, Common::getInstance()->getOS(),
+//         NetworkManager::FILTER_ROOM, Common::getInstance()->getSessionId());
+// }

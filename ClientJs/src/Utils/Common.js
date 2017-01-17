@@ -1,7 +1,7 @@
 /**
  * Created by MyPC on 12/12/2016.
  */
-
+var os = 0;
 var getTitleGame = function(){
     var title_game = "";
 
@@ -135,7 +135,7 @@ var getCp = function() {
 }
 
 var getVersionCode = function() {
-    return "9";
+    return "14";
 }
 
 var getCountry = function() {
@@ -162,7 +162,7 @@ var getDeviceInfo = function() {
 }
 
 var getPackageName = function() {
-    return "com.bigken.game.b";
+    return "com.bigken.ninth.january.seventeen";
 }
 
 var getAppVersion = function() {
@@ -283,4 +283,146 @@ var setEnableGameIds = function(gameids) {
 }
 var getEnableGameIds = function() {
     return this.enableGameIds;
+}
+
+var setSessionId = function(_sessionid) {
+    this.sessionId = _sessionid;
+}
+
+var getSessionId = function() {
+    // if (sessionId == "-1") {
+    //     sessionId = getStringForKey(Common.KEY_SESSION_ID);
+    // }
+    return this.sessionId;
+}
+
+var isHasPlayingMatch = function() {
+    return this.hasPlayingMatch;
+}
+
+var setHasPlayingMatch = function(_hasPlayingMatch) {
+    this.hasPlayingMatch = _hasPlayingMatch;
+}
+
+var getUserName = function() {
+    return this.userName;
+}
+
+var setUserName = function(userName) {
+    this.userName = userName;
+}
+
+var getDisplayName = function() {
+    // if (this.displayName.empty()){
+    //     return getUserName();
+    // }
+    return this.displayName;
+}
+
+var setDisplayName = function(displayName) {
+    this.displayName = displayName;
+}
+
+var getLevel = function() {
+    return this.level;
+}
+
+var setLevel = function(level) {
+    this.level = level;
+}
+
+var getCash = function() {
+    return this.cash;
+}
+
+var setCash = function(cash) {
+    this.cash = cash;
+}
+
+var setGold = function(gold) {
+    this.gold = gold;
+}
+
+var getGold = function() {
+    return this.gold;
+}
+
+var getAvatarId = function() {
+    if (this.avatarId < 100000){
+        return 0;
+    }
+    return this.avatarId;
+}
+
+var setAvatarId = function(avatarId) {
+    this.avatarId = avatarId;
+}
+
+var setPhoneNunber= function(phoneNumber){
+    this.phoneNumber = phoneNumber;
+}
+
+var getPhoneNumber= function(){
+    return this.phoneNumber;
+}
+
+var setAccountVerify = function(accountVerify){
+    this.accountVerify = accountVerify;
+}
+
+var getAccountVerify = function(){
+    return this.accountVerify;
+}
+
+var setDisableCashTransaction = function(disableCashTransaction){
+    this.disableCashTransaction = disableCashTransaction;
+}
+
+var getDisableCashTransaction = function(){
+    return this.disableCashTransaction;
+}
+
+var setSecurityKeySeted = function(securityKeySeted){
+    this.securityKeySeted = securityKeySeted;
+}
+
+var getSecurityKeySeted = function(){
+    return this.securityKeySeted;
+}
+
+var setAutoReady = function(autoReady) {
+    this._autoReady = autoReady;
+}
+
+var isAutoRead = function() {
+    return this._autoReady;
+}
+
+var setAutoDenyInvitation = function(autoDenyInvitation) {
+    this._autoDenyInvitation = autoDenyInvitation;
+}
+
+var isAutoDenyInvitation = function() {
+    return this._autoDenyInvitation;
+}
+
+var getOS = function()  {
+    // if (os == 0) {
+    //     #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    //             os = ANDROID_PLATFORM;
+    //     #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+    //             os =IOS_PLATFORM;
+    //     #else
+    //             os = ANDROID_PLATFORM;
+    //     #endif
+    // }
+    return os;
+}
+
+var setGameState = function(state) {
+    this.state = state;
+}
+
+var getGameState = function() {
+    return this.state;
 }

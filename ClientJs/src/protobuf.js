@@ -24,7 +24,7 @@
     /* AMD */ if (typeof define === 'function' && define["amd"])
         define(["bytebuffer"], factory);
     /* CommonJS */ else if (typeof require === "function" && typeof module === "object" && module && module["exports"])
-        module["exports"] = factory(require("./bytebuffer"), true);
+        module["exports"] = factory(require("bytebuffer"), true);
     /* Global */ else
         (global["dcodeIO"] = global["dcodeIO"] || {})["ProtoBuf"] = factory(global["dcodeIO"]["ByteBuffer"]);
 
@@ -5147,10 +5147,7 @@
      */
     ProtoBuf.protoFromFile = ProtoBuf.loadProtoFile; // Legacy
 
-    // modified supersuraccoon
-    ProtoBuf.protoFromContents = function(filename, builder, contents) {
-        return contents === null ? null : ProtoBuf.loadProto(contents, builder, filename);
-    };
+
     /**
      * Constructs a new empty Builder.
      * @param {Object.<string,*>=} options Builder options, defaults to global options set on ProtoBuf

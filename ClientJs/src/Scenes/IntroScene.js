@@ -121,10 +121,11 @@ var IntroLayer = cc.Layer.extend({
         switch (buffer.message_id) {
             case NetworkManager.INITIALIZE:
                 var msg = buffer.response;
-                cc.log("message :" , msg);
-                if(msg.responseCode) {
-                    cc.director.runScene(new LoginScene());
-                }
+                initialMessageResponseHandler(msg);
+                // cc.log("message :" , msg);
+                // if(msg.responseCode) {
+                //     cc.director.runScene(new LoginScene());
+                // }
                 break;
         }
     }

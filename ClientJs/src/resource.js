@@ -66,7 +66,11 @@ var res = {
     IMAGE_CLOSE: "res/ic_button_close.png",
     popup_girl_hotline: "res/popup_hotline/girl_hotline.png",
     popup_btn_call: "res/popup_hotline/btn_call.png",
-    LOGIN_SPRITE_BIGKEN: "res/sprite_bigken.png"
+    LOGIN_SPRITE_BIGKEN: "res/sprite_bigken.png",
+    ICON_DOI_THUONG: "res/DOI_THUONG.png",
+    LOGIN_SPRITE_CARD: "res/sprite_card.png",
+    LOGIN_SPRITE_GIRL: "res/sprite_cogai.png",
+    LOGIN_EDIT_PASSWORD: "res/edit_password.png"
 };
 
 var g_resources = [];
