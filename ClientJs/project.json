@@ -49,6 +49,7 @@
         "src/UI/Popup.js",
         "src/UI/MEditBox.js",
         "src/Popups/PopupHotLine.js",
+        "src/Popups/PopupMessageBox.js",
         "src/protobufObject/BINInitializeResponse.js",
         "src/protobufObject/BINLevelUpResponse.js",
         "src/protobufObject/BINLoginResponse.js",
