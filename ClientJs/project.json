@@ -33,9 +33,11 @@
         "src/app.js",
         "src/bytebuffer.js",
         "src/protobuf.js",
+        "src/long.js",
         "src/Scenes/LoginScene.js",
         "src/Scenes/PlayScene.js",
         "src/Scenes/BaseScene.js",
+        "src/Scenes/RegisterScene.js",
         "src/Scenes/ShowGame.js",
         "src/Scenes/IntroScene.js",
         "src/Utils/TLMNConfig.js",
@@ -52,6 +54,7 @@
         "src/protobufObject/BINInitializeResponse.js",
         "src/protobufObject/BINLevelUpResponse.js",
         "src/protobufObject/BINLoginResponse.js",
-        "src/protobufObject/BINMedalUpResponse.js"
+        "src/protobufObject/BINMedalUpResponse.js",
+        "src/protobufObject/BINRegisterResponse.js"
     ]
 }

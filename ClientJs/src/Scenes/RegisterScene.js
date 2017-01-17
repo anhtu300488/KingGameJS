@@ -12,6 +12,8 @@ var RegisterLayer = cc.Layer.extend({
 
         setGameState(GAME_STATE.REGISTER_SCENE);
 
+        cc.log("sys", cc.sys.os);
+
         var spriteBG = new cc.Sprite(res.item_background);
 
         var spriteWidth = spriteBG.getContentSize().width;
