@@ -21,4 +21,4 @@ message BINLoginResponse {
 	optional bool enableNotification = 9;
 }
 
-//End Login 
+//End Login
