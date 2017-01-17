@@ -256,18 +256,18 @@ var REGISTER = {
 };
 
 var LOGIN = {
-    BTN_GOOGLE: "btn_google.png",
-    BTN_DANGKY: "btn_dang_ky.png",
-    BTN_DANGNHAP: "btn_dangnhap.png",
-    BTN_FACEBOOK: "btn_facebook.png",
-    BTN_HOTLINE: "btn_hotline.png",
-    BTN_PHONE: "btn_phone.png",
-    CHECK_BOX: "check_box.png",
-    CHECKEDIT_PASSWORD: "checkedit_password.png",
-    SPRITE_GIRL: "sprite_cogai.png",
-    EDIT_PASSWORD: "edit_password.png",
-    SPRITE_BIGKEN: "sprite_bigken.png",
-    BTN_BUTTON: "btn_button.png",
-    SPRITE_CARD: "sprite_card.png"
+    BTN_GOOGLE: "res/btn_google.png",
+    BTN_DANGKY: "res/btn_dang_ky.png",
+    BTN_DANGNHAP: "res/btn_dangnhap.png",
+    BTN_FACEBOOK: "res/btn_facebook.png",
+    BTN_HOTLINE: "res/btn_hotline.png",
+    BTN_PHONE: "res/btn_phone.png",
+    CHECK_BOX: "res/check_box.png",
+    CHECKEDIT_PASSWORD: "res/checkedit_password.png",
+    SPRITE_GIRL: "res/sprite_cogai.png",
+    EDIT_PASSWORD: "res/edit_password.png",
+    SPRITE_BIGKEN: "res/sprite_bigken.png",
+    BTN_BUTTON: "res/btn_button.png",
+    SPRITE_CARD: "res/sprite_card.png"
 };
 

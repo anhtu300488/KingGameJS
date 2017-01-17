@@ -302,7 +302,6 @@ var LoginLayer = cc.Layer.extend({
         var buffer = e;
         switch (buffer.message_id) {
             case NetworkManager.LOGIN:
-                cc.log("message :" , msg);
                 var msg = buffer.response;
                 loginResponseHandler(msg);
                 break;

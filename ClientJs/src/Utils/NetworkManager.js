@@ -194,6 +194,29 @@ var initLoginMessage = function(username, password) {
     return loginProto.encode();
 }
 
+var getRegisterMessageFromServer = function(username, password, confirm_password, full_name, sdt) {
+    request = initRegisterMessage(username, password, confirm_password, full_name, sdt);
+    requestMessage(request, 1, NetworkManager.REGISTER, "");
+}
+
+var initRegisterMessage = function(username, password, confirm_password, full_name, sdt) {
+    cc.log("initRegisterMessage");
+
+    var ProtoBuf = dcodeIO.ProtoBuf,
+        RegisterProtobuf = ProtoBuf.loadProtoFile('res/protobuf/register.proto').build('bigken.register'),
+        RegisterProto = RegisterProtobuf.BINRegisterRequest;
+
+    var registerProto = new RegisterProto({
+        userName: username,
+        password: password,
+        confirmPassword: confirm_password,
+        displayName: full_name,
+        mobile: sdt
+    });
+
+    return registerProto.encode();
+}
+
 //function request message
 var requestMessage = function(request, os, message_id, session_id) {
     cc.log("requestMessage");
@@ -412,9 +435,9 @@ var getTypeMessage = function(msg, messageid, protoBufVar) {
         case NetworkManager.INITIALIZE:
             msg = BINInitializeResponse(protoBufVar);
             break;
-        // case NetworkManager.REGISTER:
-        //     msg = new BINRegisterResponse();
-        //     break;
+        case NetworkManager.REGISTER:
+            msg = new BINRegisterResponse(protoBufVar);
+            break;
         case NetworkManager.LOGIN:
             msg = new BINLoginResponse(protoBufVar);
             break;
