@@ -3,9 +3,6 @@
  */
 
 var LoginLayer = cc.Layer.extend({
-    loginType:null,
-    eboxNhapTK:null,
-    eboxNhapMK:null,
     ctor:function () {
         //////////////////////////////
         // 1. super init first
@@ -39,7 +36,7 @@ var LoginLayer = cc.Layer.extend({
         light_bkg.setPosition(cc.p(0, 0));
         this.addChild(light_bkg);
 
-        var pageView = new ccui.PageView();
+        /*var pageView = new ccui.PageView();
         pageView.setTouchEnabled(true);
         pageView.setContentSize(cc.size(400, 800));
         pageView.setAnchorPoint(cc.p(0.5, 0.5));
@@ -66,9 +63,23 @@ var LoginLayer = cc.Layer.extend({
 
             pageView.addPage(layout);
         }
-        this.addChild(pageView);
+        this.addChild(pageView);*/
 
-        var btn_login_facebook = MButton.createWithText(res.LOGIN_BTN_FACEBOOK,TXT.LOGIN_BTN_FACEBOOK,TAG.LOGIN.BTN_LOGIN_FB);
+        var girl = MSprite.create(res.LOGIN_SPRITE_GIRL);
+        var girl_scale = 0.9*height / girl.getHeight();
+
+        var sprite_card = MSprite.create(res.LOGIN_SPRITE_CARD);
+        sprite_card.setScale(girl_scale);
+        sprite_card.setPosition(MVec2(0,0));
+        this.addChild(sprite_card);
+
+        girl.setScale(girl_scale);
+        girl.setAnchorPoint(cc.p(0.5,0));
+        girl.setPosition(cc.p(originX + sprite_card.getWidth() * sprite_card.getScale() / 2, 0));
+        this.addChild(girl);
+
+        var btn_login_facebook = MButton.createWithText(res.LOGIN_BTN_FACEBOOK,
+            TXT.LOGIN_BTN_FACEBOOK,TAG.LOGIN.BTN_LOGIN_FB);
         btn_login_facebook.setPosition(MVec2(width-btn_login_facebook.getWidth() *5/4,
             height/2-btn_login_facebook.getHeight()*(3 + 3*0.2)));
         btn_login_facebook.setZoomScale(0.01);
@@ -76,7 +87,8 @@ var LoginLayer = cc.Layer.extend({
         this.addChild(btn_login_facebook);
 
         //choi ngay
-        var btn_playnow = MButton.createWithText(res.LOGIN_BTN_CHOI_NGAY,TXT.LOGIN_BTN_PLAYNOW,TAG.LOGIN.BTN_LOGIN_GOOGLE);
+        var btn_playnow = MButton.createWithText(res.LOGIN_BTN_CHOI_NGAY,
+            TXT.LOGIN_BTN_PLAYNOW,TAG.LOGIN.BTN_LOGIN_GOOGLE);
         btn_playnow.setPosition(cc.p(btn_login_facebook.getPosition().x,
             btn_login_facebook.getPosition().y + btn_login_facebook.getHeight()*1.2));
         btn_playnow.addTouchEventListener( this.menuCallBack,this);
@@ -90,14 +102,16 @@ var LoginLayer = cc.Layer.extend({
         this.addChild(btn_login);
 
         //đăng ký
-        var btn_register = MButton.createWithText(res.LOGIN_BTN_REGISTER, TXT.LOGIN_BTN_REGISTER , TAG.LOGIN.BTN_REGISTER);
-        btn_register.setPosition(cc.p(btn_playnow.getPosition().x + btn_playnow.getWidth() - btn_register.getWidth(),
-            btn_login.getPosition().y));
+        var btn_register = MButton.createWithText(res.LOGIN_BTN_REGISTER,
+            TXT.LOGIN_BTN_REGISTER , TAG.LOGIN.BTN_REGISTER);
+        btn_register.setPosition(cc.p(btn_playnow.getPosition().x + btn_playnow.getWidth() -
+            btn_register.getWidth(), btn_login.getPosition().y));
         btn_register.addTouchEventListener( this.menuCallBack,this);
         this.addChild(btn_register);
 
         //quen mk
-        var fogotPassword = MButton.createTextSizeTag("Quên mật khẩu?",btn_register.getHeight()*0.25,TAG.LOGIN.BTN_FORGET_PASSWORD);
+        var fogotPassword = MButton.createTextSizeTag("Quên mật khẩu?",
+            btn_register.getHeight()*0.25,TAG.LOGIN.BTN_FORGET_PASSWORD);
         cc.log("fogotPassword", fogotPassword.getContentSize().width);
         fogotPassword.setPosition(cc.p(btn_playnow.getPosition().x + btn_playnow.getWidth() -
             fogotPassword.getContentSize().width*1.1,
@@ -106,56 +120,42 @@ var LoginLayer = cc.Layer.extend({
         this.addChild(fogotPassword);
 
         var editBackgroundMatKhau = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
-        editBackgroundMatKhau.setPosition(cc.p(btn_playnow.getPositionX(),
-            btn_playnow.getPositionY() + btn_playnow.getHeight()*2.75));
+        editBackgroundMatKhau.setPosition(cc.p(btn_playnow.getPositionX(),btn_playnow.getPositionY() +
+            btn_playnow.getHeight()*2.75));
         this.addChild(editBackgroundMatKhau);
 
         var fontSize = editBackgroundMatKhau.getContentSize().height / 3;
 
-        this.eboxNhapMK = new cc.EditBox(editBackgroundMatKhau.getContentSize()*0.8,
-            cc.Scale9Sprite.create(res.LOGIN_SPRITE_EDIT_BOX_NULL),
-            cc.Scale9Sprite.create(res.LOGIN_SPRITE_EDIT_BOX_NULL));
-        this.eboxNhapMK.setPlaceHolder("Nhập Mật Khẩu");
+        this.eboxNhapMK = MEditBox.create(editBackgroundMatKhau.getContentSize()*0.8,
+            res.LOGIN_SPRITE_EDIT_BOX_NULL,fontSize,"Nhập Mật Khẩu");
         this.eboxNhapMK.setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD);
         this.eboxNhapMK.setPosition(cc.p(editBackgroundMatKhau.getPositionX() +
-            editBackgroundMatKhau.getContentSize().width*0.05,
+            editBackgroundMatKhau.getContentSize().width*0.1,
             editBackgroundMatKhau.getPositionY() + editBackgroundMatKhau.getHeight()/2));
-        this.eboxNhapMK.setPlaceholderFontSize(fontSize);
-        this.eboxNhapMK.setFontSize(fontSize);
         this.eboxNhapMK.setMaxLength(12);
-        this.eboxNhapMK.setFontColor({"r": 50, "g": 50, "b": 50});
+        this.eboxNhapMK.setFontColor(cc.Color(50,50,50,255));
         this.eboxNhapMK.setDelegate(this);
         this.addChild(this.eboxNhapMK);
 
-        cc.log("x =", editBackgroundMatKhau.getPositionX());
-
-        cc.log("y =", editBackgroundMatKhau.getHeight());
-
         var editBackgroundTaiKhoan = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
-        editBackgroundTaiKhoan.setPosition(cc.p(btn_playnow.getPosition().x,
-            btn_playnow.getPosition().y + btn_playnow.getHeight()*2.75 + 15 + editBackgroundTaiKhoan.getHeight()));
+        editBackgroundTaiKhoan.setPosition(cc.p(btn_playnow.getPosition().x,btn_playnow.getPosition().y +
+            btn_playnow.getHeight()*2.75 + 15 + editBackgroundTaiKhoan.getHeight()));
         this.addChild(editBackgroundTaiKhoan);
 
-        this.eboxNhapTK = new cc.EditBox(editBackgroundTaiKhoan.getContentSize()*0.8,
-            cc.Scale9Sprite.create(res.LOGIN_SPRITE_EDIT_BOX_NULL),
-            cc.Scale9Sprite.create(res.LOGIN_SPRITE_EDIT_BOX_NULL));
-        this.eboxNhapTK.setPlaceHolder("Nhập Tài Khoản");
-        this.eboxNhapTK.setPlaceholderFontSize(fontSize);
-        this.eboxNhapTK.setFontSize(fontSize);
+        this.eboxNhapTK = MEditBox.create(editBackgroundTaiKhoan.getContentSize()*0.8,
+            res.LOGIN_SPRITE_EDIT_BOX_NULL,fontSize,"Nhập Tài Khoản");
         this.eboxNhapTK.setInputFlag(cc.EDITBOX_INPUT_FLAG_INITIAL_CAPS_ALL_CHARACTERS);
         this.eboxNhapTK.setPosition(cc.p(editBackgroundTaiKhoan.getPositionX() +
-            editBackgroundTaiKhoan.getContentSize().width*0.05,
+            editBackgroundTaiKhoan.getContentSize().width*0.1,
             editBackgroundTaiKhoan.getPositionY() + editBackgroundTaiKhoan.getHeight()/2));
         this.eboxNhapTK.setMaxLength(12);
-        this.eboxNhapTK.setFontColor({"r": 50, "g": 50, "b": 50});
+        this.eboxNhapTK.setFontColor(cc.Color(50,50,50,255));
         this.eboxNhapTK.setDelegate(this);
         this.addChild(this.eboxNhapTK);
 
-
         var bigken = MSprite.create(res.LOGIN_SPRITE_BIGKEN);
         bigken.setPosition(btn_playnow.getPosition().x+btn_playnow.getWidth()/2-bigken.getWidth()/2,
-            this.eboxNhapTK.getPosition().y+this.eboxNhapTK.getContentSize().height+25);
-
+            editBackgroundTaiKhoan.getPosition().y+editBackgroundTaiKhoan.getContentSize().height+20);
         this.addChild(bigken);
 
         cc.log("version ", getAppVersion());
@@ -167,9 +167,8 @@ var LoginLayer = cc.Layer.extend({
 
         //hotline
         var hotlines = getHotLines();
-        var hotline = MButton.createTextSizeTag("Hotline : " + "0983555555",//(hotlines.length > 0 ? hotlines[0] : ""),
+        var hotline = MButton.createTextSizeTag("Hotline : " + (hotlines.length > 0 ? hotlines[0] : ""),
             btn_register.getHeight()*0.25, TAG.LOGIN.BTN_HOT_LINE);
-        //auto hotline_txt = MLabel::create("Hotline : " + (hotlines.size() > 0 ? hotlines[0] : ""), background_matkhau->getHeight() / 3);
         hotline.setPosition(MVec2(hotline.getContentSize().height,height-hotline.getContentSize().height*2));
         hotline.setTitleFontName(res.FONT_THIN);
         hotline.setTitleFontSize(editBackgroundMatKhau.getHeight()/3);
@@ -257,7 +256,7 @@ var LoginLayer = cc.Layer.extend({
             popupMessage.appear();
             return;
         }
-        loginType = LOGIN_STATE.NORMAL_LOGIN;
+        //this.login_Type = LOGIN_STATE.NORMAL_LOGIN;
         getLoginMessageFromServer(user_name, pass_word);
     },
     loginFacebook: function () {

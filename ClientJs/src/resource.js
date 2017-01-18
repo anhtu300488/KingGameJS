@@ -1,9 +1,12 @@
 var res = {
-    FONT:{
-        FONT_BOLD: "res/fonts/gamevina_bold.ttf",
-        FONT_THIN: "res/fonts/gamevina_thin.ttf",
-        FONT_TITLE: "res/fonts/font_title.ttf",
-    },
+
+    FONT_BOLD_X : {type:"font", name:"FONT_BOLD_X", srcs:["res/fonts/gamevina_bold.ttf","res/fonts/gamevina_bold.eot"]},
+    FONT_THIN_X : {type:"font", name:"FONT_THIN_X", srcs:["res/fonts/gamevina_thin.ttf","res/fonts/gamevina_thin.eot"]},
+    FONT_TITLE_X : {type:"font", name:"FONT_TITLE_X", srcs:["res/fonts/font_title.ttf","res/fonts/font_title.eot"]},
+
+    FONT_BOLD: "res/fonts/gamevina_bold.ttt",
+    FONT_THIN: "res/fonts/gamevina_thin.ttf",
+    FONT_TITLE: "res/fonts/font_title.ttf",
 
     COMMON_SPRITE_ITEM_BACKGROUND: "res/item_background.png",
     COMMON_BTN_BLUE: "res/btn_blue.png",
@@ -41,9 +44,25 @@ var res = {
     /*
      */
 
-    HelloWorld_png : "res/HelloWorld.png",
+    POPUP:{
+
+    },
+
+    POPUP_XACNHAN_BACKGROUND : "res/popup/popup_xacnhan/content_popup.png",
+
+    POPUP_SETTING_BACKGROUND : "res/popup/popup_setting/bg_cai_dat.png",
+    POPUP_SETTING_CONTENT : "res/popup/popup_setting/content_cai_dat.png",
+    POPUP_SETTING_CONTENT_LINE : "res/popup/popup_setting/content_line_cai_dat.png",
+    POPUP_SETTING_ON : "res/popup/popup_setting/on.png",
+    POPUP_SETTING_OFF : "res/popup/popup_setting/off.png",
+    POPUP_SETTING_AUTO_READY : "res/popup/popup_setting/auto_ready.png",
+    POPUP_SETTING_DENY_INVITE : "res/popup/popup_setting/deny.png",
+    POPUP_SETTING_MUSIC : "res/popup/popup_setting/music.png",
+    POPUP_SETTING_PHONE : "res/popup/popup_setting/phone.png",
+    POPUP_SETTING_SOUND : "res/popup/popup_setting/sound.png",
+    POPUP_SETTING_VIBRATE : "res/popup/popup_setting/phone.png",
+
     item_background_png: "res/item_background.png",
-    bg_card_png: "res/bg_card.png",
     beer_bkg_png: "res/intro/beer_bkg.png",
     beer_sprite_png: "res/intro/beer_sprite.png",
     beer_bot_png: "res/intro/beer_bot.png",
@@ -55,8 +74,6 @@ var res = {
     btn_choingay_login : "res/btn_choingay_login.png",
     btn_dangnhap : "res/btn_dangnhap.png",
     btn_dang_ky : "res/btn_dang_ky.png",
-    edit_password : "res/edit_password.png",
-    edit_login_null : "res/edit_login_null.png",
     sprite_cogai : "res/sprite_cogai.png",
     btn_back_tlmn: "res/btn_back_tlmn.png",
     btn_moichoi: "res/popup_moichoi/btn_moichoi.png",
@@ -108,10 +125,26 @@ var res = {
     ICON_DOI_THUONG: "res/DOI_THUONG.png",
     LOGIN_SPRITE_CARD: "res/sprite_card.png",
     LOGIN_SPRITE_GIRL: "res/sprite_cogai.png",
-    LOGIN_EDIT_PASSWORD: "res/edit_password.png"
 };
 
 var g_resources = [];
 for (var i in res) {
     g_resources.push(res[i]);
 }
+
+var getFontName = function(resource) {
+    return cc.sys.isNative ? resource.srcs[0] : resource.name;
+}
+
+/*
+for ios :
+ for (NSString* family in [UIFont familyNames])
+ {
+ NSLog(@"%@", family);
+
+ for (NSString* name in [UIFont fontNamesForFamilyName: family])
+ {
+ NSLog(@"  %@", name);
+ }
+ }
+ */

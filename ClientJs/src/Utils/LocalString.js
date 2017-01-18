@@ -18,5 +18,23 @@ var TXT = {
     REGISTER_LABEL_NOTIFY: "Nhập số điện thoại để nhận đổi thưởng",
     CONNECT: "Kết nối",
     RECONNECT_MESSAGE: "Lỗi kết nối máy chủ, vui lòng thử lại.",
-    OK: "OK"
+    OK: "OK",
+
+    MUSIC_TEXT: "Nhạc nền",
+    SOUND_TEXT: "Âm thanh",
+    VIBARTE_TEXT: "Rung",
+    AUTO_READY_TEXT: "Tự động sẵn sàng",
+    DENY_INVITES_TEXT: "Từ chối lời mời",
+    AUTO_SIT_TEXT: "Tự động ngồi xuống"
+}
+
+var pref = {
+    MUSIC: "music",
+    SOUND: "sound",
+    VIBARTE: "vibarte",
+    AUTOREADY: "autoready",
+    DENY_INVITES: "denyinvites",
+    USER_INFOR: "user_infor",
+    AUTO_SIT: "auto_sit",
+    NOTIFY_TABLE: "notify_table"
 }

@@ -62,12 +62,14 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(btn_hopthu);
 
         // var sprite_new_mail = new cc.Sprite(res.bg_songuoixem);
-        // sprite_new_mail.setPosition(cc.p(btn_hopthu.getContentSize().width - sprite_new_mail.getContentSize().width*0.8,
+        // sprite_new_mail.setPosition(cc.p(btn_hopthu.getContentSize().width -
+        // sprite_new_mail.getContentSize().width*0.8,
         // btn_hopthu.getContentSize().height - sprite_new_mail.getContentSize().height*0.8));
         // btn_hopthu.addChild(sprite_new_mail);
         //
         //bg avatar
-        var bk_avatar = MSprite.create(res.TABLE_BK_AVATAR);
+        var bk_avatar = MSprite.createWithSize(res.TABLE_BK_AVATAR,
+            cc.size(btn_phone.getWidth(),btn_phone.getWidth()));
         bk_avatar.setAnchorPoint(cc.p(0,1));
         bk_avatar.setPosition(cc.p(btn_phone.getPositionX() + btn_phone.getContentSize().width + padding,
             btn_phone.getPositionY() + btn_phone.getContentSize().height));
@@ -76,10 +78,11 @@ var ShowGameLayer = cc.Layer.extend({
         // avartar
         // var avatar_id = 100000;
         var avatar_id = getAvatarId() ? getAvatarId() : 100000;
-        var btn_avatar = MButton.create( cc.formatStr("res/avatar%d.png", avatar_id), TAG.SHOW_BTN_AVATAR);
-        btn_avatar.setAnchorPoint(cc.p(0.5,0.5));
-        btn_avatar.setPosition(cc.p(bk_avatar.getPositionX() + bk_avatar.getContentSize().width / 2,
-            bk_avatar.getPositionY() - bk_avatar.getContentSize().height / 2));
+        var btn_avatar = MButton.createWidthSize(cc.formatStr("res/avatar%d.png", avatar_id),
+            cc.size(btn_phone.getWidth(),btn_phone.getWidth()),TAG.SHOW_BTN_AVATAR);
+        btn_avatar.setAnchorPoint(cc.p(0,1));
+        btn_avatar.setPosition(cc.p(bk_avatar.getPositionX(),
+            bk_avatar.getPositionY()));
         // btn_avatar.addTouchEventListener();
         this.addChild(btn_avatar);
 
@@ -87,20 +90,21 @@ var ShowGameLayer = cc.Layer.extend({
         var user_id = 1;
         var label_id = MLabel.create(cc.formatStr("ID: %d", user_id), bk_avatar.getContentSize().height / 4, true);
         label_id.setAnchorPoint(cc.p(0,1));
-        label_id.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width + padding, btn_avatar.getPositionY()));
+        label_id.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width,
+            btn_avatar.getPositionY()));
         this.addChild(label_id);
 
         //ten hien thi
         // var userName = 'Tu_Atula';
         var userName = getDisplayName() ? getDisplayName() : 'Tu_Atula';
         var label_name = MLabel.create(userName, bk_avatar.getContentSize().height / 4, true);
-        label_name.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width + padding,
-            btn_phone.getPositionY() + btn_phone.getContentSize().height / 2));
+        label_name.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width +
+            label_name.getWidth()/2,
+            btn_phone.getPositionY() + btn_phone.getContentSize().height / 2 - label_name.getHeight()/2));
         this.addChild(label_name);
 
-
-
-        var widthName = label_name.getContentSize().width > label_id.getContentSize().width ? label_name.getContentSize().width : label_id.getContentSize().width;
+        var widthName = label_name.getContentSize().width > label_id.getContentSize().width ?
+            label_name.getContentSize().width : label_id.getContentSize().width;
 
         var widthXuKen = btn_hopthu.getPositionX() - (label_name.getPositionX() + widthName + 3 * padding);
 
@@ -118,13 +122,14 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(_bgr_ken);
 
         var sprite_ken = MSprite.create(res.TABLE_SPRITE_KEN);
-        sprite_ken.setPosition(cc.p(_bgr_ken.getPositionX() + _bgr_ken.getContentSize().width * scale_xuken - sprite_ken.getContentSize().width - 5,
+        sprite_ken.setPosition(cc.p(_bgr_ken.getPositionX() + _bgr_ken.getContentSize().width * scale_xuken -
+            sprite_ken.getContentSize().width - 5,
             _bgr_ken.getPositionY() + _bgr_ken.getContentSize().height / 2 - sprite_ken.getContentSize().height / 2));
         this.addChild(sprite_ken);
 
         var sprite_napken = MSprite.create(res.TABLE_SPRITE_NAPKEN);
-        sprite_napken.setPosition(cc.p(_bgr_ken.getPositionX() + 5,
-            _bgr_ken.getPositionY() + _bgr_ken.getContentSize().height / 2 - sprite_napken.getContentSize().height / 2));
+        sprite_napken.setPosition(cc.p(_bgr_ken.getPositionX() + 5,_bgr_ken.getPositionY() +
+            _bgr_ken.getContentSize().height / 2 - sprite_napken.getContentSize().height / 2));
         this.addChild(sprite_napken);
 
         //xu
@@ -136,7 +141,8 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(_bgr_xu);
 
         var sprite_xu = MSprite.create(res.SPRITE_XU);
-        sprite_xu.setPosition(cc.p(_bgr_xu.getPositionX() + _bgr_xu.getContentSize().width * scale_xuken - sprite_xu.getContentSize().width - 5,
+        sprite_xu.setPosition(cc.p(_bgr_xu.getPositionX() + _bgr_xu.getContentSize().width * scale_xuken -
+            sprite_xu.getContentSize().width - 5,
             _bgr_xu.getPositionY() + _bgr_xu.getContentSize().height / 2 - sprite_xu.getContentSize().height / 2));
         this.addChild(sprite_xu);
 
@@ -148,7 +154,7 @@ var ShowGameLayer = cc.Layer.extend({
         var sprite_thongtin = MSprite.create(res.SPRITE_THONGTIN);
         sprite_thongtin.setAnchorPoint(cc.p(0,0));
         sprite_thongtin.setPosition(cc.p(originX + visibleSize.width / 2 - sprite_thongtin.getContentSize().width / 2,
-            btn_avatar.getPositionY() - bk_avatar.getContentSize().height - padding));
+            btn_avatar.getPositionY() - bk_avatar.getContentSize().height - padding - sprite_thongtin.getHeight()));
         this.addChild(sprite_thongtin);
 
         var bkg_navigationbar = MSprite.create(res.BGR_UNDERLINE);
@@ -168,13 +174,15 @@ var ShowGameLayer = cc.Layer.extend({
         // thong bao
         var btn_thongbao = MButton.createExtendsBottom(res.ICON_BTN_THONGBAO, "Thông báo", 30, TAG.SHOW_GAME_THONGBAO);
 
-        btn_thongbao.setPosition(MVec2(visibleSize.width * 5 / 8, bkg_navigationbar.getContentSize().height / 2 - btn_thongbao.getContentSize().height / 2));
+        btn_thongbao.setPosition(MVec2(visibleSize.width * 5 / 8, bkg_navigationbar.getContentSize().height / 2 -
+            btn_thongbao.getContentSize().height / 2));
         // btn_thongbao.addTouchEventListener();
         this.addChild(btn_thongbao);
 
 
         var sprite_new_notify = MSprite.create(res.new_notify);
-        sprite_new_notify.setPosition(cc.p(btn_thongbao.getContentSize().width - sprite_new_notify.getContentSize().width/2.0,0.75*btn_thongbao.getContentSize().height));
+        sprite_new_notify.setPosition(cc.p(btn_thongbao.getContentSize().width -
+            sprite_new_notify.getContentSize().width/2.0,0.75*btn_thongbao.getContentSize().height));
         btn_thongbao.addChild(sprite_new_notify);
 
         // chat
@@ -192,39 +200,43 @@ var ShowGameLayer = cc.Layer.extend({
         //huong dan
         var btn_help = MButton.createExtendsBottom(res.ICON_HELP, "Hướng dẫn", 30, TAG.SHOW_BTN_TROGIUP);
         btn_help.setZoomScale(0.2);
-        btn_help.setPosition(cc.p(originX + visibleSize.width * 1 / 8 - btn_help.getContentSize().width, btn_thongbao.getPositionY()));
+        btn_help.setPosition(cc.p(originX + visibleSize.width * 1 / 8 - btn_help.getContentSize().width,
+            btn_thongbao.getPositionY()));
         // btn_help.addTouchEventListener();
         this.addChild(btn_help);
 
         //xep hang
         var btn_xephang = MButton.createExtendsBottom(res.ICON_TOP, "Xếp hạng", 30, TAG.SHOW_BTN_XEPHANG);
-        btn_xephang.setPosition(cc.p(originX + visibleSize.width * 2 / 8 - btn_xephang.getContentSize().width, btn_thongbao.getPositionY()));
+        btn_xephang.setPosition(cc.p(originX + visibleSize.width * 2 / 8 - btn_xephang.getContentSize().width,
+            btn_thongbao.getPositionY()));
         // btn_xephang.addTouchEventListener();
         this.addChild(btn_xephang);
 
         // banbe
         var btn_friend = MButton.createExtendsBottom(res.ICON_FRINED, "Bạn bè", 30, TAG.SHOW_BTN_FRIEND);
-        btn_friend.setPosition(cc.p(originX + visibleSize.width * 3 / 8 - btn_friend.getContentSize().width, btn_thongbao.getPositionY()));
+        btn_friend.setPosition(cc.p(originX + visibleSize.width * 3 / 8 - btn_friend.getContentSize().width,
+            btn_thongbao.getPositionY()));
         // btn_friend.addTouchEventListener();
         this.addChild(btn_friend);
 
         //==================================== scroll view - game button
 
-        var scollFrameSize = new cc.Size(visibleSize.width,sprite_thongtin.getPositionY() + sprite_thongtin.getContentSize().height - bkg_navigationbar.getContentSize().height);
+        var scollFrameSize = new cc.Size(visibleSize.width,sprite_thongtin.getPositionY() +
+            sprite_thongtin.getContentSize().height - bkg_navigationbar.getContentSize().height);
         cc.log("scollFrameSize", scollFrameSize);
-        var scrollView = new ccui.ScrollView();
-        scrollView.setContentSize(scollFrameSize);
-        scrollView.setPosition(cc.p(originX, originY + bkg_navigationbar.getContentSize().height)); //- 10
-        scrollView.setDirection(ccui.ScrollView.DIR_HORIZONTAL);
+        this.scrollView = new ccui.ScrollView();
+        this.scrollView.setContentSize(scollFrameSize);
+        this.scrollView.setPosition(cc.p(originX, originY + bkg_navigationbar.getContentSize().height)); //- 10
+        this.scrollView.setDirection(ccui.ScrollView.DIR_HORIZONTAL);
         // scrollView.setScrollBarEnabled(false);
-        scrollView.setBounceEnabled(false);
-        scrollView.setInertiaScrollEnabled(true);
-        scrollView.setTouchEnabled(true);
-        scrollView.addEventListener(this.scrollEvent,this);
+        this.scrollView.setBounceEnabled(false);
+        this.scrollView.setInertiaScrollEnabled(true);
+        this.scrollView.setTouchEnabled(true);
+        this.scrollView.addEventListener(this.scrollEvent,this);
 
         var containerSize = new cc.Size(scollFrameSize.width * 2.55, scollFrameSize.height);
-        scrollView.setInnerContainerSize(containerSize);
-        this.addChild(scrollView);
+        this.scrollView.setInnerContainerSize(containerSize);
+        this.addChild(this.scrollView);
         var scrollPage = 0;
 
         var nameTabButton = [res.ICON_TLMN_SOLO_ACTIVE, res.ICON_TLMN_ACTIVE,
@@ -242,17 +254,20 @@ var ShowGameLayer = cc.Layer.extend({
             Common.WHEEL_ZONE, Common.PHOM_ZONE, Common.MAUBINH_ZONE,
             Common.BACAY_ZONE, Common.LIENG_ZONE,Common.XITO_ZONE];
 
-        var button_size = new cc.Size(visibleSize.width * 0.22, visibleSize.width * 0.22 * 356 / 270.0);  //361 / 310.0f
+        var button_size = new cc.Size(visibleSize.width * 0.22, visibleSize.width * 0.22 * 356 / 270.0); //361 / 310.0f
         var distance_button = (scollFrameSize.width - 4.2*button_size.width) / 8;
 
         // var enableGameIds = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
         var enableGameIds = getEnableGameIds();
+        if(getEnableGameIds() == null){
+            enableGameIds = [0,1,2,3,4,5,6,7,8,9,10];
+        }
 
         cc.log("enableGameIds", enableGameIds);
 
-        for (i = 0; i < nameTabButton.length; i++){
+        for (var i = 0; i < nameTabButton.length; i++){
             var isFound = false;
-            for ( j = 0; j < enableGameIds.length; j++) {
+            for (var j = 0; j < enableGameIds.length; j++) {
                 if (enableGameIds[j] == zoneTagButton[i]) {
                     isFound = true;
                     break;
@@ -261,16 +276,17 @@ var ShowGameLayer = cc.Layer.extend({
 
             var game_button = MButton.createWidthSize(nameTabButton[i], button_size, tagTabButton[i]);
             if (!isFound){
-                game_button.setBright(false);
+                //game_button.setBright(false);
             }
 
-            game_button.setPosition(cc.p((i+1) * (button_size.width + distance_button) - button_size.width/2,containerSize.height*0.48));
-            // game_button.addTouchEventListener();
+            game_button.setPosition(cc.p((i+1) * (button_size.width + distance_button) - button_size.width/2,
+                containerSize.height*0.48));
+            game_button.addTouchEventListener(this.gameItemCallBack,this);
             if (i == 2){
                 game_button.setScale(1.25);
                 game_button.setLocalZOrder(1);
             }
-            scrollView.addChild(game_button);
+            this.scrollView.addChild(game_button);
         }
 
         return true;
@@ -332,7 +348,11 @@ var ShowGameLayer = cc.Layer.extend({
                     break;
                 case TAG.SHOW_BTN_CAIDAT:
                 {
-                    enableTouch = false;
+
+                    var popupSetting = new PopupSetting();
+                    this.addChild(popupSetting);
+                    popupSetting.appear();
+
                     // POPUP SETTING
                     // if(this->getChildByTag(POPUP_TAG_SETTING) == nullptr){
                     //     auto m_popupSetting = PopupSetting::create();
@@ -455,29 +475,31 @@ var ShowGameLayer = cc.Layer.extend({
     },
     onClickExit: function(){
         // cc.log("onClickExit");
-        // var nodeConfirm = NodeConfirmCreate(ccui.Widget.TOUCH_ENDED, TXT.TITLE_POPUP_CONFIRM, "Bạn có muốn Đăng xuất không?",true);
+        // var nodeConfirm = NodeConfirmCreate(ccui.Widget.TOUCH_ENDED, TXT.TITLE_POPUP_CONFIRM,
+        // "Bạn có muốn Đăng xuất không?",true);
         // nodeConfirm.show(true);
         // return;
         cc.director.runScene(new LoginScene());
-    }, gameItemCallBack: function(sender, type) {
-        // if (type == ccui.Widget.TOUCH_BEGAN) {
-        //     auto btnSelect = ((MButton*) sender);
-        //     btnSelect->runAction(Sequence::create(ScaleTo::create(0.1f, 1.27f),
-        //     ScaleTo::create(0.1f, 1.1f),ScaleTo::create(0.1f, 1.25f),NULL));
-        //     btnSelect->setLocalZOrder(1);
-        //
-        //     Vector<Node*> children = scrollView->getChildren();
-        //     for (int i = 0; i < children.size(); i++) {
-        //         MButton* button = dynamic_cast<MButton*>(children.at(i));
-        //         if (button != nullptr && btnSelect->getTag() != button->getTag()) {
-        //             button->runAction(ScaleTo::create(0.1f, 1.0f));
-        //             button->setLocalZOrder(0);
-        //         }
-        //     }
-        // }
+    },
+    gameItemCallBack: function(sender, type) {
+        if (type == ccui.Widget.TOUCH_BEGAN) {
+            sender.runAction(cc.sequence(cc.scaleTo(0.1, 1.27),
+                            cc.scaleTo(0.1, 1.1),cc.scaleTo(0.1, 1.25)));
+            sender.setLocalZOrder(1);
+
+            var children = this.scrollView.getChildren();
+            for (var i = 0; i < children.length; i++) {
+                var button = children[i];
+                if (button != null && sender.getTag() != button.getTag()) {
+                    button.runAction(cc.scaleTo(0.1, 1.0));
+                    button.setLocalZOrder(0);
+                }
+            }
+        }
 
         if(type == ccui.Widget.TOUCH_ENDED){
-            var gameTag = sender.tag;
+            cc.log("TOUCHED!!!");
+            /*var gameTag = sender.tag;
             setGameTag(gameTag);
             // SoundManager::getInstance()->playSound("sounds/button_click.mp3");
             var isFound = false;
@@ -489,7 +511,10 @@ var ShowGameLayer = cc.Layer.extend({
             // }
             var isFound = false;
             var enableGameIds = getEnableGameIds();
-            for ( j = 0; j < enableGameIds.length; j++) {
+            if(getEnableGameIds() == null){
+                enableGameIds = [0,1,2,3,4,5,6,7,8,9,10];
+            }
+            for (var j = 0; j < enableGameIds.length; j++) {
                 if (enableGameIds[j] == getZoneId()) {
                     isFound = true;
                     break;
@@ -499,7 +524,7 @@ var ShowGameLayer = cc.Layer.extend({
                 // showToast("Game sắp ra mắt", 3);
                 return;
             }
-            getEnterZoneMessageFromServer(getZoneId());
+            //getEnterZoneMessageFromServer(getZoneId());*/
         }
     }
 });

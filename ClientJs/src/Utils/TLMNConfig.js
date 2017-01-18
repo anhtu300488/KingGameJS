@@ -205,18 +205,28 @@ var TAG = {
 
 
 var POPUP = {
-    POPUP_HOT_LINE:{
+    HOT_LINE:{
         BTN_CLOSE: 1,
         BTN_HOT_LINE_1: 2,
         BTN_HOT_LINE_2: 3,
         BTN_FAN_PAGE: 4
     },
 
-    POPUP_MESSAGE_BOX:{
+    MESSAGE_BOX:{
         BTN_OK: 1,
         BTN_CANCEL: 2,
         BTN_CLOSE: 3,
         LBL_MESSAGE: 4
+    },
+
+    SETTING:{
+        BTN_MUSIC: 1,
+        BTN_SOUND: 2,
+        BTN_DENY_INVITE: 3,
+        BTN_AUTO_READY: 4,
+        BTN_VIBRATE: 5,
+        BTN_AUTO_SIT: 6,
+        BTN_CLOSE: 7
     },
 
     TAG_FRIEND: 331,
