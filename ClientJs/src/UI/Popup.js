@@ -26,10 +26,6 @@ var Popup = cc.Node.extend({
             },
         },this.background);
 
-        this.backgroundPopup = cc.Sprite.create(res.bg_popup);
-        this.backgroundPopup.setPosition(cc.p(visibleSize.width/2,visibleSize.height/2));
-        this.addChild(this.backgroundPopup);
-
         return true;
     },
 
@@ -39,8 +35,8 @@ var Popup = cc.Node.extend({
             this.removeFromParentAndCleanup(true);
         },this);
 
-        this.background.runAction(cc.sequence(cc.fadeTo(0.1, 0),cc.callFunc(function(){
-            var move = cc.moveTo(0.15,cc.p(originX,originY - visibleSize.height/2));
+        this.background.runAction(cc.sequence(cc.fadeTo(0.05, 0),cc.callFunc(function(){
+            var move = cc.moveTo(0.05,cc.p(originX,originY - visibleSize.height/2));
             self.runAction(cc.sequence(move,callDisappear));
         })));
 
@@ -69,7 +65,7 @@ var Popup = cc.Node.extend({
             },
         },this.backgroundPopup);
 
-        this.runAction(cc.sequence(cc.moveTo(0.15,cc.p(originX,originY)),cc.callFunc(function(){
+        this.runAction(cc.sequence(cc.moveTo(0.1,cc.p(originX,originY)),cc.callFunc(function(){
             this.background.runAction(cc.sequence(cc.fadeTo(0.1,200),cc.callFunc(function () {
                 this.scheduleUpdate();
             },this)));

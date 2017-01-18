@@ -19,7 +19,7 @@ var MButton = ccui.Button.extend({
         var button = new MButton(); 
         button.loadTextureNormal(imageName); 
         button.setTag(tag); 
-        button.setZoomScale(0.1); 
+        button.setZoomScale(0.05); 
         button.setAnchorPoint(cc.p(0,0));  
         return button; 
 }
@@ -27,7 +27,7 @@ var MButton = ccui.Button.extend({
   MButton.createWithText = function(textureName, text, tag){ 
     var btn = new MButton(); 
     btn.loadTextureNormal(textureName); 
-    btn.setZoomScale(0.1); 
+    btn.setZoomScale(0.05); 
     btn.setAnchorPoint(cc.p(0,0)); 
     btn.setTitleText(text); 
     btn.setTitleFontSize(btn.getHeight()*0.4); 
@@ -61,24 +61,49 @@ MButton.createTextSizeTag = function(text,size,tag) {
 //     return btn;
 // };
 //
-//
-// var createWithIcon = function (bgrName, iconName, text, size, tag) {
-//     var btn = new ccui.Button();
-//     btn.setZoomScale(0.02);
-//     btn.setAnchorPoint(cc.p(0,0));
-//     btn.setTag(tag);
-//     var icon = new cc.Sprite(iconName);
-//     icon.setPosition(cc.p(10, btn.getContentSize().height/2 - icon.getContentSize().height/2));
-//     btn.addChild(icon);
-//     var label = MLabelCreate(text,btn.getContentSize().height/2);
-//     label.setAnchorPoint(cc.p(0,0));
-//     label.setPosition(icon.getPositionX()+icon.getContentSize().width + (btn.getContentSize().width - icon.getPositionX() - icon.getContentSize().width)/2 - label.getContentSize().width/2, btn.getContentSize().height/2 - label.getContentSize().height/2);
-//     btn.addChild(label);
-//     return btn;
-//
-// }
+
+MButton.createWithIcon = function (bgrName, iconName, text, size, tag) {
+    var btn = new MButton();
+    btn.setZoomScale(0.02);
+    btn.setAnchorPoint(cc.p(0,0));
+    btn.setTag(tag);
+    var icon = new cc.Sprite(iconName);
+    icon.setPosition(cc.p(10, btn.getContentSize().height/2 - icon.getContentSize().height/2));
+    btn.addChild(icon);
+    var label = MLabel.create(text,btn.getContentSize().height/2);
+    label.setAnchorPoint(cc.p(0,0));
+    label.setPosition(icon.getPositionX()+icon.getContentSize().width + (btn.getContentSize().width -
+        icon.getPositionX() - icon.getContentSize().width)/2 - label.getContentSize().width/2,
+        btn.getContentSize().height/2 - label.getContentSize().height/2);
+    btn.addChild(label);
+    return btn;
+
+}
 
 // icon + text
+
+//text + icon
+MButton.createExtendsIcon = function(textureIcon,textureName,text,tag,width){
+
+    var btn = new MButton();
+    btn.loadTextureNormal(textureName);
+    btn.setZoomScale(0.05);
+    btn.setAnchorPoint(cc.p(0, 0));
+    btn.setTag(tag);
+
+    var label = MLabel.create(text, btn.getHeight() / 1.5);
+    label.setAnchorPoint(cc.p(0, 0));
+    label.setPosition(cc.p(btn.getWidth() - width, 0));
+    btn.addChild(label);
+
+    var sprite = MSprite.create(textureIcon);
+    sprite.setPosition(cc.p(label.getPosition().x - btn.getWidth()*0.6,0));
+    btn.addChild(sprite);
+
+    return btn;
+
+}
+
 MButton.createExtends = function(textureName,text,size,tag){
     var btn = new MButton();
     btn.loadTextureNormal(textureName);

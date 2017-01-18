@@ -4,7 +4,6 @@
 
 
 var RegisterLayer = cc.Layer.extend({
-    sprite:null,
     ctor:function () {
         //////////////////////////////
         // 1. super init first
@@ -12,7 +11,7 @@ var RegisterLayer = cc.Layer.extend({
 
         setGameState(GAME_STATE.REGISTER_SCENE);
 
-        var spriteBG = new cc.Sprite(res.item_background);
+        var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
 
         var spriteWidth = spriteBG.getContentSize().width;
 
@@ -20,32 +19,33 @@ var RegisterLayer = cc.Layer.extend({
 
         var rows = visibleSize.width/ spriteWidth + 1;
         var cols = visibleSize.height/ spriteHeight + 1;
-        for(i = 0; i< rows; i++){
-            for(j = 0; j<cols; j++){
-                var itemSpriteBG = new cc.Sprite(res.item_background);
+        for(var i = 0; i< rows; i++){
+            for(var j = 0; j<cols; j++){
+                var itemSpriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
                 var centerPos = cc.p(spriteBG.x + i*spriteWidth, spriteBG.y + j*spriteHeight);
                 itemSpriteBG.setPosition(centerPos);
                 this.addChild(itemSpriteBG);
             }
         }
 
-        var bkg = MSprite.createWithSize("res/sprite_background_login.png",visibleSize);
-        bkg.setPosition(MVec2(0,0));
-        this.addChild(bkg);
+        var light_bkg = MSprite.createWithSize(res.LOGIN_SPRITE_LIGHT,visibleSize);
+        light_bkg.setAnchorPoint(cc.p(0,0));
+        light_bkg.setPosition(cc.p(0, 0));
+        this.addChild(light_bkg);
 
         // initMenu();
 
+        var girl = MSprite.create(res.LOGIN_SPRITE_GIRL);
+        var girl_scale = 0.9*height / girl.getHeight();
+
         var sprite_card = MSprite.create(res.LOGIN_SPRITE_CARD);
-        var scale = 0.9*height / sprite_card.getHeight();
-        sprite_card.setScale(scale);
-        sprite_card.setPosition(cc.p(originX, originY));
+        sprite_card.setScale(girl_scale);
+        sprite_card.setPosition(MVec2(0,0));
         this.addChild(sprite_card);
 
-        //girl
-        var girl = MSprite.create(res.LOGIN_SPRITE_GIRL);
-        girl.setScale(0.9*height / girl.getHeight());
-        // girl.setAnchorPoint(ANCHOR_MIDDLE_BOTTOM);
-        girl.setPosition(cc.p(originX + sprite_card.getWidth() * scale / 2, originY));
+        girl.setScale(girl_scale);
+        girl.setAnchorPoint(cc.p(0.5,0));
+        girl.setPosition(cc.p(originX + sprite_card.getWidth() * sprite_card.getScale() / 2, 0));
         this.addChild(girl);
         //==================================== Buttons
 
@@ -70,65 +70,83 @@ var RegisterLayer = cc.Layer.extend({
 
         //==================================== Text Field
 
-        // var nhap_sdt = MEditBox.create(cc.size(background_nhap_register.getContentSize()),
-        //     res.LOGIN_EDIT_PASSWORD, background_nhap_register.getHeight() / 3);
-        this.nhap_sdt = new cc.EditBox(cc.size(background_nhap_register.getContentSize()),
-            new cc.Scale9Sprite(res.LOGIN_EDIT_PASSWORD));
-        this.nhap_sdt.setPosition(cc.p(originX + positionX,
-            btn_register.getPositionY() + btn_register.getHeight() + background_nhap_register.getHeight() / 3 + 40));
-        this.nhap_sdt.setPlaceHolder("Nhập tên hiển thị");
+
+
+        var nhap_sdt_bkg = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
+        nhap_sdt_bkg.setPosition(cc.p(originX + positionX,
+            btn_register.getPositionY() + btn_register.getHeight() + nhap_sdt_bkg.getHeight() / 3 + 40));
+        this.addChild(nhap_sdt_bkg);
+
+        var fontSize = nhap_sdt_bkg.getContentSize().height / 3;
+
+        this.nhap_sdt = MEditBox.create(nhap_sdt_bkg.getContentSize()*0.9,
+            res.LOGIN_EDIT_PASSWORD,fontSize,"Nhập tên hiển thị");
+        this.nhap_sdt.setPosition(cc.p(nhap_sdt_bkg.getPositionX() +
+            nhap_sdt_bkg.getContentSize().width*0.1,
+            nhap_sdt_bkg.getPositionY() + nhap_sdt_bkg.getHeight()/2));
         this.nhap_sdt.setMaxLength(REGISTER.MAX_LENGTH_SDT);
         this.nhap_sdt.setTag(TAG.REG_EDITBOX_NHAP_SDT);
         this.nhap_sdt.setDelegate(this);
-        this.nhap_sdt.setPlaceholderFontColor(cc.color.BLACK);
-        this.nhap_sdt.setFont("fonts/font_title.otf", background_nhap_register.getHeight() / 3);
-        this.nhap_sdt.setPlaceholderFont("fonts/font_title.otf", background_nhap_register.getHeight() / 3);
-        this.nhap_sdt.setFontColor(cc.color.BLACK);
-        this.nhap_sdt.setInputMode(cc.EDITBOX_INPUT_MODE_SINGLELINE);
+        this.nhap_sdt.setFontColor(cc.Color(50,50,50,255));
         this.addChild(this.nhap_sdt);
 
-        this.nhaplai_matkhau = new cc.EditBox(cc.size(background_nhap_register.getContentSize()),
-            new cc.Scale9Sprite(res.LOGIN_EDIT_PASSWORD));
-        this.nhaplai_matkhau.setPosition(cc.p(this.nhap_sdt.getPositionX(),
-            this.nhap_sdt.getPositionY() + this.nhap_sdt.getContentSize().height + 20));
-        this.nhaplai_matkhau.setPlaceHolder("Nhập lại mật khẩu");
+        var nhap_lai_mk_bkg = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
+        nhap_lai_mk_bkg.setPosition(cc.p(originX + positionX,
+            nhap_sdt_bkg.getPositionY() + nhap_sdt_bkg.getHeight() + nhap_lai_mk_bkg.getHeight() / 3));
+        this.addChild(nhap_lai_mk_bkg);
+
+        this.nhaplai_matkhau = MEditBox.create(nhap_lai_mk_bkg.getContentSize()*0.9,
+            res.LOGIN_EDIT_PASSWORD,fontSize,"Nhập lại mật khẩu");
+        this.nhaplai_matkhau.setPosition(cc.p(nhap_lai_mk_bkg.getPositionX() +
+            nhap_lai_mk_bkg.getContentSize().width*0.1,
+            nhap_lai_mk_bkg.getPositionY() + nhap_lai_mk_bkg.getHeight()/2));
         this.nhaplai_matkhau.setMaxLength(12);
         this.nhaplai_matkhau.setTag(TAG.REG_EDITBOX_NHAPLAI_MATKHAU);
         this.nhaplai_matkhau.setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD);
         this.nhaplai_matkhau.setDelegate(this);
-        this.nhaplai_matkhau.setFontColor(cc.color.BLACK);
+        this.nhaplai_matkhau.setFontColor(cc.Color(50,50,50,255));
         this.addChild(this.nhaplai_matkhau);
 
         // editbox nhap mat khau
 
-        this.nhap_matkhau = new cc.EditBox(cc.size(background_nhap_register.getContentSize()),
-            new cc.Scale9Sprite(res.LOGIN_EDIT_PASSWORD));
-        this.nhap_matkhau.setPosition(cc.p(this.nhap_sdt.getPositionX(),
-            this.nhaplai_matkhau.getPositionY()+this.nhaplai_matkhau.getContentSize().height+20));
-        this.nhap_matkhau.setPlaceHolder("Nhập mật khẩu");
+        var nhap_matkhau_bkg = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
+        nhap_matkhau_bkg.setPosition(cc.p(originX + positionX,
+            nhap_lai_mk_bkg.getPositionY() + nhap_lai_mk_bkg.getHeight() + nhap_matkhau_bkg.getHeight() / 3));
+        this.addChild(nhap_matkhau_bkg);
+
+        this.nhap_matkhau = MEditBox.create(nhap_matkhau_bkg.getContentSize()*0.9,
+            res.LOGIN_EDIT_PASSWORD,fontSize,"Nhập mật khẩu");
+        this.nhap_matkhau.setPosition(cc.p(nhap_matkhau_bkg.getPositionX() +
+            nhap_matkhau_bkg.getContentSize().width*0.1,
+            nhap_matkhau_bkg.getPositionY() + nhap_matkhau_bkg.getHeight()/2));
         this.nhap_matkhau.setMaxLength(12);
         this.nhap_matkhau.setTag(TAG.REG_EDITBOX_NHAP_MATKHAU);
         this.nhap_matkhau.setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD);
         this.nhap_matkhau.setDelegate(this);
-        this.nhap_matkhau.setFontColor(cc.color.BLACK);
+        this.nhap_matkhau.setFontColor(cc.Color(50,50,50,255));
         this.addChild(this.nhap_matkhau);
 
         // editbox ten dang nhap
 
-        this.nhap_ten = new cc.EditBox(cc.size(background_nhap_register.getContentSize()),
-            new cc.Scale9Sprite(res.LOGIN_EDIT_PASSWORD));
-        this.nhap_ten.setPosition(cc.p(this.nhap_sdt.getPositionX(),
-            this.nhap_matkhau.getPositionY()+this.nhap_matkhau.getContentSize().height+20));
-        this.nhap_ten.setPlaceHolder("Tên đăng nhập");
+        var nhap_ten_bkg = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
+        nhap_ten_bkg.setPosition(cc.p(originX + positionX,
+            nhap_matkhau_bkg.getPositionY() + nhap_matkhau_bkg.getHeight() + nhap_ten_bkg.getHeight() / 3));
+        this.addChild(nhap_ten_bkg);
+
+        this.nhap_ten = MEditBox.create(nhap_ten_bkg.getContentSize()*0.9,
+            res.LOGIN_EDIT_PASSWORD,fontSize,"Tên đăng nhập");
+        this.nhap_ten.setPosition(cc.p(nhap_ten_bkg.getPositionX() +
+            nhap_ten_bkg.getContentSize().width*0.1,
+            nhap_ten_bkg.getPositionY() + nhap_ten_bkg.getHeight()/2));
         this.nhap_ten.setMaxLength(REGISTER.MAX_LENGTH_USERNAME);
         this.nhap_ten.setTag(TAG.REG_EDITBOX_NHAP_TEN);
         this.nhap_ten.setDelegate(this);
-        this.nhap_ten.setFontColor(cc.color.BLACK);
+        this.nhap_ten.setFontColor(cc.Color(50,50,50,255));
         this.addChild(this.nhap_ten);
 
-        var bigken = MSprite.create(LOGIN.SPRITE_BIGKEN);
-        bigken.setPosition(cc.p(this.nhap_sdt.getPositionX() + this.nhap_ten.getContentSize().width / 2 - bigken.getWidth() / 2,
-            this.nhap_ten.getPositionY() + this.nhap_ten.getContentSize().height + 20));
+        var bigken = MSprite.create(res.LOGIN_SPRITE_BIGKEN);
+        bigken.setPosition(cc.p(nhap_ten_bkg.getPositionX() + nhap_ten_bkg.getContentSize().width / 2 - bigken.getWidth() / 2,
+            nhap_ten_bkg.getPositionY() + nhap_ten_bkg.getContentSize().height + 20));
         this.addChild(bigken);
 
         // this.scheduleUpdate();

@@ -6,7 +6,6 @@ var IntroLayer = cc.Layer.extend({
         // 1. super init first
         this._super();
 
-
         var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
 
         var spriteWidth = spriteBG.getContentSize().width;
@@ -24,7 +23,7 @@ var IntroLayer = cc.Layer.extend({
             }
         }
 
-        var itemSpriteBGCard = MSprite.create(res.bg_card_png);
+        var itemSpriteBGCard = MSprite.create(res.INTRO_SPRITE_BG_CARD);
         var centerPosCard = MVec2(width/2, height/2);
         itemSpriteBGCard.setPosition(centerPosCard);
         this.addChild(itemSpriteBGCard);

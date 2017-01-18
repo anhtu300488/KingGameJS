@@ -128,6 +128,14 @@ var Common = {
     NO_DEVICE : "NO_DEVICE"
 }
 
+var setPrefs = function(key, value){
+    cc.sys.localStorage.setItem(key, value);
+}
+
+var getPrefs = function(key){
+    cc.sys.localStorage.getItem(key);
+}
+
 var getCp = function() {
     // if (TEST_ENVIRONMENT)
     return "1";
@@ -417,12 +425,4 @@ var getOS = function()  {
     //     #endif
     // }
     return os;
-}
-
-var setGameState = function(state) {
-    this.state = state;
-}
-
-var getGameState = function() {
-    return this.state;
 }
