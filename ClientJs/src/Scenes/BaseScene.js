@@ -164,9 +164,10 @@ var initialMessageResponseHandler = function(listMessages) {
 // }
 
 var goGame = function() {
+    cc.log("gogame");
     // if (getGameState() == GAME_STATE.INTRO) {
-        var scene = new LoginScene();
-        cc.director.runScene(scene);
+    //     var scene = new LoginScene();
+        cc.director.runScene(new LoginScene());
     // }
     // else {
     //     sendPingAndReceiveMessage(
