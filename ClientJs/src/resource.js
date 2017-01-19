@@ -27,7 +27,7 @@ var res = {
         BTN_LOGIN: "res/btn_dangnhap.png",
         BTN_REGISTER: "res/btn_dang_ky.png",
         BTN_CHOI_NGAY: "res/btn_choingay_login.png",
-        SPRITE_EDIT_BOX: "res/sprite_edit_box.png",
+        SPRITE_EDIT_BOX: "res/edit_box.png",
         SPRITE_EDIT_BOX_NULL: "res/edit_box_null.png",
         SPRITE_GIRL: "res/sprite_cogai.png",
         SPRITE_LIGHT: "res/sprite_background_login.png"
