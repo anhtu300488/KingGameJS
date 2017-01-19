@@ -23,10 +23,10 @@ MEditBox.create = function(size,fileName,textSize){
     editbox.setContentSize(size);
     editbox.setInputFlag(fileName);
     editbox.setAnchorPoint(cc.p(0,0));
-    editbox.setFontName("fonts/gamevina.otf");
+    editbox.setFontName(res.FONT.FONT_THIN);
     editbox.setFontSize(textSize);
     editbox.setFontColor(cc.color.WHITE);
-    editbox.setPlaceholderFont("fonts/gamevina.otf",textSize);
+    editbox.setPlaceholderFont(res.FONT.FONT_THIN,textSize);
     editbox.setPlaceholderFontColor(cc.color(213,187,187));
     editbox.setReturnType(EditBox.KEYBOARD_RETURNTYPE_DONE);
     editbox.setInputMode(EditBox.EDITBOX_INPUT_MODE_SINGLELINE);

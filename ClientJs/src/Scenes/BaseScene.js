@@ -50,7 +50,7 @@ var initialMessageResponseHandler = function(listMessages) {
     // var init_response = BINInitializeResponse();
     //get list event
     // checkEvent(NetworkManager.INITIALIZE);
-    cc.log("get list message", listMessages.responseCode);
+    cc.log("get list message", listMessages);
 
     if (listMessages != 0) {
         setInitialize(listMessages.responseCode);

@@ -84,7 +84,7 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(btn_avatar);
 
         //info
-        var user_id = 1;
+        var user_id = getUserId() ? getUserId() : '';
         var label_id = MLabel.create(cc.formatStr("ID: %d", user_id), bk_avatar.getContentSize().height / 4, true);
         label_id.setAnchorPoint(cc.p(0,1));
         label_id.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width + padding, btn_avatar.getPositionY()));
@@ -92,10 +92,9 @@ var ShowGameLayer = cc.Layer.extend({
 
         //ten hien thi
         // var userName = 'Tu_Atula';
-        var userName = getDisplayName() ? getDisplayName() : 'Tu_Atula';
+        var userName = getDisplayName() ? getDisplayName() : '';
         var label_name = MLabel.create(userName, bk_avatar.getContentSize().height / 4, true);
-        label_name.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width + padding,
-            btn_phone.getPositionY() + btn_phone.getContentSize().height / 2));
+        label_name.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width + padding, btn_phone.getPositionY() + btn_phone.getContentSize().height / 2));
         this.addChild(label_name);
 
 

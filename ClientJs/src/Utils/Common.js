@@ -407,16 +407,18 @@ var isAutoDenyInvitation = function() {
 }
 
 var getOS = function()  {
-    // if (os == 0) {
-    //     #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    //             os = ANDROID_PLATFORM;
-    //     #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    //             os =IOS_PLATFORM;
-    //     #else
-    //             os = ANDROID_PLATFORM;
-    //     #endif
-    // }
-    return os;
+    //     if (cc.sys.platform == cc.sys.DESKTOP_BROWSER)
+    //             os = cc.sys.DESKTOP_BROWSER;
+    //     else if(cc.sys.platform == cc.sys.ANDROID)
+    //             os = cc.sys.ANDROID;
+    //     else if(cc.sys.platform == cc.sys.IOS)
+    //         os = cc.sys.IOS;
+    //     else
+    //         os = cc.sys.DESKTOP_BROWSER;
+    //     // end;
+    // return os;
+    // return cc.sys.DESKTOP_BROWSER;
+    return 1;
 }
 
 var setGameState = function(state) {
@@ -425,4 +427,12 @@ var setGameState = function(state) {
 
 var getGameState = function() {
     return this.state;
+}
+
+var setUserId = function(userId) {
+    this.userId = userId;
+}
+
+var getUserId = function() {
+    return this.userId;
 }

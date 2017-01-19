@@ -137,7 +137,7 @@ var getInitializeMessageFromServer = function(cp, appversion , country, language
 
     cc.log("request = ", request);
 
-    var requestMess = requestMessage(request, 1, NetworkManager.INITIALIZE, "");
+    var requestMess = requestMessage(request, getOS(), NetworkManager.INITIALIZE, "");
 
     return requestMess;
 }
@@ -172,7 +172,7 @@ var getLoginMessageFromServer = function(username, password)
     cc.log("getLoginMessageFromServer");
     var request = initLoginMessage(username, password);
 
-    var requestMess = requestMessage(request, 1, NetworkManager.LOGIN, "");
+    var requestMess = requestMessage(request, getOS(), NetworkManager.LOGIN, "");
 
     return requestMess;
 }
@@ -196,7 +196,7 @@ var initLoginMessage = function(username, password) {
 
 var getRegisterMessageFromServer = function(username, password, confirm_password, full_name, sdt) {
     request = initRegisterMessage(username, password, confirm_password, full_name, sdt);
-    requestMessage(request, 1, NetworkManager.REGISTER, "");
+    requestMessage(request, getOS(), NetworkManager.REGISTER, "");
 }
 
 var initRegisterMessage = function(username, password, confirm_password, full_name, sdt) {
@@ -441,258 +441,258 @@ var getTypeMessage = function(msg, messageid, protoBufVar) {
         case NetworkManager.LOGIN:
             msg = new BINLoginResponse(protoBufVar);
             break;
-        // case NetworkManager.EXPIRED_SESSION:
-        //     msg = new BINSessionExpiredResponse();
-        //     break;
-        // case NetworkManager.ENTER_ROOM:
-        //     msg = new BINEnterRoomResponse();
-        //     break;
-        // case NetworkManager.ENTER_GROUP_ROOM:
-        //     msg = new BINEnterRoomResponse();
-        //     break;
-        // case NetworkManager.PLAYER_ENTER_ROOM:
-        //     msg = new BINPlayerEnterRoomResponse();
-        //     break;
-        // case NetworkManager.ENTER_ZONE:
-        //     msg = new BINEnterZoneResponse();
-        //     break;
-        // case NetworkManager.PING:
-        //     msg = new BINPingResponse();
-        //     break;
-        // case NetworkManager.FILTER_ROOM:
-        //     msg = new BINFilterRoomResponse();
-        //     break;
-        // case NetworkManager.START_MATCH:
-        //     msg = new BINStartMatchResponse();
-        //     break;
-        // case NetworkManager.CREATE_ROOM:
-        //     msg = new BINCreateRoomResponse();
-        //     break;
-        // case NetworkManager.TURN:
-        //     msg = new BINTurnResponse();
-        //     break;
-        // case NetworkManager.MATCH_BEGIN:
-        //     msg = new BINMatchBeginResponse();
-        //     break;
-        // case NetworkManager.MATCH_END:
-        //     msg = new BINMatchEndResponse();
-        //     break;
-        // case NetworkManager.PLAYER_EXIT_AFTER_MATCH_END:
-        //     msg = new BINPlayerExitAfterMatchEndResponse();
-        //     break;
-        // case NetworkManager.PLAYER_EXIT_ROOM:
-        //     msg = new BINPlayerExitRoomResponse();
-        //     break;
-        // case NetworkManager.UPDATE_MONEY:
-        //     msg = new BINUpdateMoneyResponse();
-        //     break;
-        // case NetworkManager.EXIT_ROOM:
-        //     msg = new BINExitRoomResponse();
-        //     break;
-        // case NetworkManager.PREPARE_NEW_MATCH:
-        //     msg = new BINPrepareNewMatchResponse();
-        //     break;
-        // case NetworkManager.ROOM_OWNER_CHANGED:
-        //     msg = new BINRoomOwnerChangedResponse();
-        //     break;
-        // case NetworkManager.CANCEL_EXIT_ROOM:
-        //     msg = new BINCancelExitAfterMatchEndResponse();
-        //     break;
-        // case NetworkManager.READY_TO_PLAY:
-        //     msg = new BINReadyToPlayResponse();
-        //     break;
-        // case NetworkManager.UPDATE_USER_INFO:
-        //     msg = new BINUpdateUserInfoResponse();
-        //     break;
-        // case NetworkManager.LOGOUT:
-        //     msg = new BINLogoutResponse();
-        //     break;
-        // case NetworkManager.KICK_USER:
-        //     msg = new BINKickPlayerOutResponse();
-        //     break;
-        // case NetworkManager.LOCK_ROOM:
-        //     msg = new BINLockRoomResponse();
-        //     break;
-        // case NetworkManager.FILTER_TOP_USER:
-        //     msg = new BINFilterTopUserResponse();
-        //     break;
-        // case NetworkManager.FILTER_FRIEND:
-        //     msg = new BINFilterFriendResponse();
-        //     break;
-        // case NetworkManager.ADD_FRIEND:
-        //     msg = new BINAddFriendResponse();
-        //     break;
-        // case NetworkManager.FILTER_ADD_FRIEND:
-        //     msg = new BINFilterAddFriendResponse();
-        //     break;
-        // case NetworkManager.APPROVE_ADD_FRIEND:
-        //     msg = new BINApproveAddFriendResponse();
-        //     break;
-        // case NetworkManager.FIND_USER:
-        //     msg = new BINFindUserResponse();
-        //     break;
-        // case NetworkManager.VIEW_USER_INFO:
-        //     msg = new BINViewUserInfoResponse();
-        //     break;
-        // case NetworkManager.REMOVE_FRIEND:
-        //     msg = new BINRemoveFriendResponse();
-        //     break;
-        // case NetworkManager.CHANGE_RULE:
-        //     msg = new BINChangeRuleResponse();
-        //     break;
-        // case NetworkManager.LOOKUP_MONEY_HISTORY:
-        //     msg = new BINLookUpMoneyHistoryResponse();
-        //     break;
-        // case NetworkManager.SEND_TEXT_EMOTICON:
-        //     msg = new BINSendTextEmoticonResponse();
-        //     break;
-        // case NetworkManager.INSTANT_MESSAGE:
-        //     msg = new BINInstantMessageResponse();
-        //     break;
-        // case NetworkManager.UPDATE_USER_SETTING:
-        //     msg = new BINUpdateUserSettingResponse();
-        //     break;
-        // case NetworkManager.FILTER_MAIL:
-        //     msg = new BINFilterMailResponse();
-        //     break;
-        // case NetworkManager.SEND_MAIL:
-        //     msg = new BINSendMailResponse();
-        //     break;
-        // case NetworkManager.DELETE_MAIL:
-        //     msg = new BINDeleteMailResponse();
-        //     break;
-        // case NetworkManager.READED_MAIL:
-        //     msg = new BINReadedMailResponse();
-        //     break;
-        // case NetworkManager.CLAIM_ATTACH_ITEM:
-        //     msg = new BINClaimAttachItemResponse();
-        //     break;
-        // case NetworkManager.LEVEL_UP:
-        //     msg = new BINLevelUpResponse();
-        //     break;
-        // case NetworkManager.MEDAL_UP:
-        //     msg = new BINMedalUpResponse();
-        //     break;
-        // case NetworkManager.CAPTCHA:
-        //     msg = new BINCaptchaResponse();
-        //     break;
-        // case NetworkManager.PURCHASE_MONEY:
-        //     msg = new BINPurchaseMoneyResponse();
-        //     break;
-        // case NetworkManager.KILL_ROOM:
-        //     msg = new BINKillRoomResponse();
-        //     break;
-        // case NetworkManager.EXIT_ZONE:
-        //     msg = new BINExitZoneResponse();
-        //     break;
-        // case NetworkManager.BET:
-        //     msg = new BINBetResponse();
-        //     break;
-        // case NetworkManager.CHANGE_HOST:
-        //     msg = new BINChangeHostResponse();
-        //     break;
-        // case NetworkManager.EXTRA_BET:
-        //     msg = new BINExtraBetResponse();
-        //     break;
-        // case NetworkManager.HOST_REGISTRATION:
-        //     msg = new BINHostRegistrationResponse();
-        //     break;
-        // case NetworkManager.LOOKUP_USER_TO_INVITE:
-        //     msg = new BINLookUpUserToInviteResponse();
-        //     break;
-        // case NetworkManager.INVITE_TO_ROOM:
-        //     msg = new BINInviteToRoomResponse();
-        //     break;
-        // case NetworkManager.CANCEL_INVITE:
-        //     msg = new BINCancelInvitationResponse();
-        //     break;
-        // case NetworkManager.RELY_INVITE:
-        //     msg = new BINRelyInvitationResponse();
-        //     break;
-        // case NetworkManager.REDEEM_GIFT_CODE:
-        //     msg = new BINRedeemGiftCodeResponse();
-        //     break;
-        // case NetworkManager.REDEEM_GIFT_CODE_HISTORY:
-        //     msg = new BINRedeemGiftCodeHistoryResponse();
-        //     break;
-        // case NetworkManager.ASSET_CONFIG:
-        //     msg = new BINAssetConfigResponse();
-        //     break;
-        // case NetworkManager.EXCHANGE_ASSET:
-        //     msg = new BINExchangeAssetResponse();
-        //     break;
-        // case NetworkManager.EXCHANGE_CASH_TO_GOLD:
-        //     msg = new BINExchangeCashToGoldResponse();
-        //     break;
-        // case NetworkManager.EXCHANGE_ASSET_HISTORY:
-        //     msg = new BINExchangeAssetHistoryResponse();
-        //     break;
-        // case NetworkManager.PURCHASE_CASH_HISTORY:
-        //     msg = new BINPurchaseCashHistoryResponse();
-        //     break;
-        // case NetworkManager.EXCHANGE_GOLD_HISTORY:
-        //     msg = new BINExchangeGoldHistoryResponse();
-        //     break;
-        // case NetworkManager.SMS_CONFIG:
-        //     msg = new BINSmsConfigResponse();
-        //     break;
-        // case NetworkManager.USER_VERIFY_CONFIG:
-        //     msg = new BINUserVerifyConfigResponse();
-        //     break;
-        // case NetworkManager.USER_VERIFY:
-        //     msg = new BINUserVerifyResponse();
-        //     break;
-        // case NetworkManager.CASH_TRANSFER:
-        //     msg = new BINCashTransferResponse();
-        //     break;
-        // case NetworkManager.CASH_TRANSFER_CONFIG:
-        //     msg = new BINCashTransferConfigResponse();
-        //     break;
-        // case NetworkManager.RESET_PASSWORD:
-        //     msg = new BINResetPasswordResponse();
-        //     break;
-        // case NetworkManager.FIND_USER_BY_ID:
-        //     msg = new BINFindUserByIdResponse();
-        //     break;
-        // case NetworkManager.EXCHANGE_C2G_CONFIG:
-        //     msg = new BINExchangeC2GConfigResponse();
-        //     break;
-        // case NetworkManager.CARD_CONFIG:
-        //     msg = new BINCardConfigResponse();
-        //     break;
-        // case NetworkManager.HEAD_LINE:
-        //     msg = new BINHeadLineResponse();
-        //     break;
-        // case NetworkManager.EMERGENCY_NOTIFICATION:
-        //     msg = new BINEmergencyNotificationResponse();
-        //     break;
-        // case NetworkManager.LUCKY_WHEEL_CONFIG:
-        //     msg = new BINLuckyWheelConfigResponse();
-        //     break;
-        // case NetworkManager.BUY_TURN:
-        //     msg = new BINBuyTurnResponse();
-        //     break;
-        // case NetworkManager.JAR_REQUEST:
-        //     msg = new BINJarResponse();
-        //     break;
-        // case NetworkManager.LOOKUP_GAME_HISTORY:
-        //     msg = new BINLookUpGameHistoryResponse();
-        //     break;
-        // case NetworkManager.IAP_CONFIG:
-        //     msg = new BINIAPConfigResponse();
-        //     break;
-        // case NetworkManager.IAP_FINISH:
-        //     msg = new BINCompleteIAPResponse();
-        //     break;
-        // case NetworkManager.GOLD_CONFIG:
-        //     msg = new BINGoldConfigResponse();
-        //     break;
-        // case NetworkManager.PURCHASE_GOLD:
-        //     msg = new BINPurchaseGoldResponse();
-        //     break;
-        // case NetworkManager.USER_STATUS:
-        //     msg = new BINUserStatusResponse();
-        //     break;
+        case NetworkManager.EXPIRED_SESSION:
+            msg = new BINSessionExpiredResponse();
+            break;
+        case NetworkManager.ENTER_ROOM:
+            msg = new BINEnterRoomResponse();
+            break;
+        case NetworkManager.ENTER_GROUP_ROOM:
+            msg = new BINEnterRoomResponse();
+            break;
+        case NetworkManager.PLAYER_ENTER_ROOM:
+            msg = new BINPlayerEnterRoomResponse();
+            break;
+        case NetworkManager.ENTER_ZONE:
+            msg = new BINEnterZoneResponse();
+            break;
+        case NetworkManager.PING:
+            msg = new BINPingResponse();
+            break;
+        case NetworkManager.FILTER_ROOM:
+            msg = new BINFilterRoomResponse();
+            break;
+        case NetworkManager.START_MATCH:
+            msg = new BINStartMatchResponse();
+            break;
+        case NetworkManager.CREATE_ROOM:
+            msg = new BINCreateRoomResponse();
+            break;
+        case NetworkManager.TURN:
+            msg = new BINTurnResponse();
+            break;
+        case NetworkManager.MATCH_BEGIN:
+            msg = new BINMatchBeginResponse();
+            break;
+        case NetworkManager.MATCH_END:
+            msg = new BINMatchEndResponse();
+            break;
+        case NetworkManager.PLAYER_EXIT_AFTER_MATCH_END:
+            msg = new BINPlayerExitAfterMatchEndResponse();
+            break;
+        case NetworkManager.PLAYER_EXIT_ROOM:
+            msg = new BINPlayerExitRoomResponse();
+            break;
+        case NetworkManager.UPDATE_MONEY:
+            msg = new BINUpdateMoneyResponse();
+            break;
+        case NetworkManager.EXIT_ROOM:
+            msg = new BINExitRoomResponse();
+            break;
+        case NetworkManager.PREPARE_NEW_MATCH:
+            msg = new BINPrepareNewMatchResponse();
+            break;
+        case NetworkManager.ROOM_OWNER_CHANGED:
+            msg = new BINRoomOwnerChangedResponse();
+            break;
+        case NetworkManager.CANCEL_EXIT_ROOM:
+            msg = new BINCancelExitAfterMatchEndResponse();
+            break;
+        case NetworkManager.READY_TO_PLAY:
+            msg = new BINReadyToPlayResponse();
+            break;
+        case NetworkManager.UPDATE_USER_INFO:
+            msg = new BINUpdateUserInfoResponse();
+            break;
+        case NetworkManager.LOGOUT:
+            msg = new BINLogoutResponse();
+            break;
+        case NetworkManager.KICK_USER:
+            msg = new BINKickPlayerOutResponse();
+            break;
+        case NetworkManager.LOCK_ROOM:
+            msg = new BINLockRoomResponse();
+            break;
+        case NetworkManager.FILTER_TOP_USER:
+            msg = new BINFilterTopUserResponse();
+            break;
+        case NetworkManager.FILTER_FRIEND:
+            msg = new BINFilterFriendResponse();
+            break;
+        case NetworkManager.ADD_FRIEND:
+            msg = new BINAddFriendResponse();
+            break;
+        case NetworkManager.FILTER_ADD_FRIEND:
+            msg = new BINFilterAddFriendResponse();
+            break;
+        case NetworkManager.APPROVE_ADD_FRIEND:
+            msg = new BINApproveAddFriendResponse();
+            break;
+        case NetworkManager.FIND_USER:
+            msg = new BINFindUserResponse();
+            break;
+        case NetworkManager.VIEW_USER_INFO:
+            msg = new BINViewUserInfoResponse();
+            break;
+        case NetworkManager.REMOVE_FRIEND:
+            msg = new BINRemoveFriendResponse();
+            break;
+        case NetworkManager.CHANGE_RULE:
+            msg = new BINChangeRuleResponse();
+            break;
+        case NetworkManager.LOOKUP_MONEY_HISTORY:
+            msg = new BINLookUpMoneyHistoryResponse();
+            break;
+        case NetworkManager.SEND_TEXT_EMOTICON:
+            msg = new BINSendTextEmoticonResponse();
+            break;
+        case NetworkManager.INSTANT_MESSAGE:
+            msg = new BINInstantMessageResponse();
+            break;
+        case NetworkManager.UPDATE_USER_SETTING:
+            msg = new BINUpdateUserSettingResponse();
+            break;
+        case NetworkManager.FILTER_MAIL:
+            msg = new BINFilterMailResponse();
+            break;
+        case NetworkManager.SEND_MAIL:
+            msg = new BINSendMailResponse();
+            break;
+        case NetworkManager.DELETE_MAIL:
+            msg = new BINDeleteMailResponse();
+            break;
+        case NetworkManager.READED_MAIL:
+            msg = new BINReadedMailResponse();
+            break;
+        case NetworkManager.CLAIM_ATTACH_ITEM:
+            msg = new BINClaimAttachItemResponse();
+            break;
+        case NetworkManager.LEVEL_UP:
+            msg = new BINLevelUpResponse();
+            break;
+        case NetworkManager.MEDAL_UP:
+            msg = new BINMedalUpResponse();
+            break;
+        case NetworkManager.CAPTCHA:
+            msg = new BINCaptchaResponse();
+            break;
+        case NetworkManager.PURCHASE_MONEY:
+            msg = new BINPurchaseMoneyResponse();
+            break;
+        case NetworkManager.KILL_ROOM:
+            msg = new BINKillRoomResponse();
+            break;
+        case NetworkManager.EXIT_ZONE:
+            msg = new BINExitZoneResponse();
+            break;
+        case NetworkManager.BET:
+            msg = new BINBetResponse();
+            break;
+        case NetworkManager.CHANGE_HOST:
+            msg = new BINChangeHostResponse();
+            break;
+        case NetworkManager.EXTRA_BET:
+            msg = new BINExtraBetResponse();
+            break;
+        case NetworkManager.HOST_REGISTRATION:
+            msg = new BINHostRegistrationResponse();
+            break;
+        case NetworkManager.LOOKUP_USER_TO_INVITE:
+            msg = new BINLookUpUserToInviteResponse();
+            break;
+        case NetworkManager.INVITE_TO_ROOM:
+            msg = new BINInviteToRoomResponse();
+            break;
+        case NetworkManager.CANCEL_INVITE:
+            msg = new BINCancelInvitationResponse();
+            break;
+        case NetworkManager.RELY_INVITE:
+            msg = new BINRelyInvitationResponse();
+            break;
+        case NetworkManager.REDEEM_GIFT_CODE:
+            msg = new BINRedeemGiftCodeResponse();
+            break;
+        case NetworkManager.REDEEM_GIFT_CODE_HISTORY:
+            msg = new BINRedeemGiftCodeHistoryResponse();
+            break;
+        case NetworkManager.ASSET_CONFIG:
+            msg = new BINAssetConfigResponse();
+            break;
+        case NetworkManager.EXCHANGE_ASSET:
+            msg = new BINExchangeAssetResponse();
+            break;
+        case NetworkManager.EXCHANGE_CASH_TO_GOLD:
+            msg = new BINExchangeCashToGoldResponse();
+            break;
+        case NetworkManager.EXCHANGE_ASSET_HISTORY:
+            msg = new BINExchangeAssetHistoryResponse();
+            break;
+        case NetworkManager.PURCHASE_CASH_HISTORY:
+            msg = new BINPurchaseCashHistoryResponse();
+            break;
+        case NetworkManager.EXCHANGE_GOLD_HISTORY:
+            msg = new BINExchangeGoldHistoryResponse();
+            break;
+        case NetworkManager.SMS_CONFIG:
+            msg = new BINSmsConfigResponse();
+            break;
+        case NetworkManager.USER_VERIFY_CONFIG:
+            msg = new BINUserVerifyConfigResponse();
+            break;
+        case NetworkManager.USER_VERIFY:
+            msg = new BINUserVerifyResponse();
+            break;
+        case NetworkManager.CASH_TRANSFER:
+            msg = new BINCashTransferResponse();
+            break;
+        case NetworkManager.CASH_TRANSFER_CONFIG:
+            msg = new BINCashTransferConfigResponse();
+            break;
+        case NetworkManager.RESET_PASSWORD:
+            msg = new BINResetPasswordResponse();
+            break;
+        case NetworkManager.FIND_USER_BY_ID:
+            msg = new BINFindUserByIdResponse();
+            break;
+        case NetworkManager.EXCHANGE_C2G_CONFIG:
+            msg = new BINExchangeC2GConfigResponse();
+            break;
+        case NetworkManager.CARD_CONFIG:
+            msg = new BINCardConfigResponse();
+            break;
+        case NetworkManager.HEAD_LINE:
+            msg = new BINHeadLineResponse();
+            break;
+        case NetworkManager.EMERGENCY_NOTIFICATION:
+            msg = new BINEmergencyNotificationResponse();
+            break;
+        case NetworkManager.LUCKY_WHEEL_CONFIG:
+            msg = new BINLuckyWheelConfigResponse();
+            break;
+        case NetworkManager.BUY_TURN:
+            msg = new BINBuyTurnResponse();
+            break;
+        case NetworkManager.JAR_REQUEST:
+            msg = new BINJarResponse();
+            break;
+        case NetworkManager.LOOKUP_GAME_HISTORY:
+            msg = new BINLookUpGameHistoryResponse();
+            break;
+        case NetworkManager.IAP_CONFIG:
+            msg = new BINIAPConfigResponse();
+            break;
+        case NetworkManager.IAP_FINISH:
+            msg = new BINCompleteIAPResponse();
+            break;
+        case NetworkManager.GOLD_CONFIG:
+            msg = new BINGoldConfigResponse();
+            break;
+        case NetworkManager.PURCHASE_GOLD:
+            msg = new BINPurchaseGoldResponse();
+            break;
+        case NetworkManager.USER_STATUS:
+            msg = new BINUserStatusResponse();
+            break;
         default:
             msg = 0;
             break;
