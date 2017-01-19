@@ -2,12 +2,12 @@
  * Created by MyPC on 30/12/2016.
  */
 var MEditBox = cc.EditBox.extend({
-    ctor: function () {
-        this._super();
-        this.init();
+    ctor: function (size,sprite_normal,sprite_pressed,sprite_disable) {
+        this._super(size,sprite_normal,sprite_pressed,sprite_disable);
+        this.init(size,sprite_normal,sprite_pressed,sprite_disable);
     },
-    init:function () {
-        this._super();
+    init:function (size,sprite_normal,sprite_pressed,sprite_disable) {
+        this._super(size,sprite_normal,sprite_pressed,sprite_disable);
     },
     getWidth: function () {
         return this.getContentSize().width;
@@ -17,19 +17,22 @@ var MEditBox = cc.EditBox.extend({
     }
 });
 
-MEditBox.create = function(size,fileName,textSize){
+MEditBox.create = function(size,fileName,textSize,text){
 
-    var editbox = new MEditBox();
-    editbox.setContentSize(size);
-    editbox.setInputFlag(fileName);
-    editbox.setAnchorPoint(cc.p(0,0));
-    editbox.setFontName(res.FONT.FONT_THIN);
-    editbox.setFontSize(textSize);
-    editbox.setFontColor(cc.color.WHITE);
-    editbox.setPlaceholderFont(res.FONT.FONT_THIN,textSize);
-    editbox.setPlaceholderFontColor(cc.color(213,187,187));
-    editbox.setReturnType(EditBox.KEYBOARD_RETURNTYPE_DONE);
-    editbox.setInputMode(EditBox.EDITBOX_INPUT_MODE_SINGLELINE);
+    var edit_box = new MEditBox(size,cc.Scale9Sprite.create(fileName),
+        cc.Scale9Sprite.create(fileName),cc.Scale9Sprite.create(fileName));
+    edit_box.setContentSize(size);
+    edit_box.setInputFlag(fileName);
+    edit_box.setFontName(res.FONT_THIN);
+    edit_box.setFontSize(textSize);
+    edit_box.setFontColor(cc.color.BLACK);
+    edit_box.setPlaceholderFontColor(cc.color.BLACK);
+    edit_box.setPlaceHolder(text);
+    edit_box.setPlaceholderFont(res.FONT_THIN,textSize);
+    edit_box.setPlaceholderFontColor(cc.color(213,187,187));
+    edit_box.setReturnType(cc.EditBox.KEYBOARD_RETURNTYPE_DONE);
+    edit_box.setInputMode(cc.EditBox.EDITBOX_INPUT_MODE_SINGLELINE);
+    edit_box.setInputFlag(cc.EditBox.EDITBOX_INPUT_FLAG_INITIAL_CAPS_SENTENCE);
 
-    return editbox;
+    return edit_box;
 }

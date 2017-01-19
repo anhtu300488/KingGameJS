@@ -6,8 +6,6 @@ var IntroLayer = cc.Layer.extend({
         // 1. super init first
         this._super();
 
-        var spriteBG = new cc.Sprite(res.COMMON.SPRITE_ITEM_BACKGROUND);
-
         var spriteWidth = spriteBG.getContentSize().width;
 
         var spriteHeight = spriteBG.getContentSize().height;
@@ -16,14 +14,14 @@ var IntroLayer = cc.Layer.extend({
         var cols = visibleSize.height/ spriteHeight + 1;
         for(var i = 0; i< rows; i++){
             for(var j = 0; j<cols; j++){
-                var itemSpriteBG = new cc.Sprite(res.COMMON.SPRITE_ITEM_BACKGROUND);
+                var itemSpriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
                 var centerPos = cc.p(spriteBG.x + i*spriteWidth, spriteBG.y + j*spriteHeight);
                 itemSpriteBG.setPosition(centerPos);
                 this.addChild(itemSpriteBG);
             }
         }
 
-        var itemSpriteBGCard = MSprite.create(res.bg_card_png);
+        var itemSpriteBGCard = MSprite.create(res.INTRO_SPRITE_BG_CARD);
         var centerPosCard = MVec2(width/2, height/2);
         itemSpriteBGCard.setPosition(centerPosCard);
         this.addChild(itemSpriteBGCard);

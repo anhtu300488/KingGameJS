@@ -3,12 +3,12 @@
  */
 
 var MLabel = cc.LabelTTF.extend({
-    ctor: function () {
-        this._super();
-        this.init();
+    ctor: function (text,font,size) {
+        this._super(text,font,size);
+        this.init(text,font,size);
     },
-    init:function () {
-        this._super();
+    init:function (text,font,size) {
+        this._super(text,font,size);
     },
     getWidth: function () {
         return this.getContentSize().width;
@@ -18,34 +18,40 @@ var MLabel = cc.LabelTTF.extend({
     }
 });
 
-MLabel.create = function (text, size, isBold) {
-    var label = new MLabel();
+MLabel.create = function (text, size) {
+    var label = new MLabel("",getFontName(res.FONT_THIN_X),size);
     label.setAnchorPoint(cc.p(0.5,0.5));
     label.setString(text);
     label.setColor(cc.color(255,255,255));
-    label.setFontName(isBold ? res.FONT_BOLD : res.FONT_THIN);
-    label.setFontSize(size);
+    label.setFontName(res.FONT_THIN);
+
+    return label;
+}
+
+MLabel.createBold = function (text, size) {
+    var label = new MLabel("",getFontName(res.FONT_BOLD_X),size);
+    label.setAnchorPoint(cc.p(0.5,0.5));
+    label.setString(text);
+    label.setColor(cc.color(255,255,255));
+    label.setFontName(res.FONT_BOLD);
 
     return label;
 }
 
 MLabel.createWithColor = function(text, size, color, isBold) {
-    var label = new MLabel();
+    var label = new MLabel("",getFontName(res.FONT_THIN_X),size);
     label.setString(text);
     label.setFontName(isBold ? res.FONT_BOLD : res.FONT_THIN);
-    label.setFontSize(size);
     label.setColor(color);
 
     return label;
 }
 
 MLabel.createTitle = function(text, size){
-    var label = new MLabel();
+    var label = new MLabel("",getFontName(res.FONT_TITLE_X),size);
     label.setString(text);
-    label.setFontName(res.FONT_TITLE);
     label.setColor(cc.color(0,0,0));
     label.setAnchorPoint(cc.p(0, 0));
-    label.setFontSize(size);
 
     return label;
 }

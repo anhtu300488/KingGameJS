@@ -11,44 +11,36 @@ var PlayLayer = cc.Layer.extend({
     init:function () {
         this._super();
 
-        var padding = 10;
-
-        var size = cc.winSize;
-
-        var winsize = cc.director.getWinSize();
-
-        //create the background image and position it at the center of screen
-
-        var spriteBG = new cc.Sprite(res.item_background);
+        var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
 
         var spriteWidth = spriteBG.getContentSize().width;
 
         var spriteHeight = spriteBG.getContentSize().height;
 
-        var rows = winsize.width/ spriteWidth + 1;
-        var cols = winsize.height/ spriteHeight + 1;
-        for(i = 0; i< rows; i++){
-            for(j = 0; j<cols; j++){
-                var itemSpriteBG = new cc.Sprite(res.item_background);
+        var rows = visibleSize.width/ spriteWidth + 1;
+        var cols = visibleSize.height/ spriteHeight + 1;
+        for(var i = 0; i< rows; i++){
+            for(var j = 0; j<cols; j++){
+                var itemSpriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
                 var centerPos = cc.p(spriteBG.x + i*spriteWidth, spriteBG.y + j*spriteHeight);
                 itemSpriteBG.setPosition(centerPos);
                 this.addChild(itemSpriteBG);
             }
         }
 
-        var btnBack = MButtonCreate(res.btn_back_tlmn, TAG.TLMN_BTN_BACK);
-        btnBack.setPosition(MVec2(padding - btnBack.getContentSize().height/6, winsize.height - padding - btnBack.getContentSize().height*(1 - 1/6)));
+        var btnBack = MButton.create(res.btn_back_tlmn, TAG.TLMN_BTN_BACK);
+        btnBack.setPosition(MVec2(padding - btnBack.getContentSize().height/6, height - padding - btnBack.getContentSize().height*(1 - 1/6)));
         // btnBack.addTouchEventListener();
 
-        var btnInvitePlay = new MButtonCreate(res.btn_moichoi, TAG.BTN_INVITE_TO_PLAY);
-        btnInvitePlay.setPosition(MVec2(padding, winsize.height - 2*padding - btnInvitePlay.getContentSize().height*2));
+        var btnInvitePlay = new MButton.create(res.btn_moichoi, TAG.BTN_INVITE_TO_PLAY);
+        btnInvitePlay.setPosition(MVec2(padding, height - 2*padding - btnInvitePlay.getContentSize().height*2));
         btnInvitePlay.addTouchEventListener();
 
         // var icon_lock = passwordRequired ? "btn_mokhoa.png" : "btn_khoa.png";
         var icon_lock = res.btn_mokhoa;
 
-        var btnKhoa = MButtonCreate(icon_lock, TAG.TLMN_BTN_KHOA);
-        btnKhoa.setPosition(MVec2(2*padding + btnKhoa.getContentSize().width, winsize.height - padding - btnKhoa.getContentSize().height));
+        var btnKhoa = MButton.create(icon_lock, TAG.TLMN_BTN_KHOA);
+        btnKhoa.setPosition(MVec2(2*padding + btnKhoa.getContentSize().width, height - padding - btnKhoa.getContentSize().height));
         // btnKhoa.addTouchEventListener();
         // btnKhoa.setVisible(is_create_room);
 
@@ -57,27 +49,27 @@ var PlayLayer = cc.Layer.extend({
         // var lb_title_game = new MLabelCreate(title_game, btnKhoa.getContentSize().height*0.35, cc.p(10,175,244), true);
         // lb_title_game.setAnchorPoint(cc.p(0,1));
         // var posx_titlegame = is_create_room ? (btnKhoa.getPositionX() + btnKhoa.getContentSize().width + padding) : (btnInvitePlay.getPositionX() + btnKhoa.getContentSize().width + padding);
-        // lb_title_game.setPosition(cc.p(posx_titlegame, originY + winsize.height - padding));
+        // lb_title_game.setPosition(cc.p(posx_titlegame, originY + height - padding));
         // this.addChild(lb_title_game);
 
-        var btn_caidat = MButtonCreate(res.btn_caidat, TAG.TLMN_BTN_CAIDAT);
-        btn_caidat.setPosition(MVec2(winsize.width - padding - btn_caidat.getContentSize().width, winsize.height - btn_caidat.getContentSize().height - padding));
+        var btn_caidat = MButton.create(res.btn_caidat, TAG.TLMN_BTN_CAIDAT);
+        btn_caidat.setPosition(MVec2(width - padding - btn_caidat.getContentSize().width, height - btn_caidat.getContentSize().height - padding));
         // btn_caidat.addTouchEventListener();
 
-        var btn_menu = MButtonCreate(res.btn_menu, TAG.TLMN_BTN_MENU);
-        btn_menu.setPosition(cc.p(originX+padding, originY+winsize.height - btn_menu.getContentSize().height - padding));
+        var btn_menu = MButton.create(res.btn_menu, TAG.TLMN_BTN_MENU);
+        btn_menu.setPosition(cc.p(originX+padding, originY+height - btn_menu.getContentSize().height - padding));
         // btn_menu.addTouchEventListener();
 
-        var btn_message = MButtonCreate(res.btn_message, TAG.TLMN_BTN_MESSAGE);
-        btn_message.setPosition(MVec2(winsize.width - btn_message.getContentSize().width - padding, padding));
+        var btn_message = MButton.create(res.btn_message, TAG.TLMN_BTN_MESSAGE);
+        btn_message.setPosition(MVec2(width - btn_message.getContentSize().width - padding, padding));
         // btn_message.addTouchEventListener();
 
-        var btn_purcharse = MButtonCreate(res.btn_purcharse, TAG.TLMN_BTN_PURCHASE);
+        var btn_purcharse = MButton.create(res.btn_purcharse, TAG.TLMN_BTN_PURCHASE);
         btn_purcharse.setPosition(cc.p(btn_caidat.getPositionX() - padding - btn_purcharse.getContentSize().width,
             btn_caidat.getPositionY()));
         // btn_purcharse.addTouchEventListener();
 
-        var btn_facebook = MButtonCreate(res.btn_facebook, TAG.TLMN_BTN_FACEBOOK);
+        var btn_facebook = MButton.create(res.btn_facebook, TAG.TLMN_BTN_FACEBOOK);
         btn_facebook.setPosition(cc.p(btn_purcharse.getPositionX() - padding - btn_facebook.getContentSize().width,
             btn_purcharse.getPositionY()));
         // btn_facebook.addTouchEventListener();
