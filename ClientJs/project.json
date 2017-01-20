@@ -61,5 +61,4 @@
         "src/protobufObject/BINMedalUpResponse.js",
         "src/protobufObject/BINRegisterResponse.js",
         "src/protobufObject/BINEnterZoneRequest.js"
-    ]
 }

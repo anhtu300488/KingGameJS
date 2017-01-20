@@ -390,12 +390,10 @@ var saveUserInfo = function(userInfo) {
     // }
 
     // if (userInfo.has_cash()) {
-    setCash(userInfo.cash.low);
-    // }
+        setCash(userInfo.cash.low);    // }
 
     // if (userInfo.has_gold()) {
-    setGold(userInfo.gold.low);
-    // }
+        setGold(userInfo.gold.low);    // }
 
     // if (userInfo.has_avatarid()) {
     setAvatarId(userInfo.avatarId);

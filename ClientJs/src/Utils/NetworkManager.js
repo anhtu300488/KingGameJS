@@ -137,7 +137,7 @@ var getInitializeMessageFromServer = function(cp, appversion , country, language
 
     cc.log("request = ", request);
 
-    var requestMess = requestMessage(request, 1, NetworkManager.INITIALIZE, "");
+    var requestMess = requestMessage(request, getOS(), NetworkManager.INITIALIZE, "");
 
     return requestMess;
 }
@@ -172,7 +172,7 @@ var getLoginMessageFromServer = function(username, password)
     cc.log("getLoginMessageFromServer");
     var request = initLoginMessage(username, password);
 
-    var requestMess = requestMessage(request, 1, NetworkManager.LOGIN, "");
+    var requestMess = requestMessage(request, getOS(), NetworkManager.LOGIN, "");
 
     return requestMess;
 }
@@ -196,7 +196,7 @@ var initLoginMessage = function(username, password) {
 
 var getRegisterMessageFromServer = function(username, password, confirm_password, full_name, sdt) {
     request = initRegisterMessage(username, password, confirm_password, full_name, sdt);
-    requestMessage(request, 1, NetworkManager.REGISTER, "");
+    requestMessage(request, getOS(), NetworkManager.REGISTER, "");
 }
 
 var initRegisterMessage = function(username, password, confirm_password, full_name, sdt) {

@@ -464,4 +464,3 @@ var convertString2ByteArray = function(str){
 
     return bytesv2;
 }
-

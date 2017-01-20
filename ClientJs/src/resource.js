@@ -29,7 +29,6 @@ var res = {
     LOGIN_SPRITE_GIRL: "res/sprite_cogai.png",
     LOGIN_SPRITE_LIGHT: "res/sprite_background_login.png",
     LOGIN_EDIT_PASSWORD: "res/edit_password.png",
-
     SHOW_GAME:{
 
     },
@@ -125,7 +124,7 @@ var res = {
     LOGIN_SPRITE_BIGKEN: "res/sprite_bigken.png",
     ICON_DOI_THUONG: "res/DOI_THUONG.png",
     LOGIN_SPRITE_CARD: "res/sprite_card.png",
-    LOGIN_SPRITE_GIRL: "res/sprite_cogai.png",
+    LOGIN_SPRITE_GIRL: "res/sprite_cogai.png"
 };
 
 var g_resources = [];

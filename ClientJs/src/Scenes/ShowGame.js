@@ -96,12 +96,11 @@ var ShowGameLayer = cc.Layer.extend({
 
         //ten hien thi
         // var userName = 'Tu_Atula';
-        var userName = getDisplayName() ? getDisplayName() : 'Tu_Atula';
+        var userName = getDisplayName() ? getDisplayName() : '';
         var label_name = MLabel.create(userName, bk_avatar.getContentSize().height / 4, true);
         label_name.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width +
             label_name.getWidth()/2,
-            btn_phone.getPositionY() + btn_phone.getContentSize().height / 2 - label_name.getHeight()/2));
-        this.addChild(label_name);
+            btn_phone.getPositionY() + btn_phone.getContentSize().height / 2 - label_name.getHeight()/2));        this.addChild(label_name);
 
         var widthName = label_name.getContentSize().width > label_id.getContentSize().width ?
             label_name.getContentSize().width : label_id.getContentSize().width;

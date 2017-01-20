@@ -11,8 +11,8 @@ var RegisterLayer = cc.Layer.extend({
 
         setGameState(GAME_STATE.REGISTER_SCENE);
 
-        var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
-
+        //var spriteBG = new cc.Sprite(res.item_background);
+		var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
         var spriteWidth = spriteBG.getContentSize().width;
 
         var spriteHeight = spriteBG.getContentSize().height;
@@ -49,7 +49,7 @@ var RegisterLayer = cc.Layer.extend({
         this.addChild(girl);
         //==================================== Buttons
 
-        var sprite_edit_password = MSprite.create(res.LOGIN_EDIT_PASSWORD);
+        var sprite_edit_password = MSprite.create(res.LOGIN.EDIT_PASSWORD);
         var positionX = width / 2 + 70;
 
         //register Button
@@ -59,7 +59,7 @@ var RegisterLayer = cc.Layer.extend({
         btn_register.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_register);
 
-        var background_nhap_register = MSprite.create(res.LOGIN_EDIT_PASSWORD);
+        var background_nhap_register = MSprite.create(res.LOGIN.EDIT_PASSWORD);
 
         // btn back
         var btn_back = MButton.create(res.btn_back_tlmn,TAG.REG_BTN_BACK);
