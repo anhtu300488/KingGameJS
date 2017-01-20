@@ -339,6 +339,8 @@ var parseFrom = function(read_str, len)
         if (is_compress == 1) {
             cc.log("zip");
             var left_block = bb.copy(_offset);
+            var byteArray = new Uint8Array(left_block);
+            cc.log("byteArray", byteArray);
             var bufArr = left_block.view;
             // var bufByteArr = Array.from(bufArr);
             // cc.log("bufByteArr", bufByteArr);
@@ -348,7 +350,7 @@ var parseFrom = function(read_str, len)
 
 
             // var dataUnzip = cc.unzip(bufArr);
-            var dataUnzip = cc.Codec.GZip.gunzip(left_block.toString());
+            var dataUnzip = cc.unzip(left_block);
             // cc.log("convertString2ByteArray(leftString)", convertString2ByteArray(leftString));
 
             //get unit8array from buffer
