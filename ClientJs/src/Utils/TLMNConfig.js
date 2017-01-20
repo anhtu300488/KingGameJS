@@ -78,7 +78,14 @@ var TAG = {
     },
 
     PHOM_SCENE:{
-
+        BTN_DANHBAI: 240,
+        BTN_XEPBAI: 241,
+        BTN_BOCBAI: 242,
+        BTN_ANBAI: 243,
+        BTN_BATDAU: 244,
+        BTN_HAPHOM: 245,
+        BTN_GUIBAI: 246,
+        BTN_U: 247
     },
 
     CHANLE_SCENE:{
@@ -94,7 +101,10 @@ var TAG = {
     },
 
     MAUBINH_SCENE:{
-
+        BTN_START_MATCH: 2001,
+        BTN_SANSANG: 2002,
+        BTN_XONG: 2003,
+        EFFECT_TEXT: 2004
     },
 
     VQMM_SCENE:{
@@ -292,4 +302,9 @@ var LOGIN = {
     BTN_BUTTON: "res/btn_button.png",
     SPRITE_CARD: "res/sprite_card.png"
 };
+
+var BUTTON_PADDING = 15;
+var CARD_RATIO  = 1.490909;
+var CARD_UP   = 20;
+var INDEX_CARD  = 22;
 

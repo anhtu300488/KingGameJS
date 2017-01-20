@@ -32,3 +32,10 @@ MSprite.createWithSize = function(textureName,size){
 
     return sprite;
 }
+
+MSprite.createwithFrameName= function(textureName) {
+    var sprite = new MSprite();
+    sprite.setAnchorPoint(cc.p(0,0));
+    sprite.setSpriteFrame(textureName);
+    return sprite;
+}

@@ -55,3 +55,9 @@ MLabel.createTitle = function(text, size){
 
     return label;
 }
+
+MLabel.createIsBold = function(text, size,isBold){
+    var label = new MLabel(text, isBold ? res.FONT_BOLD : res.FONT_THIN,size);
+    label.setAnchorPoint(cc.p(0,0));
+    return label;
+}

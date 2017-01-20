@@ -41,3 +41,5 @@ var pref = {
 };
 
 var TEXT_SHOWGAME_HELLO =         "Chào mừng bạn đã đến với Game Bài BigKen Online !";
+var TXT_BTN_START_MATCH =         "Bắt đầu";
+var TXT_BTN_FINISH      =         "XONG";
