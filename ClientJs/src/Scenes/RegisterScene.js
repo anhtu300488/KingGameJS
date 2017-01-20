@@ -21,14 +21,14 @@ var RegisterLayer = cc.Layer.extend({
         var cols = visibleSize.height/ spriteHeight + 1;
         for(var i = 0; i< rows; i++){
             for(var j = 0; j<cols; j++){
-                var itemSpriteBG = new cc.Sprite(res.COMMON.SPRITE_ITEM_BACKGROUND);
+                var itemSpriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
                 var centerPos = cc.p(spriteBG.x + i*spriteWidth, spriteBG.y + j*spriteHeight);
                 itemSpriteBG.setPosition(centerPos);
                 this.addChild(itemSpriteBG);
             }
         }
 
-        var light_bkg = MSprite.createWithSize(res.LOGIN.SPRITE_LIGHT,visibleSize);
+        var light_bkg = MSprite.createWithSize(res.LOGIN_SPRITE_LIGHT,visibleSize);
         light_bkg.setAnchorPoint(cc.p(0,0));
         light_bkg.setPosition(cc.p(0, 0));
         this.addChild(light_bkg);
@@ -49,7 +49,7 @@ var RegisterLayer = cc.Layer.extend({
         this.addChild(girl);
         //==================================== Buttons
 
-        var sprite_edit_password = MSprite.create(res.LOGIN.EDIT_PASSWORD);
+        var sprite_edit_password = MSprite.create(res.LOGIN_EDIT_PASSWORD);
         var positionX = width / 2 + 70;
 
         //register Button
@@ -59,7 +59,7 @@ var RegisterLayer = cc.Layer.extend({
         btn_register.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_register);
 
-        var background_nhap_register = MSprite.create(res.LOGIN.EDIT_PASSWORD);
+        var background_nhap_register = MSprite.create(res.LOGIN_EDIT_PASSWORD);
 
         // btn back
         var btn_back = MButton.create(res.btn_back_tlmn,TAG.REG_BTN_BACK);
@@ -72,7 +72,7 @@ var RegisterLayer = cc.Layer.extend({
 
 
 
-        var nhap_sdt_bkg = MSprite.create(res.LOGIN.SPRITE_EDIT_BOX);
+        var nhap_sdt_bkg = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
         nhap_sdt_bkg.setPosition(cc.p(originX + positionX,
             btn_register.getPositionY() + btn_register.getHeight() + nhap_sdt_bkg.getHeight() / 3 + 40));
         this.addChild(nhap_sdt_bkg);
@@ -90,7 +90,7 @@ var RegisterLayer = cc.Layer.extend({
         this.nhap_sdt.setFontColor(cc.Color(50,50,50,255));
         this.addChild(this.nhap_sdt);
 
-        var nhap_lai_mk_bkg = MSprite.create(res.LOGIN.SPRITE_EDIT_BOX);
+        var nhap_lai_mk_bkg = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
         nhap_lai_mk_bkg.setPosition(cc.p(originX + positionX,
             nhap_sdt_bkg.getPositionY() + nhap_sdt_bkg.getHeight() + nhap_lai_mk_bkg.getHeight() / 3));
         this.addChild(nhap_lai_mk_bkg);
@@ -109,7 +109,7 @@ var RegisterLayer = cc.Layer.extend({
 
         // editbox nhap mat khau
 
-        var nhap_matkhau_bkg = MSprite.create(res.LOGIN.SPRITE_EDIT_BOX);
+        var nhap_matkhau_bkg = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
         nhap_matkhau_bkg.setPosition(cc.p(originX + positionX,
             nhap_lai_mk_bkg.getPositionY() + nhap_lai_mk_bkg.getHeight() + nhap_matkhau_bkg.getHeight() / 3));
         this.addChild(nhap_matkhau_bkg);
@@ -128,7 +128,7 @@ var RegisterLayer = cc.Layer.extend({
 
         // editbox ten dang nhap
 
-        var nhap_ten_bkg = MSprite.create(res.LOGIN.SPRITE_EDIT_BOX);
+        var nhap_ten_bkg = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
         nhap_ten_bkg.setPosition(cc.p(originX + positionX,
             nhap_matkhau_bkg.getPositionY() + nhap_matkhau_bkg.getHeight() + nhap_ten_bkg.getHeight() / 3));
         this.addChild(nhap_ten_bkg);

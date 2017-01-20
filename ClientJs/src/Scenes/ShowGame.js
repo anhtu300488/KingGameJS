@@ -87,7 +87,7 @@ var ShowGameLayer = cc.Layer.extend({
         this.addChild(btn_avatar);
 
         //info
-        var user_id = 1;
+        var user_id = getUserId() ? getUserId() : '';
         var label_id = MLabel.create(cc.formatStr("ID: %d", user_id), bk_avatar.getContentSize().height / 4, true);
         label_id.setAnchorPoint(cc.p(0,1));
         label_id.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width,
@@ -132,6 +132,14 @@ var ShowGameLayer = cc.Layer.extend({
             _bgr_ken.getContentSize().height / 2 - sprite_napken.getContentSize().height / 2));
         this.addChild(sprite_napken);
 
+        var number_gold = getGold();
+        cc.log("gold", number_gold);
+        var text_ken_scale = number_gold.toString().length > 9 ? 0.42 : 0.5;
+        var label_ken = MLabel.create(number_gold, _bgr_ken.getHeight()*text_ken_scale, cc.color(40, 189, 212), true);
+        label_ken.setAnchorPoint(cc.p(1,0));
+        label_ken.setPosition(sprite_ken.getPositionX() - 5, _bgr_ken.getPositionY() + _bgr_ken.getHeight() / 2 - label_ken.getHeight() / 2);
+        this.addChild(label_ken);
+
         //xu
         var _bgr_xu = MButton.create(res.SPRITE_BK_XUKEN,TAG.SHOW_BTN_NAPXU);
         // _bgr_xu.addTouchEventListener();
@@ -151,11 +159,44 @@ var ShowGameLayer = cc.Layer.extend({
             _bgr_xu.getPositionY() + _bgr_xu.getContentSize().height / 2 - sprite_napxu.getContentSize().height / 2));
         this.addChild(sprite_napxu);
 
+        var number_cash = getCash();
+        var text_xu_scale = number_cash.toString().length > 9 ? 0.42 : 0.5;
+        var label_xu = MLabel.create(number_cash, _bgr_xu.getHeight()*text_xu_scale, cc.color(255, 214, 0), true);
+        label_xu.setAnchorPoint(cc.p(1,0));
+        label_xu.setPosition(sprite_xu.getPositionX() - 5,
+            _bgr_xu.getPositionY() + _bgr_xu.getHeight() / 2 - label_xu.getHeight() / 2);
+        this.addChild(label_xu);
+
         var sprite_thongtin = MSprite.create(res.SPRITE_THONGTIN);
         sprite_thongtin.setAnchorPoint(cc.p(0,0));
         sprite_thongtin.setPosition(cc.p(originX + visibleSize.width / 2 - sprite_thongtin.getContentSize().width / 2,
             btn_avatar.getPositionY() - bk_avatar.getContentSize().height - padding - sprite_thongtin.getHeight()));
         this.addChild(sprite_thongtin);
+
+        // var node_hello = new cc.Node();
+        // cc.log("node_hello", getHeadLineNotify());
+        // if (getHeadLineNotify().empty()){
+        //     var label_hello = MLabel.create(TEXT_SHOWGAME_HELLO, _bgr_xu.getHeight()*0.32);
+        //     label_hello.setColor(cc.color.WHITE);
+        //     label_hello.setPosition(0,sprite_thongtin.getContentSize().height / 2 - label_hello.getHeight() / 2);
+        //
+        //     node_hello.setContentSize(Size(label_hello.getContentSize().width, sprite_thongtin.getContentSize().height));
+        //     node_hello.addChild(label_hello);
+        // } else {
+        //     getNodeHello(node_hello);
+        // }
+
+        // var bg_thongtin = MSprite.create(res.SPRITE_THONGTIN);
+        // var clipText = new cc.ClippingNode(bg_thongtin);
+        // clipText.setPosition(cc.p(origin.x + width / 2 - bg_thongtin.getWidth() / 2,
+        //     btn_avatar.getPosition().y - btn_avatar.getHeight() - padding));
+        // clipText.addChild(node_hello);
+        // this.addChild(clipText);
+        //
+        // var sprite_thongtin_hidden = MSprite.create("res/sprite_thongtin_hidden.png");
+        // sprite_thongtin_hidden.setPosition(cc.p(sprite_thongtin.getPositionX(),
+        //     sprite_thongtin.getPositionY()));
+        // this.addChild(sprite_thongtin_hidden);
 
         var bkg_navigationbar = MSprite.create(res.BGR_UNDERLINE);
         bkg_navigationbar.setAnchorPoint(cc.p(0,0));
@@ -259,6 +300,9 @@ var ShowGameLayer = cc.Layer.extend({
 
         // var enableGameIds = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
         var enableGameIds = getEnableGameIds();
+
+        cc.log("enableGameIds", enableGameIds);
+
         if(getEnableGameIds() == null){
             enableGameIds = [0,1,2,3,4,5,6,7,8,9,10];
         }
@@ -499,32 +543,37 @@ var ShowGameLayer = cc.Layer.extend({
 
         if(type == ccui.Widget.TOUCH_ENDED){
             cc.log("TOUCHED!!!");
-            /*var gameTag = sender.tag;
+
+            var gameTag = sender.tag;
+
             setGameTag(gameTag);
             // SoundManager::getInstance()->playSound("sounds/button_click.mp3");
-            var isFound = false;
-            // for (game_id : Common::getInstance()->getEnableGameIds()) {
-            //     if (Common::getInstance()->getZoneId() == game_id) {
-            //         isFound = true;
-            //         break;
-            //     }
-            // }
+
             var isFound = false;
             var enableGameIds = getEnableGameIds();
-            if(getEnableGameIds() == null){
-                enableGameIds = [0,1,2,3,4,5,6,7,8,9,10];
-            }
+            cc.log("enableGameIds", enableGameIds);
+
+            cc.log("getZoneId", getZoneId());
+            // if(getEnableGameIds() == null){
+            //     enableGameIds = [0,1,2,3,4,5,6,7,8,9,10];
+            // }
             for (var j = 0; j < enableGameIds.length; j++) {
                 if (enableGameIds[j] == getZoneId()) {
                     isFound = true;
                     break;
                 }
             }
+
+            cc.log("isFound", isFound);
             if (!isFound) {
                 // showToast("Game sắp ra mắt", 3);
+                var popupMessage = new PopupMessageBox();
+                popupMessage.setMessage("Game sắp ra mắt!");
+                this.addChild(popupMessage);
+                popupMessage.appear();
                 return;
             }
-            //getEnterZoneMessageFromServer(getZoneId());*/
+            getEnterZoneMessageFromServer(getZoneId());
         }
     }
 });
@@ -536,3 +585,44 @@ var ShowGameScene = cc.Scene.extend({
         this.addChild(layer);
     }
 });
+
+/*//herehere
+var getNodeHello = function(node){
+    // node->removeAllChildren();
+
+    var padding_item = 5;
+    var padding_node = sprite_thongtin.getContentSize().width / 10;
+    vector<BINNews> lstHeadLineNotify = Common::getInstance()->getHeadLineNotify();
+
+    float size_text = 0.0f;
+
+    for (int i = 0; i < lstHeadLineNotify.size(); i++){
+        //tag
+        auto lb_tag = MLabel::create("( "+lstHeadLineNotify[i].tag()+" )", _bgr_xu->getHeight()*0.32f, Color3B(255,255, 0));
+
+        lb_tag->setPosition(Vec2(size_text, sprite_thongtin->getContentSize().height / 2 - lb_tag->getHeight() / 2));
+        node->addChild(lb_tag);
+
+        //displayName
+        auto lb_displayname = MLabel::create(lstHeadLineNotify[i].displayname(), _bgr_xu->getHeight()*0.32f, Color3B(69,203,241));//Color3B(0, 255, 246)
+        lb_displayname->setPosition(Vec2(lb_tag->getPosition().x + lb_tag->getWidth() + padding_item,
+            sprite_thongtin->getContentSize().height / 2 - lb_displayname->getHeight()/2));
+        node->addChild(lb_displayname);
+
+        //action
+        auto lb_action = MLabel::create(lstHeadLineNotify[i].action(), _bgr_xu->getHeight()*0.32f, Color3B(218,235,129));//Color3B::WHITE
+        lb_action->setPosition(Vec2(lb_displayname->getPosition().x + lb_displayname->getWidth() + padding_item,
+            sprite_thongtin->getContentSize().height / 2 - lb_action->getHeight() / 2));
+        node->addChild(lb_action);
+
+        //subject
+        auto lb_subject = MLabel::create(lstHeadLineNotify[i].subject(), _bgr_xu->getHeight()*0.32f, Color3B(68, 235, 219));//Color3B(251, 7, 133)
+        lb_subject->setPosition(Vec2(lb_action->getPosition().x + lb_action->getWidth() + padding_item,
+            sprite_thongtin->getContentSize().height / 2 - lb_subject->getHeight() / 2));
+        node->addChild(lb_subject);
+
+        size_text += lb_tag->getWidth() + lb_displayname->getWidth() + lb_action->getWidth() + lb_subject->getWidth() + padding_node;
+    }
+
+    node->setContentSize(Size(size_text, sprite_thongtin->getContentSize().height));
+}*/

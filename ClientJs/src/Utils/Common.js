@@ -2,6 +2,7 @@
  * Created by MyPC on 12/12/2016.
  */
 var os = 0;
+var _zoneId = -1;
 var getTitleGame = function(){
     var title_game = "";
 
@@ -33,7 +34,7 @@ var getTitleGame = function(){
 
 var getZoneId = function() {
     var result = -1;
-    //CCLOG("%d", this->gameTag);
+    cc.log("this.gameTag", this.gameTag);
     switch (this.gameTag)
     {
         case TAG.SHOW_GAME_SAM:
@@ -49,6 +50,7 @@ var getZoneId = function() {
             result = TAG.TIENLENMIENNAM_ZONE;
             break;
         case TAG.SHOW_GAME_TLMN_SOLO:
+            cc.log("here SHOW_GAME_TLMN_SOLO");
             result = TAG.TLMN_SOLO_ZONE;
             break;
         case TAG.SHOW_GAME_BACAY:
@@ -79,6 +81,9 @@ var getZoneId = function() {
             result = TAG.TIENLENMIENNAM_ZONE;
             break;
     }
+
+    cc.log("_zoneId", _zoneId);
+
     return _zoneId != -1 ? _zoneId : result;
 };
 
@@ -415,14 +420,48 @@ var isAutoDenyInvitation = function() {
 }
 
 var getOS = function()  {
-    // if (os == 0) {
-    //     #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    //             os = ANDROID_PLATFORM;
-    //     #elif (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    //             os =IOS_PLATFORM;
-    //     #else
-    //             os = ANDROID_PLATFORM;
-    //     #endif
-    // }
-    return os;
+    //     if (cc.sys.platform == cc.sys.DESKTOP_BROWSER)
+    //             os = cc.sys.DESKTOP_BROWSER;
+    //     else if(cc.sys.platform == cc.sys.ANDROID)
+    //             os = cc.sys.ANDROID;
+    //     else if(cc.sys.platform == cc.sys.IOS)
+    //         os = cc.sys.IOS;
+    //     else
+    //         os = cc.sys.DESKTOP_BROWSER;
+    //     // end;
+    // return os;
+    // return cc.sys.DESKTOP_BROWSER;
+    return 1;
 }
+
+var setUserId = function(userId) {
+    this.userId = userId;
+}
+
+var getUserId = function() {
+    return this.userId;
+}
+
+var setHeadLineNotify = function(headline_notify){
+    this.headline_nofify = headline_notify;
+}
+
+var getHeadLineNotify = function(){
+    return this.headline_nofify;
+}
+
+var convertString2ByteArray = function(str){
+    var bytes = []; // char codes
+    var bytesv2 = []; // char codes
+
+    for (var i = 0; i < str.length; ++i) {
+        var code = str.charCodeAt(i);
+
+        bytes = bytes.concat([code]);
+
+        bytesv2 = bytesv2.concat([code & 0xff, code / 256 >>> 0]);
+    }
+
+    return bytesv2;
+}
+

@@ -26,7 +26,8 @@ var TXT = {
     AUTO_READY_TEXT: "Tự động sẵn sàng",
     DENY_INVITES_TEXT: "Từ chối lời mời",
     AUTO_SIT_TEXT: "Tự động ngồi xuống"
-}
+
+};
 
 var pref = {
     MUSIC: "music",
@@ -37,4 +38,6 @@ var pref = {
     USER_INFOR: "user_infor",
     AUTO_SIT: "auto_sit",
     NOTIFY_TABLE: "notify_table"
-}
+};
+
+var TEXT_SHOWGAME_HELLO =         "Chào mừng bạn đã đến với Game Bài BigKen Online !";

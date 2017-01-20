@@ -14,7 +14,7 @@ var LoginLayer = cc.Layer.extend({
     init:function(){
         this._super();
 
-        var spriteBG = new cc.Sprite(res.COMMON.SPRITE_ITEM_BACKGROUND);
+        var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
 
         var spriteWidth = spriteBG.getContentSize().width;
 
@@ -24,14 +24,14 @@ var LoginLayer = cc.Layer.extend({
         var cols = visibleSize.height/ spriteHeight + 1;
         for(var i = 0; i< rows; i++){
             for(var j = 0; j<cols; j++){
-                var itemSpriteBG = new cc.Sprite(res.COMMON.SPRITE_ITEM_BACKGROUND);
+                var itemSpriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
                 var centerPos = cc.p(spriteBG.x + i*spriteWidth, spriteBG.y + j*spriteHeight);
                 itemSpriteBG.setPosition(centerPos);
                 this.addChild(itemSpriteBG);
             }
         }
 
-        var light_bkg = MSprite.createWithSize(res.LOGIN.SPRITE_LIGHT,visibleSize);
+        var light_bkg = MSprite.createWithSize(res.LOGIN_SPRITE_LIGHT,visibleSize);
         light_bkg.setAnchorPoint(cc.p(0,0));
         light_bkg.setPosition(cc.p(0, 0));
         this.addChild(light_bkg);
@@ -87,7 +87,7 @@ var LoginLayer = cc.Layer.extend({
         this.addChild(btn_login_facebook);
 
         //choi ngay
-        var btn_playnow = MButton.createWithText(res.LOGIN.BTN_CHOI_NGAY,
+        var btn_playnow = MButton.createWithText(res.LOGIN_BTN_CHOI_NGAY,
             TXT.LOGIN_BTN_PLAYNOW,TAG.LOGIN.BTN_LOGIN_GOOGLE);
         btn_playnow.setPosition(cc.p(btn_login_facebook.getPosition().x,
             btn_login_facebook.getPosition().y + btn_login_facebook.getHeight()*1.2));
@@ -119,7 +119,7 @@ var LoginLayer = cc.Layer.extend({
         fogotPassword.addTouchEventListener( this.menuCallBack,this);
         this.addChild(fogotPassword);
 
-        var editBackgroundMatKhau = MSprite.create(res.LOGIN.SPRITE_EDIT_BOX);
+        var editBackgroundMatKhau = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
         editBackgroundMatKhau.setPosition(cc.p(btn_playnow.getPositionX(),btn_playnow.getPositionY() +
             btn_playnow.getHeight()*2.75));
         this.addChild(editBackgroundMatKhau);
@@ -127,7 +127,7 @@ var LoginLayer = cc.Layer.extend({
         var fontSize = editBackgroundMatKhau.getContentSize().height / 3;
 
         this.eboxNhapMK = MEditBox.create(editBackgroundMatKhau.getContentSize()*0.8,
-            res.LOGIN.SPRITE_EDIT_BOX_NULL,fontSize,"Nhập Mật Khẩu");
+            res.LOGIN_SPRITE_EDIT_BOX_NULL,fontSize,"Nhập Mật Khẩu");
         this.eboxNhapMK.setInputFlag(cc.EDITBOX_INPUT_FLAG_PASSWORD);
         this.eboxNhapMK.setPosition(cc.p(editBackgroundMatKhau.getPositionX() +
             editBackgroundMatKhau.getContentSize().width*0.1,
@@ -137,13 +137,13 @@ var LoginLayer = cc.Layer.extend({
         this.eboxNhapMK.setDelegate(this);
         this.addChild(this.eboxNhapMK);
 
-        var editBackgroundTaiKhoan = MSprite.create(res.LOGIN.SPRITE_EDIT_BOX);
+        var editBackgroundTaiKhoan = MSprite.create(res.LOGIN_SPRITE_EDIT_BOX);
         editBackgroundTaiKhoan.setPosition(cc.p(btn_playnow.getPosition().x,btn_playnow.getPosition().y +
             btn_playnow.getHeight()*2.75 + 15 + editBackgroundTaiKhoan.getHeight()));
         this.addChild(editBackgroundTaiKhoan);
 
         this.eboxNhapTK = MEditBox.create(editBackgroundTaiKhoan.getContentSize()*0.8,
-            res.LOGIN.SPRITE_EDIT_BOX_NULL,fontSize,"Nhập Tài Khoản");
+            res.LOGIN_SPRITE_EDIT_BOX_NULL,fontSize,"Nhập Tài Khoản");
         this.eboxNhapTK.setInputFlag(cc.EDITBOX_INPUT_FLAG_INITIAL_CAPS_ALL_CHARACTERS);
         this.eboxNhapTK.setPosition(cc.p(editBackgroundTaiKhoan.getPositionX() +
             editBackgroundTaiKhoan.getContentSize().width*0.1,
@@ -327,13 +327,19 @@ var loginResponseHandler = function(loginresponse) {
             // setIntegerForKey(Common.KEY_USER_ID,
             //     loginresponse.userInfo.userId);
 
+            cc.log("userInfo",loginresponse.userInfo.userId.low);
+
+            var userId = loginresponse.userInfo.userId.low
+
+            setUserId(userId);
+
 
             setHasPlayingMatch(loginresponse.hasPlayingMatch);
             // if (loginresponse.has_userinfo) {
-                saveUserInfo(loginresponse.userInfo);
+            saveUserInfo(loginresponse.userInfo);
             // }
             // if (loginresponse.has_usersetting) {
-                saveUserSetting(loginresponse.userSetting);
+            saveUserSetting(loginresponse.userSetting);
             // }
 
             if (!isHasPlayingMatch()) {
@@ -373,52 +379,54 @@ var loginResponseHandler = function(loginresponse) {
 }
 
 var saveUserInfo = function(userInfo) {
+    cc.log("userInfo xxxx",userInfo);
     setUserName(userInfo.userName);
     // if (userInfo.displayName) {
-        setDisplayName(userInfo.displayName);
+    setDisplayName(userInfo.displayName);
     // }
 
     // if (userInfo.has_level()) {
-        setLevel(userInfo.level);
+    setLevel(userInfo.level);
     // }
 
     // if (userInfo.has_cash()) {
-        setCash(userInfo.cash);
+    setCash(userInfo.cash.low);
     // }
 
     // if (userInfo.has_gold()) {
-        setGold(userInfo.gold);
+    setGold(userInfo.gold.low);
     // }
 
     // if (userInfo.has_avatarid()) {
-        setAvatarId(userInfo.avatarId);
+    setAvatarId(userInfo.avatarId);
     // }
 
     // if (userInfo.has_mobile()){
-        setPhoneNunber(userInfo.mobile);
+    setPhoneNunber(userInfo.mobile);
     // }
 
     // if (userInfo.has_accountverified()){
-        setAccountVerify(userInfo.accountVerified);
+    setAccountVerify(userInfo.accountVerified);
     // }
 
     // if (userInfo.has_disablecashtransaction()){
-        setDisableCashTransaction(userInfo.disableCashTransaction);
+    setDisableCashTransaction(userInfo.disableCashTransaction);
     // }
 
     // if (userInfo.has_securitykeyset()){
-        setSecurityKeySeted(userInfo.securityKeySet);
+    setSecurityKeySeted(userInfo.securityKeySet);
     // }
 }
 
 var saveUserSetting = function(userSetting) {
+    cc.log("usersetting", userSetting);
     // if (userSetting.has_autoready()) {
-        setAutoReady(userSetting.autoReady);
-        // setPrefs(AUTOREADY, userSetting.autoReady);
+    setAutoReady(userSetting.autoReady);
+    // setPrefs(AUTOREADY, userSetting.autoReady);
     // }
 
     // if (userSetting.has_autodenyinvitation()) {
-        setAutoDenyInvitation(userSetting.autoDenyInvitation);
-        // setPrefs(DENY_INVITES, userSetting.autoDenyInvitation);
+    setAutoDenyInvitation(userSetting.autoDenyInvitation);
+    // setPrefs(DENY_INVITES, userSetting.autoDenyInvitation);
     // }
 }
