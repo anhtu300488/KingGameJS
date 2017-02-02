@@ -100,6 +100,9 @@ var PhomLayer = cc.Layer.extend({
         remainCard.setVisible(false);
 
         return true;
+    },
+    initGame : function () {
+        btnInvitePlay = 10;
     }
 
 });

@@ -7,158 +7,158 @@
 		<key>xoc_1.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{220,220},{220,220}}</string>
+			<string>{{229,201},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 		<key>xoc_10.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{0,220},{220,220}}</string>
+			<string>{{0,201},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 		<key>xoc_11.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 		<key>xoc_12.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{440,0},{220,220}}</string>
+			<string>{{458,0},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 		<key>xoc_2.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{440,220},{220,220}}</string>
+			<string>{{458,201},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 		<key>xoc_3.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{440,0},{220,220}}</string>
+			<string>{{458,0},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 		<key>xoc_4.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{220,660},{220,220}}</string>
+			<string>{{229,603},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 		<key>xoc_5.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{220,440},{220,220}}</string>
+			<string>{{229,402},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 		<key>xoc_6.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{440,440},{220,220}}</string>
+			<string>{{458,402},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 		<key>xoc_7.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{220,0},{220,220}}</string>
+			<string>{{229,0},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 		<key>xoc_8.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{0,660},{220,220}}</string>
+			<string>{{0,603},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 		<key>xoc_9.png</key>
 		<dict>
 			<key>frame</key>
-			<string>{{0,440},{220,220}}</string>
+			<string>{{0,402},{229,201}}</string>
 			<key>offset</key>
 			<string>{0,0}</string>
 			<key>rotated</key>
 			<false/>
 			<key>sourceColorRect</key>
-			<string>{{0,0},{220,220}}</string>
+			<string>{{0,0},{229,201}}</string>
 			<key>sourceSize</key>
-			<string>{220,220}</string>
+			<string>{229,201}</string>
 		</dict>
 	</dict>
 	<key>metadata</key>
@@ -166,7 +166,7 @@
 		<key>format</key>
 		<integer>2</integer>
 		<key>size</key>
-		<string>{660,880}</string>
+		<string>{687,804}</string>
 		<key>textureFileName</key>
 		<string>xoc.png</string>
 	</dict>

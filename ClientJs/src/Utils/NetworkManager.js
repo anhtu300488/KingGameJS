@@ -343,14 +343,16 @@ var parseFrom = function(read_str, len)
             cc.log("byteArray", byteArray);
             var bufArr = left_block.view;
             // var bufByteArr = Array.from(bufArr);
-            // cc.log("bufByteArr", bufByteArr);
+            cc.log("bufByteArr", left_block.toString('base64'));
             // var leftString = left_block.toString();
             // cc.log("leftString", leftString);
             // var leftString = 'test';
 
 
             // var dataUnzip = cc.unzip(bufArr);
-            var dataUnzip = cc.unzip(left_block);
+            var dataUnzip = cc.unzipBase64AsArray(left_block.toString('base64'));
+
+
             // cc.log("convertString2ByteArray(leftString)", convertString2ByteArray(leftString));
 
             //get unit8array from buffer
@@ -377,7 +379,56 @@ var parseFrom = function(read_str, len)
             // // transfer bytes from this buffer into the given destination array
             // buf.put(bytes, 0, bytes.length);
 
+            var _offsetZip = 0;
+
             cc.log("dataUnzip", dataUnzip);
+
+            var bbZip = new ByteBuffer(dataUnzip.length);
+
+            bbZip.append(dataUnzip, "", 0);
+
+            cc.log("dataUnzip", bbZip);
+
+            var data_size_block_zip = bbZip.readInt16(_offsetZip);
+            _offsetZip+= 2;
+
+
+            // read messageid
+
+            var messageidZip = bbZip.readInt16(_offsetZip);
+            _offsetZip+= 2;
+
+
+            left_byte_size -= (data_size_block_zip + 2);
+
+            //read protobuf
+
+
+            var protoBufVarZip = bbZip.copy(_offsetZip, data_size_block_zip + _offsetZip - 2);
+
+            cc.log("protoBufVar = ", protoBufVarZip);
+
+            cc.log("messageid:" + messageidZip);
+
+            response = getTypeMessage(response, messageidZip, protoBufVarZip);
+
+            cc.log("response: " + response + ", messageid:" + messageidZip);
+
+            if (response != 0) {
+                left_byte_size -= (data_size_block_zip + 2);
+                cc.log("response: " + response + ", messageid:" + messageidZip);
+                var pairZip = {
+                    message_id: messageidZip,
+                    response: response
+                };
+                listMessages.push(pairZip);
+                cc.log("list message size: " + listMessages.length);
+            }
+            else {
+                cc.error("unknown message");
+            }
+
+
             // google::protobuf::io::CodedInputStream::Limit msgLimit =
             //     codedIn.PushLimit(left_byte_size); //limit compressed size
             // //read data compressed
@@ -480,256 +531,256 @@ var getTypeMessage = function(msg, messageid, protoBufVar) {
             msg = new BINLoginResponse(protoBufVar);
             break;
         case NetworkManager.EXPIRED_SESSION:
-            msg = new BINSessionExpiredResponse();
+            msg = new BINSessionExpiredResponse(protoBufVar);
             break;
         case NetworkManager.ENTER_ROOM:
-            msg = new BINEnterRoomResponse();
+            msg = new BINEnterRoomResponse(protoBufVar);
             break;
         case NetworkManager.ENTER_GROUP_ROOM:
-            msg = new BINEnterRoomResponse();
+            msg = new BINEnterRoomResponse(protoBufVar);
             break;
         case NetworkManager.PLAYER_ENTER_ROOM:
-            msg = new BINPlayerEnterRoomResponse();
+            msg = new BINPlayerEnterRoomResponse(protoBufVar);
             break;
         case NetworkManager.ENTER_ZONE:
-            msg = new BINEnterZoneResponse();
+            msg = new BINEnterZoneResponse(protoBufVar);
             break;
         case NetworkManager.PING:
-            msg = new BINPingResponse();
+            msg = new BINPingResponse(protoBufVar);
             break;
         case NetworkManager.FILTER_ROOM:
-            msg = new BINFilterRoomResponse();
+            msg = new BINFilterRoomResponse(protoBufVar);
             break;
         case NetworkManager.START_MATCH:
-            msg = new BINStartMatchResponse();
+            msg = new BINStartMatchResponse(protoBufVar);
             break;
         case NetworkManager.CREATE_ROOM:
-            msg = new BINCreateRoomResponse();
+            msg = new BINCreateRoomResponse(protoBufVar);
             break;
         case NetworkManager.TURN:
-            msg = new BINTurnResponse();
+            msg = new BINTurnResponse(protoBufVar);
             break;
         case NetworkManager.MATCH_BEGIN:
-            msg = new BINMatchBeginResponse();
+            msg = new BINMatchBeginResponse(protoBufVar);
             break;
         case NetworkManager.MATCH_END:
-            msg = new BINMatchEndResponse();
+            msg = new BINMatchEndResponse(protoBufVar);
             break;
         case NetworkManager.PLAYER_EXIT_AFTER_MATCH_END:
-            msg = new BINPlayerExitAfterMatchEndResponse();
+            msg = new BINPlayerExitAfterMatchEndResponse(protoBufVar);
             break;
         case NetworkManager.PLAYER_EXIT_ROOM:
-            msg = new BINPlayerExitRoomResponse();
+            msg = new BINPlayerExitRoomResponse(protoBufVar);
             break;
         case NetworkManager.UPDATE_MONEY:
-            msg = new BINUpdateMoneyResponse();
+            msg = new BINUpdateMoneyResponse(protoBufVar);
             break;
         case NetworkManager.EXIT_ROOM:
-            msg = new BINExitRoomResponse();
+            msg = new BINExitRoomResponse(protoBufVar);
             break;
         case NetworkManager.PREPARE_NEW_MATCH:
-            msg = new BINPrepareNewMatchResponse();
+            msg = new BINPrepareNewMatchResponse(protoBufVar);
             break;
         case NetworkManager.ROOM_OWNER_CHANGED:
-            msg = new BINRoomOwnerChangedResponse();
+            msg = new BINRoomOwnerChangedResponse(protoBufVar);
             break;
         case NetworkManager.CANCEL_EXIT_ROOM:
-            msg = new BINCancelExitAfterMatchEndResponse();
+            msg = new BINCancelExitAfterMatchEndResponse(protoBufVar);
             break;
         case NetworkManager.READY_TO_PLAY:
-            msg = new BINReadyToPlayResponse();
+            msg = new BINReadyToPlayResponse(protoBufVar);
             break;
         case NetworkManager.UPDATE_USER_INFO:
-            msg = new BINUpdateUserInfoResponse();
+            msg = new BINUpdateUserInfoResponse(protoBufVar);
             break;
         case NetworkManager.LOGOUT:
-            msg = new BINLogoutResponse();
+            msg = new BINLogoutResponse(protoBufVar);
             break;
         case NetworkManager.KICK_USER:
-            msg = new BINKickPlayerOutResponse();
+            msg = new BINKickPlayerOutResponse(protoBufVar);
             break;
         case NetworkManager.LOCK_ROOM:
-            msg = new BINLockRoomResponse();
+            msg = new BINLockRoomResponse(protoBufVar);
             break;
         case NetworkManager.FILTER_TOP_USER:
-            msg = new BINFilterTopUserResponse();
+            msg = new BINFilterTopUserResponse(protoBufVar);
             break;
         case NetworkManager.FILTER_FRIEND:
-            msg = new BINFilterFriendResponse();
+            msg = new BINFilterFriendResponse(protoBufVar);
             break;
         case NetworkManager.ADD_FRIEND:
-            msg = new BINAddFriendResponse();
+            msg = new BINAddFriendResponse(protoBufVar);
             break;
         case NetworkManager.FILTER_ADD_FRIEND:
-            msg = new BINFilterAddFriendResponse();
+            msg = new BINFilterAddFriendResponse(protoBufVar);
             break;
         case NetworkManager.APPROVE_ADD_FRIEND:
-            msg = new BINApproveAddFriendResponse();
+            msg = new BINApproveAddFriendResponse(protoBufVar);
             break;
         case NetworkManager.FIND_USER:
-            msg = new BINFindUserResponse();
+            msg = new BINFindUserResponse(protoBufVar);
             break;
         case NetworkManager.VIEW_USER_INFO:
-            msg = new BINViewUserInfoResponse();
+            msg = new BINViewUserInfoResponse(protoBufVar);
             break;
         case NetworkManager.REMOVE_FRIEND:
-            msg = new BINRemoveFriendResponse();
+            msg = new BINRemoveFriendResponse(protoBufVar);
             break;
         case NetworkManager.CHANGE_RULE:
-            msg = new BINChangeRuleResponse();
+            msg = new BINChangeRuleResponse(protoBufVar);
             break;
         case NetworkManager.LOOKUP_MONEY_HISTORY:
-            msg = new BINLookUpMoneyHistoryResponse();
+            msg = new BINLookUpMoneyHistoryResponse(protoBufVar);
             break;
         case NetworkManager.SEND_TEXT_EMOTICON:
-            msg = new BINSendTextEmoticonResponse();
+            msg = new BINSendTextEmoticonResponse(protoBufVar);
             break;
         case NetworkManager.INSTANT_MESSAGE:
-            msg = new BINInstantMessageResponse();
+            msg = new BINInstantMessageResponse(protoBufVar);
             break;
         case NetworkManager.UPDATE_USER_SETTING:
-            msg = new BINUpdateUserSettingResponse();
+            msg = new BINUpdateUserSettingResponse(protoBufVar);
             break;
         case NetworkManager.FILTER_MAIL:
-            msg = new BINFilterMailResponse();
+            msg = new BINFilterMailResponse(protoBufVar);
             break;
         case NetworkManager.SEND_MAIL:
-            msg = new BINSendMailResponse();
+            msg = new BINSendMailResponse(protoBufVar);
             break;
         case NetworkManager.DELETE_MAIL:
-            msg = new BINDeleteMailResponse();
+            msg = new BINDeleteMailResponse(protoBufVar);
             break;
         case NetworkManager.READED_MAIL:
-            msg = new BINReadedMailResponse();
+            msg = new BINReadedMailResponse(protoBufVar);
             break;
         case NetworkManager.CLAIM_ATTACH_ITEM:
-            msg = new BINClaimAttachItemResponse();
+            msg = new BINClaimAttachItemResponse(protoBufVar);
             break;
         case NetworkManager.LEVEL_UP:
-            msg = new BINLevelUpResponse();
+            msg = new BINLevelUpResponse(protoBufVar);
             break;
         case NetworkManager.MEDAL_UP:
-            msg = new BINMedalUpResponse();
+            msg = new BINMedalUpResponse(protoBufVar);
             break;
         case NetworkManager.CAPTCHA:
-            msg = new BINCaptchaResponse();
+            msg = new BINCaptchaResponse(protoBufVar);
             break;
         case NetworkManager.PURCHASE_MONEY:
-            msg = new BINPurchaseMoneyResponse();
+            msg = new BINPurchaseMoneyResponse(protoBufVar);
             break;
         case NetworkManager.KILL_ROOM:
-            msg = new BINKillRoomResponse();
+            msg = new BINKillRoomResponse(protoBufVar);
             break;
         case NetworkManager.EXIT_ZONE:
-            msg = new BINExitZoneResponse();
+            msg = new BINExitZoneResponse(protoBufVar);
             break;
         case NetworkManager.BET:
-            msg = new BINBetResponse();
+            msg = new BINBetResponse(protoBufVar);
             break;
         case NetworkManager.CHANGE_HOST:
-            msg = new BINChangeHostResponse();
+            msg = new BINChangeHostResponse(protoBufVar);
             break;
         case NetworkManager.EXTRA_BET:
-            msg = new BINExtraBetResponse();
+            msg = new BINExtraBetResponse(protoBufVar);
             break;
         case NetworkManager.HOST_REGISTRATION:
-            msg = new BINHostRegistrationResponse();
+            msg = new BINHostRegistrationResponse(protoBufVar);
             break;
         case NetworkManager.LOOKUP_USER_TO_INVITE:
-            msg = new BINLookUpUserToInviteResponse();
+            msg = new BINLookUpUserToInviteResponse(protoBufVar);
             break;
         case NetworkManager.INVITE_TO_ROOM:
-            msg = new BINInviteToRoomResponse();
+            msg = new BINInviteToRoomResponse(protoBufVar);
             break;
         case NetworkManager.CANCEL_INVITE:
-            msg = new BINCancelInvitationResponse();
+            msg = new BINCancelInvitationResponse(protoBufVar);
             break;
         case NetworkManager.RELY_INVITE:
-            msg = new BINRelyInvitationResponse();
+            msg = new BINRelyInvitationResponse(protoBufVar);
             break;
         case NetworkManager.REDEEM_GIFT_CODE:
-            msg = new BINRedeemGiftCodeResponse();
+            msg = new BINRedeemGiftCodeResponse(protoBufVar);
             break;
         case NetworkManager.REDEEM_GIFT_CODE_HISTORY:
-            msg = new BINRedeemGiftCodeHistoryResponse();
+            msg = new BINRedeemGiftCodeHistoryResponse(protoBufVar);
             break;
         case NetworkManager.ASSET_CONFIG:
-            msg = new BINAssetConfigResponse();
+            msg = new BINAssetConfigResponse(protoBufVar);
             break;
         case NetworkManager.EXCHANGE_ASSET:
-            msg = new BINExchangeAssetResponse();
+            msg = new BINExchangeAssetResponse(protoBufVar);
             break;
         case NetworkManager.EXCHANGE_CASH_TO_GOLD:
-            msg = new BINExchangeCashToGoldResponse();
+            msg = new BINExchangeCashToGoldResponse(protoBufVar);
             break;
         case NetworkManager.EXCHANGE_ASSET_HISTORY:
-            msg = new BINExchangeAssetHistoryResponse();
+            msg = new BINExchangeAssetHistoryResponse(protoBufVar);
             break;
         case NetworkManager.PURCHASE_CASH_HISTORY:
-            msg = new BINPurchaseCashHistoryResponse();
+            msg = new BINPurchaseCashHistoryResponse(protoBufVar);
             break;
         case NetworkManager.EXCHANGE_GOLD_HISTORY:
-            msg = new BINExchangeGoldHistoryResponse();
+            msg = new BINExchangeGoldHistoryResponse(protoBufVar);
             break;
         case NetworkManager.SMS_CONFIG:
-            msg = new BINSmsConfigResponse();
+            msg = new BINSmsConfigResponse(protoBufVar);
             break;
         case NetworkManager.USER_VERIFY_CONFIG:
-            msg = new BINUserVerifyConfigResponse();
+            msg = new BINUserVerifyConfigResponse(protoBufVar);
             break;
         case NetworkManager.USER_VERIFY:
-            msg = new BINUserVerifyResponse();
+            msg = new BINUserVerifyResponse(protoBufVar);
             break;
         case NetworkManager.CASH_TRANSFER:
-            msg = new BINCashTransferResponse();
+            msg = new BINCashTransferResponse(protoBufVar);
             break;
         case NetworkManager.CASH_TRANSFER_CONFIG:
-            msg = new BINCashTransferConfigResponse();
+            msg = new BINCashTransferConfigResponse(protoBufVar);
             break;
         case NetworkManager.RESET_PASSWORD:
-            msg = new BINResetPasswordResponse();
+            msg = new BINResetPasswordResponse(protoBufVar);
             break;
         case NetworkManager.FIND_USER_BY_ID:
-            msg = new BINFindUserByIdResponse();
+            msg = new BINFindUserByIdResponse(protoBufVar);
             break;
         case NetworkManager.EXCHANGE_C2G_CONFIG:
-            msg = new BINExchangeC2GConfigResponse();
+            msg = new BINExchangeC2GConfigResponse(protoBufVar);
             break;
         case NetworkManager.CARD_CONFIG:
-            msg = new BINCardConfigResponse();
+            msg = new BINCardConfigResponse(protoBufVar);
             break;
         case NetworkManager.HEAD_LINE:
-            msg = new BINHeadLineResponse();
+            msg = new BINHeadLineResponse(protoBufVar);
             break;
         case NetworkManager.EMERGENCY_NOTIFICATION:
-            msg = new BINEmergencyNotificationResponse();
+            msg = new BINEmergencyNotificationResponse(protoBufVar);
             break;
         case NetworkManager.LUCKY_WHEEL_CONFIG:
-            msg = new BINLuckyWheelConfigResponse();
+            msg = new BINLuckyWheelConfigResponse(protoBufVar);
             break;
         case NetworkManager.BUY_TURN:
-            msg = new BINBuyTurnResponse();
+            msg = new BINBuyTurnResponse(protoBufVar);
             break;
         case NetworkManager.JAR_REQUEST:
-            msg = new BINJarResponse();
+            msg = new BINJarResponse(protoBufVar);
             break;
         case NetworkManager.LOOKUP_GAME_HISTORY:
-            msg = new BINLookUpGameHistoryResponse();
+            msg = new BINLookUpGameHistoryResponse(protoBufVar);
             break;
         case NetworkManager.IAP_CONFIG:
-            msg = new BINIAPConfigResponse();
+            msg = new BINIAPConfigResponse(protoBufVar);
             break;
         case NetworkManager.IAP_FINISH:
-            msg = new BINCompleteIAPResponse();
+            msg = new BINCompleteIAPResponse(protoBufVar);
             break;
         case NetworkManager.GOLD_CONFIG:
-            msg = new BINGoldConfigResponse();
+            msg = new BINGoldConfigResponse(protoBufVar);
             break;
         case NetworkManager.PURCHASE_GOLD:
-            msg = new BINPurchaseGoldResponse();
+            msg = new BINPurchaseGoldResponse(protoBufVar);
             break;
         case NetworkManager.USER_STATUS:
-            msg = new BINUserStatusResponse();
+            msg = new BINUserStatusResponse(protoBufVar);
             break;
         default:
             msg = 0;

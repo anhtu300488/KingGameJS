@@ -10,6 +10,7 @@ var is_vip_room = false;
 var roomIndex;
 var padding = 10;
 var btn_message =   new ccui.Button();
+var btn_caidat =   new ccui.Button();
 
 // var PlayLayer = cc.Layer.extend({
 //     ctor:function () {

@@ -9,7 +9,19 @@ var origin = cc.director.getVisibleOrigin();
 var originX = origin.x;
 var originY = origin.y;
 
-
+var ZERO = cc.p(0.0, 0.0);
+var ONE = cc.p(1.0, 1.0);
+var UNIT_X= cc.p(1.0, 0.0);
+var UNIT_Y= cc.p(0.0, 1.0);
+var ANCHOR_MIDDLE= cc.p(0.5, 0.5);
+var ANCHOR_BOTTOM_LEFT= cc.p(0.0, 0.0);
+var ANCHOR_TOP_LEFT= cc.p(0.0, 1.0);
+var ANCHOR_BOTTOM_RIGHT= cc.p(1.0, 0.0);
+var ANCHOR_TOP_RIGHT= cc.p(1.0, 1.0);
+var ANCHOR_MIDDLE_RIGHT= cc.p(1.0, 0.5);
+var ANCHOR_MIDDLE_LEFT= cc.p(0.0, 0.5);
+var ANCHOR_MIDDLE_TOP= cc.p(0.5, 1.0);
+var ANCHOR_MIDDLE_BOTTOM= cc.p(0.5, 0.0);
 
 cc.log("ox/oy:" + originX + "/" +originY);
 

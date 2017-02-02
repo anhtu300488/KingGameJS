@@ -34,16 +34,21 @@
         "src/bytebuffer.js",
         "src/protobuf.js",
         "src/long.js",
+        "src/Scenes/BaseScene.js",
         "src/Scenes/LoginScene.js",
         "src/Scenes/RegisterScene.js",
         "src/Scenes/LiengScene.js",
         "src/Scenes/PlayScene.js",
-        "src/Scenes/BaseScene.js",
         "src/Scenes/RegisterScene.js",
         "src/Scenes/MauBinhScene.js",
         "src/Scenes/PhomScene.js",
         "src/Scenes/ShowGame.js",
         "src/Scenes/IntroScene.js",
+        "src/Scenes/SceneTable.js",
+        "src/Scenes/SocdiaScene.js",
+        "src/Scenes/ThreeCardsScene.js",
+        "src/Scenes/VongQuayMayMan.js",
+        "src/Scenes/TLMienNam.js",
         "src/Utils/TLMNConfig.js",
         "src/Utils/common.js",
         "src/Utils/LocalString.js",
@@ -63,6 +68,7 @@
         "src/protobufObject/BINLoginResponse.js",
         "src/protobufObject/BINMedalUpResponse.js",
         "src/protobufObject/BINRegisterResponse.js",
-        "src/protobufObject/BINEnterZoneRequest.js"
+        "src/protobufObject/BINEnterZoneRequest.js",
+        "src/protobufObject/BINEnterZoneResponse.js"
     ]
 }

@@ -61,3 +61,9 @@ MLabel.createIsBold = function(text, size,isBold){
     label.setAnchorPoint(cc.p(0,0));
     return label;
 }
+
+MLabel.createBMFont = function(fontName,index){
+    var label = new MLabel("fonts/"+fontName, cc.formatStr("%d",index));
+    label.setAnchorPoint(cc.p(0.5,0.5));
+    return label;
+}

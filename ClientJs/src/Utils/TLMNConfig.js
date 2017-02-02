@@ -70,7 +70,26 @@ var TAG = {
     },
 
     SCENE_TABLE: {
+        //Table
+        SCENE: 120,
+        BTN_BACK: 121,
+        BTN_PLAYNOW: 122,
+        BTN_CREATE: 123,
+        BTN_GOTO: 124,
+        BTN_REFRESH: 125,
+        BTN_PHONGVIP: 126,
+        BTN_PHONGFREE: 127,
+        BTN_HOPTHU: 128,
+        BTN_TIEN: 129,
+        BTN_PHONE: 130,
+        BTN_CAIDAT: 131,
 
+        BTN_PHONGCHO: 132,
+        BTN_VIPXU: 133,
+        BTN_KEN: 134,
+        BTN_MUCCUOC: 135,
+        BTN_SONGUOI: 136,
+        BTN_KHOA: 137
     },
 
     TLMN_SCENE:{
@@ -108,7 +127,13 @@ var TAG = {
     },
 
     VQMM_SCENE:{
-
+        VQMN: 600,
+        BTN_BACK: 601,
+        BTN_QUAY: 602,
+        BTN_SWEEP_TURN: 603,
+        BTN_MUA_1: 604,
+        BTN_MUA_2: 605,
+        BTN_MUA_3: 606
     },
 
     BACAY_SCENE:{
@@ -117,6 +142,42 @@ var TAG = {
 
     MINI_BACAY_SCENE:{
 
+    },
+
+    XOCDIA_SCENE:{
+        //Xoc dia scene
+        BTN_X1: 141,
+        BTN_X5: 142,
+        BTN_X25: 143,
+        BTN_X50: 144,
+        CUA_CHAN: 145,
+        CUA_LE: 146,
+        CUA_0_TRANG: 147,
+        CUA_1_TRANG: 148,
+        CUA_3_TRANG: 149,
+        CUA_4_TRANG: 152,
+        BTN_DATLAI: 153,
+        BTN_HUYCUOC: 154,
+        BTN_GAPDOI: 155,
+        BTN_XINCAI: 157,
+        BTN_HUYCAI: 158,
+        NUT_TRANG_DO: 156,
+        OUTSITE_PLAYER: 159
+    },
+
+    POPUP_VQMM: {
+        POPUP: 840,
+        BTN_HISTORY: 841,
+
+        BTN_HISTORY_NOHU: 842,
+        HISTORY_NOHU: 843,
+        BTN_HISTORY_SPIN: 844,
+        HISTORY_SPIN: 845,
+        BTN_TOP_USER_HISTORY: 846,
+        TOP_USER_HISTORY: 847,
+
+        BTN_NAP_XU: 848,
+        BTN_NAP_KEN: 849
     },
 
     TLMN_SCENE: 100,
@@ -209,7 +270,19 @@ var TAG = {
     REG_EDITBOX_NHAP_MATKHAU: 43,
     REG_EDITBOX_NHAPLAI_MATKHAU: 44,
     REG_EDITBOX_NHAP_SDT: 45,
-    REG_EDITBOX_NHAP_TEN: 46
+    REG_EDITBOX_NHAP_TEN: 46,
+
+    BACAY_BTN_SANSANG: 1001,
+    BACAY_BTN_LATBAI: 1002,
+    NODE_BACAY_BETTABLE: 1003,
+    BTN_CUOC_XACNHAN: 1004,
+    BTN_LABEL_MUCCUOC: 1005,
+    BTN_BET_BARIER1: 1006,
+    BTN_BET_BARIER2: 1007,
+    BTN_GOP_GA: 1008,
+    BACAY_BTN_SOBAI: 1009,
+
+    BTN_SANSANG: 1010
 }
 
 

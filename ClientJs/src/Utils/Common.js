@@ -464,3 +464,23 @@ var convertString2ByteArray = function(str){
 
     return bytesv2;
 }
+
+var getDisplayNameSubText = function(displayName){
+    // var displayNameChars = displayName.split(' ');
+    // if (displayNameChars.length > 1){
+    //     var origSize = displayName.length;
+    //
+    //     var sub_display_name;
+    //     utf8substr(displayName, 12, sub_display_name);
+    //     if (sub_display_name.size() != origSize){
+    //         return sub_display_name + "...";
+    //     }
+    //     return sub_display_name;
+    //
+    // }
+    // else if (displayName.length > 12){
+    //     return (displayName.substr(0, 12) + "...");
+    // }
+
+    return displayName;
+}
