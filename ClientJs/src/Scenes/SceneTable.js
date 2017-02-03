@@ -123,7 +123,7 @@ var SceneTableLayer = cc.Layer.extend({
         _bgr_ken.addTouchEventListener(this.menuCallBack, this);
         var scale_xuken = (widthXuKen / 2) / (_bgr_ken.getWidth());
         _bgr_ken.setScaleX(scale_xuken);
-        //_bgr_ken->setContentSize(Size(widthXuKen / 2, _bgr_ken->getHeight()));
+        //_bgr_ken.setContentSize(Size(widthXuKen / 2, _bgr_ken.getHeight()));
         _bgr_ken.setPosition(cc.p(btnHopThu.getPositionX() - _bgr_ken.getWidth() * scale_xuken - padding,
             btnHopThu.getPositionY() + btnHopThu.getHeight() / 2 - _bgr_ken.getHeight() / 2));
         this.addChild(_bgr_ken);
@@ -152,7 +152,7 @@ var SceneTableLayer = cc.Layer.extend({
         _bgr_xu.setTag(TAG.SHOW_BTN_NAPKEN);
         _bgr_xu.addTouchEventListener(this.menuCallBack, this);
         _bgr_xu.setScaleX(scale_xuken);
-        //_bgr_xu->setContentSize(Size(widthXuKen / 2, _bgr_xu->getHeight()));
+        //_bgr_xu.setContentSize(Size(widthXuKen / 2, _bgr_xu.getHeight()));
         _bgr_xu.setPosition(cc.p(_bgr_ken.getPositionX() - padding - _bgr_xu.getWidth() * scale_xuken,
             btnHopThu.getPositionY() + btnHopThu.getHeight() / 2 - _bgr_ken.getHeight() / 2));
         this.addChild(_bgr_xu);
@@ -239,18 +239,19 @@ var SceneTableLayer = cc.Layer.extend({
 
         var hightTable = bg_lst_table.getHeight() - 0.76 * bg_lst_table.getHeight() / 6;
 
-        // var tableView = new cc.TableView(this, cc.size(bg_lst_table.getWidth(), hightTable));
-        // tableView.setDirection(cc.SCROLLVIEW_DIRECTION_VERTICAL);
-        // tableView.setVerticalFillOrder(cc.TABLEVIEW_FILL_TOPDOWN);
-        // tableView.setAnchorPoint(cc.p(0.5,0.5));
-        // tableView.setDelegate(this);
-        // tableView.setBounceable(true);
-        // tableView.setPosition(MVec2(15 + (scrollBkg.getWidth() - bg_lst_table.getWidth()) / 2, scrollY));
-        //
-        // this.addChild(tableView);
+        var tableView = new cc.TableView(this, cc.size(bg_lst_table.getWidth(), hightTable));
+        tableView.setDirection(cc.SCROLLVIEW_DIRECTION_VERTICAL);
+        tableView.setVerticalFillOrder(cc.TABLEVIEW_FILL_TOPDOWN);
+        tableView.setAnchorPoint(cc.p(0.5,0.5));
+        tableView.setDelegate(this);
+        tableView.setBounceable(true);
+        tableView.setPosition(MVec2(15 + (scrollBkg.getWidth() - bg_lst_table.getWidth()) / 2, scrollY));
 
-        initTitleTable(originX + 15 + (scrollBkg.getWidth() - bg_lst_table.getWidth()) / 2,
-            bg_lst_table.getPosition().y + bg_lst_table.getHeight() - 0.76 * bg_lst_table.getHeight() / 12, this, bg_lst_table.getWidth(), hightTable);
+        this.addChild(tableView);
+
+        this.initTitleTable(originX + 15 + (scrollBkg.getWidth() - bg_lst_table.getWidth()) / 2,
+            bg_lst_table.getPosition().y + bg_lst_table.getHeight() - 0.76 * bg_lst_table.getHeight() / 12,
+            bg_lst_table.getWidth(), hightTable);
 
         //bar
         this.addChild(bar);
@@ -264,10 +265,10 @@ var SceneTableLayer = cc.Layer.extend({
         // ken
         var btn_ken = MButton.createExtendsBottom(res.TABLE_BTN_MENU_KEN, "XU", 30, TAG.SCENE_TABLE.BTN_KEN);
         var labelTmp = MLabel.create("Tmp",btn_ken.getHeight() / 2.0);
-        //float height = labelTmp->getContentSize().height + 5 + btn_ken->getHeight();
+        //float height = labelTmp.getContentSize().height + 5 + btn_ken.getHeight();
 
         btn_ken.setPosition(MVec2(width * 5 / 8, 0));
-        btn_ken.addTouchEventListener(this.phongCallBack, this);
+        btn_ken.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_ken);
 
         // cuoc ban
@@ -285,7 +286,7 @@ var SceneTableLayer = cc.Layer.extend({
         //xu
         var btn_xu = MButton.createExtendsBottom(res.TABLE_BTN_MENU_XU, "KEN", 30, TAG.SCENE_TABLE.BTN_VIPXU);
         btn_xu.setPosition(cc.p(originX + width * 3 / 8 - btn_xu.getWidth(), btn_ken.getPosition().y));
-        btn_xu.addTouchEventListener(this.phongCallBack, this);
+        btn_xu.addTouchEventListener(this.menuCallBack, this);
         this.addChild(btn_xu);
 
         //lam moi
@@ -303,7 +304,7 @@ var SceneTableLayer = cc.Layer.extend({
 
         // //add thong bao
         // notify = MNotify::create();
-        // this->addChild(notify, INDEX_NOTIFY);
+        // this.addChild(notify, INDEX_NOTIFY);
 
         ws.onmessage = this.ongamestatus.bind(this);
 
@@ -314,7 +315,7 @@ var SceneTableLayer = cc.Layer.extend({
     menuCallBack: function(sender, type){
         if(type == ccui.Widget.TOUCH_ENDED){
             var tag = sender.tag;
-            // SoundManager::getInstance()->playSound("sounds/button_click.mp3");
+            // SoundManager::getInstance().playSound("sounds/button_click.mp3");
             switch (tag) {
                 case TAG.SCENE_TABLE.BTN_BACK:
                     cc.log("Button Back");
@@ -322,174 +323,6 @@ var SceneTableLayer = cc.Layer.extend({
                     getExitZoneMessageFromServer(getZoneId());
                 }
                     break;
-                // case TAG.TABLE_BTN_CREATE:
-                //     cc.log("Button create");
-                //     if(this.getChildByTag(POPUP.TAG_CREATEROOM) == null){
-                //         var m_popupCreateRoom = PopupCreateRoom::create();
-                //         if (is_vip_room){
-                //             m_popupCreateRoom->showBetVip();
-                //         }
-                //         m_popupCreateRoom->setTag(POPUP_TAG_CREATEROOM);
-                //         addChild(m_popupCreateRoom, INDEX_POPUP);
-                //         m_popupCreateRoom->appear();
-                //     }
-                //
-                //     break;
-                // case TAG_SHOW_BTN_AVATAR:
-                //     if(this->getChildByTag(POPUP_TAG_USERINFOR) == nullptr){
-                //         auto m_popupUserInfo = PopupUserInfo::create();
-                //         m_popupUserInfo->setTag(POPUP_TAG_USERINFOR);
-                //         m_popupUserInfo->showPositionTab(1);
-                //         addChild(m_popupUserInfo, INDEX_POPUP);
-                //         m_popupUserInfo->appear();
-                //     }
-                //     break;
-                // case TAG_TABLE_BTN_GOTO:
-                //     CCLOG("%s","Button GoTo");
-                //     break;
-                // case TAG_TABLE_BTN_HOPTHU:
-                //     if(this->getChildByTag(POPUP_TAG_USERINFOR) == nullptr){
-                //         auto m_popupUserInfo = PopupUserInfo::create();
-                //         m_popupUserInfo->setTag(POPUP_TAG_USERINFOR);
-                //         m_popupUserInfo->showPositionTab(2);
-                //         addChild(m_popupUserInfo, INDEX_POPUP);
-                //         m_popupUserInfo->appear();
-                //     }
-                //
-                //     break;
-                // case TAG_TABLE_BTN_PLAYNOW:
-                // {
-                //     CCLOG("%s", "Button Play Now");
-                //     NetworkManager::getInstance()->getEnterRoomGroupFromServer(-1, is_vip_room);
-                // }
-                //     break;
-                // case TAG_SHOW_BTN_REFRESH:
-                // {
-                //     listRoomPlay.clear();
-                //     //bool asc = orderByField == TABLE_ORDERBY::NUM_PLAYER ? false : true;
-                //     isReloadRoom = false;
-                //     NetworkManager::getInstance()->
-                //     getFilterRoomMessageFromServer(Common::getInstance()->getZoneId(),
-                //         roomType, 0, LOAD_MORE_XUKEN, orderByField, asc);
-                // }
-                //     break;
-                // case TAG_TABLE_BTN_CAIDAT:
-                //     // POPUP SETTING
-                //     if (this->getChildByTag(POPUP_TAG_SETTING) == nullptr){
-                //         auto m_popupSetting = PopupSetting::create();
-                //         m_popupSetting->setTag(POPUP_TAG_SETTING);
-                //         addChild(m_popupSetting, INDEX_POPUP);
-                //         m_popupSetting->appear();
-                //     }
-                //     break;
-                // case TAG_SHOW_BTN_NAPKEN:
-                // {
-                //     if (Common::getInstance()->getServerAppVersion() < 0){
-                //     #if(CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-                //             break;
-                //         #endif
-                //     }
-                //     auto m_popupDoiThe = (PopupDoiThe*) this->getChildByTag(POPUP_TAG_DOITHE);
-                //     if (m_popupDoiThe == nullptr){
-                //         m_popupDoiThe = PopupDoiThe::create();
-                //         m_popupDoiThe->setTag(POPUP_TAG_DOITHE);
-                //         m_popupDoiThe->addMenuNapThe();
-                //         addChild(m_popupDoiThe, INDEX_POPUP);
-                //         m_popupDoiThe->appear();
-                //     }
-                // }
-                //     break;
-                // case TAG_SHOW_BTN_NAPXU:
-                // {
-                //     if (Common::getInstance()->getServerAppVersion() < 0){
-                //     #if(CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-                //             break;
-                //         #endif
-                //     }
-                //
-                //     if (Common::getInstance()->getEnableCashToGold()){
-                //         auto m_popupDoiThe = (PopupDoiThe*) this->getChildByTag(POPUP_TAG_DOITHE);
-                //         if (m_popupDoiThe == nullptr){
-                //             m_popupDoiThe = PopupDoiThe::create();
-                //             m_popupDoiThe->setTag(POPUP_TAG_DOITHE);
-                //             m_popupDoiThe->showPositionTabDoiXu();
-                //             addChild(m_popupDoiThe, INDEX_POPUP);
-                //             m_popupDoiThe->appear();
-                //         }
-                //     }
-                //     else {
-                //         this->showToast(MSG_MAINTAIN, 2);
-                //     }
-                // }
-                //     break;
-                // case TAG_SHOW_SORT_NUMPLAYER:
-                //     listRoomPlay.clear();
-                //     orderByField = TABLE_ORDERBY::NUM_PLAYER;
-                //     //asc = false;
-                //     isReloadRoom = false;
-                //
-                //     if (btn_sort_songuoichoi->getRotation() == 0){
-                //         btn_sort_songuoichoi->setRotation(-180);
-                //         asc = false;
-                //     }
-                //     else {
-                //         btn_sort_songuoichoi->setRotation(0);
-                //         asc = true;
-                //     }
-                //     //btn_sort_toithieu->setRotation(0);
-                //     btn_sort_muccuoc->setRotation(0);
-                //
-                //     NetworkManager::getInstance()->
-                //     getFilterRoomMessageFromServer(Common::getInstance()->getZoneId(),
-                //         roomType, 0, LOAD_MORE_XUKEN, orderByField, asc);
-                //     break;
-                // case TAG_SHOW_SORT_MUCCUOC:
-                //     listRoomPlay.clear();
-                //     orderByField = TABLE_ORDERBY::MIN_BET;
-                //     //asc = false;
-                //     if (btn_sort_muccuoc->getRotation() == 0){
-                //         btn_sort_muccuoc->setRotation(-180);
-                //         asc = false;
-                //     }
-                //     else {
-                //         btn_sort_muccuoc->setRotation(0);
-                //         asc = true;
-                //     }
-                //     btn_sort_songuoichoi->setRotation(0);
-                //     //btn_sort_toithieu->setRotation(0);
-                //     //asc = !asc;
-                //     isReloadRoom = false;
-                //     NetworkManager::getInstance()->
-                //     getFilterRoomMessageFromServer(Common::getInstance()->getZoneId(),
-                //         roomType, 0, LOAD_MORE_XUKEN, orderByField, asc);
-                //     break;
-                // case TAG_SHOW_SORT_TOITHIEU:
-                //     /*listRoomPlay.clear();
-                //      orderByField = TABLE_ORDERBY::;
-                //      NetworkManager::getInstance()->
-                //      getFilterRoomMessageFromServer(Common::getInstance()->getZoneId(),
-                //      is_vip_room, -1, -1, orderByField, true);*/
-                //     break;
-                // case TAG_TABLE_BTN_PHONE:
-                //     if(this->getChildByTag(POPUP_TAG_HOTLINE) == nullptr){
-                //         auto m_popupHotLine = PopupHotLine::create();
-                //         m_popupHotLine->setTag(POPUP_TAG_HOTLINE);
-                //         addChild(m_popupHotLine,INDEX_POPUP);
-                //         m_popupHotLine->appear();
-                //     }
-                //     break;
-                // case TAG_SHOW_BTN_TROGIUP:
-                //     if (this->getChildByTag(POPUP_TAG_HELP_TO_PLAY) == nullptr){
-                //         auto m_popup = PopupHelpToPlay::create();
-                //         m_popup->setTag(POPUP_TAG_HELP_TO_PLAY);
-                //         addChild(m_popup, INDEX_POPUP);
-                //         m_popup->appear(false);
-                //
-                //     }
-                //     break;
-                // case TAG_TABLE_BTN_MUCCUOC:
-                //     showToast(TEXT_NOTIFY_FUNCTION_FUTURE, 2);
-                //     break;
                 default:
                     break;
             }
@@ -514,6 +347,122 @@ var SceneTableLayer = cc.Layer.extend({
                 exitZoneResponseHandler(msg);
                 break;
         }
+    },
+
+    //========================= TableView
+
+    tableCellSizeForIndex:function (table, idx) {
+        return cc.size(300,100);
+    },
+    tableCellAtIndex:function (table, idx) {
+        var strValue = idx.toFixed(0);
+        var cell = table.dequeueCell();
+        var label;
+        if (!cell) {
+            cell = new MTableViewCell();
+
+            label = cc.LabelTTF.create(strValue, "Helvetica", 15);
+            label.setPosition(50,0);
+            label.setAnchorPoint(0,0);
+            label.setTag("comment");
+            cell.addChild(label);
+        } else {
+            label = cell.getChildByTag("comment");
+            var txt = "ha_ha";//responses[strValue];
+            label.setString(txt);
+        }
+        return cell;
+    },
+    numberOfCellsInTableView:function (table) {
+        return 10;//responses.length;
+    },
+
+    initTitleTable: function(posX, posY, widthObj, heightObj){
+        var width = widthObj;
+        var height = heightObj / 6;
+        var sizeText = height / 3;
+
+        //so ban
+        var lb_soban = MLabel.create(TABLE_TXT_SOBAN, sizeText, true);
+        lb_soban.setAnchorPoint(cc.p(0.5,0.5));
+        lb_soban.setPosition(cc.p(posX + width / 12, posY));
+        this.addChild(lb_soban);
+
+        //muc cuoc
+        var lb_muccuoc = MLabel.create(TABLE_TXT_MUCCUOC, sizeText, true);
+        lb_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
+        lb_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (8 * 6) - 10, posY));
+        this.addChild(lb_muccuoc);
+
+        var btn_sort_muccuoc = MButton.create(res.TABLE_IC_SORT);
+        btn_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
+        btn_sort_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (4 * 6) + btn_sort_muccuoc.getWidth()/2, posY));
+        //btn_sort_muccuoc.setTag(TAG_SHOW_SORT_MUCCUOC);
+        //btn_sort_muccuoc.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
+        this.addChild(btn_sort_muccuoc);
+
+        //bg sort muc cuoc
+        var bg_sort_muccuoc = MButton.create(res.TABLE_BTN_SORT);
+        bg_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
+        bg_sort_muccuoc.setPosition(cc.p(lb_muccuoc.getPosition().x - lb_muccuoc.getWidth() / 2
+            + (lb_muccuoc.getWidth()/2 + btn_sort_muccuoc.getWidth()/2 + btn_sort_muccuoc.getPosition().x - lb_muccuoc.getPosition().x) / 2
+            , posY));
+        bg_sort_muccuoc.setTag(TAG.SHOW_SORT_MUCCUOC);
+        bg_sort_muccuoc.addTouchEventListener(this.menuCallBack, this);
+        this.addChild(bg_sort_muccuoc);
+
+        //so nguoi choi
+        var lb_songuoichoi = MLabel.create(TABLE_TXT_SONGUOICHOI, sizeText, true);
+        lb_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
+        lb_songuoichoi.setPosition(cc.p(posX + 3 * width / 6, posY));
+        this.addChild(lb_songuoichoi);
+
+        //sort songuoichoi
+        var btn_sort_songuoichoi = MButton.create(res.TABLE_IC_SORT);
+        btn_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
+        btn_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x + lb_songuoichoi.getWidth()/2
+            + btn_sort_songuoichoi.getWidth()/2 + 10, posY));
+        //btn_sort_songuoichoi.setTag(TAG_SHOW_SORT_NUMPLAYER);
+        //btn_sort_songuoichoi.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
+        this.addChild(btn_sort_songuoichoi);
+        btn_sort_songuoichoi.setRotation(-180);
+
+        //bg sort so nguoi choi
+        var bg_sort_songuoichoi = MButton.create(res.TABLE_BTN_SORT);
+        bg_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
+        bg_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x - lb_songuoichoi.getWidth() / 2
+            + (lb_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getPosition().x - lb_songuoichoi.getPosition().x) / 2
+            , posY));
+        bg_sort_songuoichoi.setTag(TAG.SHOW_SORT_NUMPLAYER);
+        bg_sort_songuoichoi.addTouchEventListener(this.menuCallBack, this);
+        this.addChild(bg_sort_songuoichoi);
+
+        //toi thieu
+        var lb_toithieu = MLabel.create(TABLE_TXT_TOITHIEU, sizeText, true);
+        lb_toithieu.setAnchorPoint(cc.p(0.5,0.5));
+        lb_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (8 * 6) - 10, posY));
+        this.addChild(lb_toithieu);
+
+        //sort toi thieu
+        var btn_sort_toithieu = MButton.create(res.TABLE_IC_SORT);
+        btn_sort_toithieu.setAnchorPoint(cc.p(0.5,0.5));
+        btn_sort_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (4 * 6) + btn_sort_toithieu.getWidth() / 2, posY));
+        //btn_sort_toithieu.setTag(TAG_SHOW_SORT_TOITHIEU);
+        //btn_sort_toithieu.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
+        // this.addChild(btn_sort_toithieu);
+
+        //trang thai
+        var lb_trangthai = MLabel.create(TABLE_TXT_TRANGTHAI, sizeText, true);
+        lb_trangthai.setAnchorPoint(cc.p(0.5,0.5));
+        lb_trangthai.setPosition(cc.p(posX + 5 * width / 6 + width / (2 * 6), posY));
+        this.addChild(lb_trangthai);
+
+    }
+});
+
+var MTableViewCell = cc.TableViewCell.extend({
+    draw:function (ctx) {
+        this._super(ctx);
     }
 });
 
@@ -525,97 +474,15 @@ var SceneTable = cc.Scene.extend({
     }
 });
 
-var initTitleTable = function(posX, posY, thisObj, widthObj, heightObj){
-    var width = widthObj;
-    var height = heightObj / 6;
-    var sizeText = height / 3;
-
-    //so ban
-    var lb_soban = MLabel.create(TABLE_TXT_SOBAN, sizeText, true);
-    lb_soban.setAnchorPoint(cc.p(0.5,0.5));
-    lb_soban.setPosition(cc.p(posX + width / 12, posY));
-    thisObj.addChild(lb_soban);
-
-    //muc cuoc
-    var lb_muccuoc = MLabel.create(TABLE_TXT_MUCCUOC, sizeText, true);
-    lb_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
-    lb_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (8 * 6) - 10, posY));
-    thisObj.addChild(lb_muccuoc);
-
-    var btn_sort_muccuoc = MButton.create(res.TABLE_IC_SORT);
-    btn_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
-    btn_sort_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (4 * 6) + btn_sort_muccuoc.getWidth()/2, posY));
-    //btn_sort_muccuoc->setTag(TAG_SHOW_SORT_MUCCUOC);
-    //btn_sort_muccuoc->addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
-    thisObj.addChild(btn_sort_muccuoc);
-
-    //bg sort muc cuoc
-    var bg_sort_muccuoc = MButton.create(res.TABLE_BTN_SORT);
-    bg_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
-    bg_sort_muccuoc.setPosition(cc.p(lb_muccuoc.getPosition().x - lb_muccuoc.getWidth() / 2
-        + (lb_muccuoc.getWidth()/2 + btn_sort_muccuoc.getWidth()/2 + btn_sort_muccuoc.getPosition().x - lb_muccuoc.getPosition().x) / 2
-        , posY));
-    bg_sort_muccuoc.setTag(TAG.SHOW_SORT_MUCCUOC);
-    bg_sort_muccuoc.addTouchEventListener(thisObj.menuCallBack, this);
-    thisObj.addChild(bg_sort_muccuoc);
-
-    //so nguoi choi
-    var lb_songuoichoi = MLabel.create(TABLE_TXT_SONGUOICHOI, sizeText, true);
-    lb_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
-    lb_songuoichoi.setPosition(cc.p(posX + 3 * width / 6, posY));
-    thisObj.addChild(lb_songuoichoi);
-
-    //sort songuoichoi
-    var btn_sort_songuoichoi = MButton.create(res.TABLE_IC_SORT);
-    btn_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
-    btn_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x + lb_songuoichoi.getWidth()/2
-        + btn_sort_songuoichoi.getWidth()/2 + 10, posY));
-    //btn_sort_songuoichoi->setTag(TAG_SHOW_SORT_NUMPLAYER);
-    //btn_sort_songuoichoi->addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
-    thisObj.addChild(btn_sort_songuoichoi);
-    btn_sort_songuoichoi.setRotation(-180);
-
-    //bg sort so nguoi choi
-    var bg_sort_songuoichoi = MButton.create(res.TABLE_BTN_SORT);
-    bg_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
-    bg_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x - lb_songuoichoi.getWidth() / 2
-        + (lb_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getPosition().x - lb_songuoichoi.getPosition().x) / 2
-        , posY));
-    bg_sort_songuoichoi.setTag(TAG.SHOW_SORT_NUMPLAYER);
-    bg_sort_songuoichoi.addTouchEventListener(thisObj.menuCallBack, this);
-    thisObj.addChild(bg_sort_songuoichoi);
-
-    //toi thieu
-    var lb_toithieu = MLabel.create(TABLE_TXT_TOITHIEU, sizeText, true);
-    lb_toithieu.setAnchorPoint(cc.p(0.5,0.5));
-    lb_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (8 * 6) - 10, posY));
-    thisObj.addChild(lb_toithieu);
-
-    //sort toi thieu
-    var btn_sort_toithieu = MButton.create(res.TABLE_IC_SORT);
-    btn_sort_toithieu.setAnchorPoint(cc.p(0.5,0.5));
-    btn_sort_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (4 * 6) + btn_sort_toithieu.getWidth() / 2, posY));
-    //btn_sort_toithieu->setTag(TAG_SHOW_SORT_TOITHIEU);
-    //btn_sort_toithieu->addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
-    // this->addChild(btn_sort_toithieu);
-
-    //trang thai
-    var lb_trangthai = MLabel.create(TABLE_TXT_TRANGTHAI, sizeText, true);
-    lb_trangthai.setAnchorPoint(cc.p(0.5,0.5));
-    lb_trangthai.setPosition(cc.p(posX + 5 * width / 6 + width / (2 * 6), posY));
-    thisObj.addChild(lb_trangthai);
-
-}
-
 var exitZoneResponseHandler = function (exitZoneResponse) {
 
     if (exitZoneResponse != 0) {
         cc.log("exit zone response: ", exitZoneResponse);
         if (exitZoneResponse.responseCode) {
             setZoneId(-1);
-            // this->unscheduleUpdate();
+            // this.unscheduleUpdate();
             //
-            // notify->onHideNotify();
+            // notify.onHideNotify();
 
             var scene = new ShowGameScene();
             cc.director.runScene(scene);
