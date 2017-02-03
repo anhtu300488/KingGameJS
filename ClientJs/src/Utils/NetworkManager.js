@@ -317,6 +317,8 @@ var parseFrom = function(read_str, len)
 
     bb.append(read_str);
 
+    cc.log("bb = ", bb);
+
 
     var listMessages = [];
 
@@ -326,7 +328,7 @@ var parseFrom = function(read_str, len)
         var bytes_size = bb.readInt32(_offset);
         _offset+= 4;
 
-
+        cc.log("bytes_size = ", bytes_size);
         //read compress
         var is_compress = bb.readInt8(_offset);
         _offset+= 1;
@@ -335,6 +337,12 @@ var parseFrom = function(read_str, len)
         lenPacket -= (bytes_size + 4);
         var response = 0;
 
+        cc.log("is_compress", is_compress);
+
+        cc.log("left_byte_size = ", left_byte_size);
+
+        cc.log("_offset = ", _offset);
+
         /*if is_compress = 1 */
         if (is_compress == 1) {
             cc.log("zip");
@@ -342,42 +350,8 @@ var parseFrom = function(read_str, len)
             var byteArray = new Uint8Array(left_block);
             cc.log("byteArray", byteArray);
             var bufArr = left_block.view;
-            // var bufByteArr = Array.from(bufArr);
-            cc.log("bufByteArr", left_block.toString('base64'));
-            // var leftString = left_block.toString();
-            // cc.log("leftString", leftString);
-            // var leftString = 'test';
 
-
-            // var dataUnzip = cc.unzip(bufArr);
             var dataUnzip = cc.unzipBase64AsArray(left_block.toString('base64'));
-
-
-            // cc.log("convertString2ByteArray(leftString)", convertString2ByteArray(leftString));
-
-            //get unit8array from buffer
-            // var unit8arr = left_block.Unit8Array();
-
-            // // Create a byte array
-            // var bytes = [left_block.byteLength];
-            //
-            // // Wrap a byte array into a buffer
-            // var bufDe = dcodeIO.ByteBuffer;
-            // var buf = bufDe.wrap(bytes);
-            //
-            // // Retrieve bytes between the position and limit
-            // // (see Putting Bytes into a ByteBuffer)
-            // bytes = [buf.remaining()];
-            //
-            // // transfer bytes from this buffer into the given destination array
-            // buf.put(bytes, 0, bytes.length);
-            //
-            // // Retrieve all bytes in the buffer
-            // buf.clear();
-            // bytes = [buf.capacity()];
-            //
-            // // transfer bytes from this buffer into the given destination array
-            // buf.put(bytes, 0, bytes.length);
 
             var _offsetZip = 0;
 
@@ -429,70 +403,28 @@ var parseFrom = function(read_str, len)
             }
 
 
-            // google::protobuf::io::CodedInputStream::Limit msgLimit =
-            //     codedIn.PushLimit(left_byte_size); //limit compressed size
-            // //read data compressed
-            // char *data_compressed = new char[left_byte_size];
-            //
-            // codedIn.ReadRaw(data_compressed, left_byte_size);
-            // codedIn.PopLimit(msgLimit);
-            // vector<char> result = Common::getInstance()->decompress_gzip2(
-            //         data_compressed, (int)left_byte_size);
-            // char* data_uncompressed = reinterpret_cast<char*>(result.data());
-            //
-            // int length = (int)result.size();
-            // int index = 0;
-            // while (index < length) {
-            //     //read datablocksize
-            //     int data_size_block = ((data_uncompressed[index] & 0xFF) << 8) + ((data_uncompressed[index + 1] & 0xFF) << 0);
-            //     //read messageid
-            //     int messageid = ((data_uncompressed[index + 2] & 0xFF) << 8) + ((data_uncompressed[index + 3] & 0xFF) << 0);
-            //     //read protobuf message
-            //
-            //     response = getTypeMessage(response, messageid);
-            //
-            //     if (response == 0) {
-            //         CCLOG("unknown message");
-            //         throw std::runtime_error("");
-            //     }
-            //
-            //     bool isRead = response->ParseFromArray(&data_uncompressed[index + 4], data_size_block - 2);
-            //     index += (data_size_block + 2);
-            //     if (isRead)
-            //         listMessages.push_back(std::make_pair(response, messageid));
-            // }
         }
         else {
-            cc.log("unzip");
-            /* if is_compression = 0 */
-            while (left_byte_size > 0) {
+
+            // while (left_byte_size > 0) {
                 //read protobuf + data_size_block + mid
                 //read datasizeblock
-                // var offset = 0;
+
                 var data_size_block = bb.readInt16(_offset);
                 _offset+= 2;
 
-
                 // read messageid
-
                 var messageid = bb.readInt16(_offset);
                 _offset+= 2;
-
 
                 left_byte_size -= (data_size_block + 2);
 
                 //read protobuf
 
-
                 var protoBufVar = bb.copy(_offset, data_size_block + _offset - 2);
-
-                cc.log("protoBufVar = ", protoBufVar);
-
-                cc.log("messageid:" + messageid);
 
                 response = getTypeMessage(response, messageid, protoBufVar);
 
-                cc.log("response: " + response + ", messageid:" + messageid);
 
                 if (response != 0) {
                     left_byte_size -= (data_size_block + 2);
@@ -502,13 +434,12 @@ var parseFrom = function(read_str, len)
                         response: response
                     };
                     listMessages.push(pair);
-                    cc.log("list message size: " + listMessages.length);
                 }
                 else {
                     cc.error("unknown message");
                 }
 
-            }
+            // }
         }
     }
 
@@ -860,3 +791,22 @@ var getEnterZoneMessageFromServer = function(zoneId) {
 //     requestMessage(request, Common::getInstance()->getOS(),
 //         NetworkManager::FILTER_ROOM, Common::getInstance()->getSessionId());
 // }
+
+var getExitZoneMessageFromServer = function(zoneId) {
+    var request = initExitZoneMessage(zoneId);
+    requestMessage(request, getOS(),
+        NetworkManager.EXIT_ZONE, getSessionId());
+}
+
+var initExitZoneMessage = function(zoneId) {
+
+    var ProtoBuf = dcodeIO.ProtoBuf,
+        ExitZoneProtobuf = ProtoBuf.loadProtoFile('res/protobuf/enter_zone.proto').build('bigken.enterzone'),
+        ExitZoneProto = ExitZoneProtobuf.BINExitZoneRequest;
+
+    var exitZoneProto = new ExitZoneProto({
+        zoneId: zoneId
+    });
+
+    return exitZoneProto.encode();
+}

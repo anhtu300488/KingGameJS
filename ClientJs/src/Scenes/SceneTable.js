@@ -90,7 +90,7 @@ var SceneTableLayer = cc.Layer.extend({
 
         // avartar
         var avatar_id = getAvatarId();
-        var btn_avatar = MButton.create(cc.formatStr("avatar%d.png", avatar_id), TAG.SHOW_BTN_AVATAR);
+        var btn_avatar = MButton.create(cc.formatStr("res/avatar%d.png", avatar_id), TAG.SHOW_BTN_AVATAR);
         btn_avatar.setAnchorPoint(cc.p(0.5,0.5));
         btn_avatar.setPosition(cc.p(bk_avatar.getPositionX() + bk_avatar.getWidth() / 2,
             bk_avatar.getPositionY() - bk_avatar.getHeight() / 2));
@@ -305,6 +305,215 @@ var SceneTableLayer = cc.Layer.extend({
         // notify = MNotify::create();
         // this->addChild(notify, INDEX_NOTIFY);
 
+        ws.onmessage = this.ongamestatus.bind(this);
+
+        return true;
+
+
+    },
+    menuCallBack: function(sender, type){
+        if(type == ccui.Widget.TOUCH_ENDED){
+            var tag = sender.tag;
+            // SoundManager::getInstance()->playSound("sounds/button_click.mp3");
+            switch (tag) {
+                case TAG.SCENE_TABLE.BTN_BACK:
+                    cc.log("Button Back");
+                {
+                    getExitZoneMessageFromServer(getZoneId());
+                }
+                    break;
+                // case TAG.TABLE_BTN_CREATE:
+                //     cc.log("Button create");
+                //     if(this.getChildByTag(POPUP.TAG_CREATEROOM) == null){
+                //         var m_popupCreateRoom = PopupCreateRoom::create();
+                //         if (is_vip_room){
+                //             m_popupCreateRoom->showBetVip();
+                //         }
+                //         m_popupCreateRoom->setTag(POPUP_TAG_CREATEROOM);
+                //         addChild(m_popupCreateRoom, INDEX_POPUP);
+                //         m_popupCreateRoom->appear();
+                //     }
+                //
+                //     break;
+                // case TAG_SHOW_BTN_AVATAR:
+                //     if(this->getChildByTag(POPUP_TAG_USERINFOR) == nullptr){
+                //         auto m_popupUserInfo = PopupUserInfo::create();
+                //         m_popupUserInfo->setTag(POPUP_TAG_USERINFOR);
+                //         m_popupUserInfo->showPositionTab(1);
+                //         addChild(m_popupUserInfo, INDEX_POPUP);
+                //         m_popupUserInfo->appear();
+                //     }
+                //     break;
+                // case TAG_TABLE_BTN_GOTO:
+                //     CCLOG("%s","Button GoTo");
+                //     break;
+                // case TAG_TABLE_BTN_HOPTHU:
+                //     if(this->getChildByTag(POPUP_TAG_USERINFOR) == nullptr){
+                //         auto m_popupUserInfo = PopupUserInfo::create();
+                //         m_popupUserInfo->setTag(POPUP_TAG_USERINFOR);
+                //         m_popupUserInfo->showPositionTab(2);
+                //         addChild(m_popupUserInfo, INDEX_POPUP);
+                //         m_popupUserInfo->appear();
+                //     }
+                //
+                //     break;
+                // case TAG_TABLE_BTN_PLAYNOW:
+                // {
+                //     CCLOG("%s", "Button Play Now");
+                //     NetworkManager::getInstance()->getEnterRoomGroupFromServer(-1, is_vip_room);
+                // }
+                //     break;
+                // case TAG_SHOW_BTN_REFRESH:
+                // {
+                //     listRoomPlay.clear();
+                //     //bool asc = orderByField == TABLE_ORDERBY::NUM_PLAYER ? false : true;
+                //     isReloadRoom = false;
+                //     NetworkManager::getInstance()->
+                //     getFilterRoomMessageFromServer(Common::getInstance()->getZoneId(),
+                //         roomType, 0, LOAD_MORE_XUKEN, orderByField, asc);
+                // }
+                //     break;
+                // case TAG_TABLE_BTN_CAIDAT:
+                //     // POPUP SETTING
+                //     if (this->getChildByTag(POPUP_TAG_SETTING) == nullptr){
+                //         auto m_popupSetting = PopupSetting::create();
+                //         m_popupSetting->setTag(POPUP_TAG_SETTING);
+                //         addChild(m_popupSetting, INDEX_POPUP);
+                //         m_popupSetting->appear();
+                //     }
+                //     break;
+                // case TAG_SHOW_BTN_NAPKEN:
+                // {
+                //     if (Common::getInstance()->getServerAppVersion() < 0){
+                //     #if(CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+                //             break;
+                //         #endif
+                //     }
+                //     auto m_popupDoiThe = (PopupDoiThe*) this->getChildByTag(POPUP_TAG_DOITHE);
+                //     if (m_popupDoiThe == nullptr){
+                //         m_popupDoiThe = PopupDoiThe::create();
+                //         m_popupDoiThe->setTag(POPUP_TAG_DOITHE);
+                //         m_popupDoiThe->addMenuNapThe();
+                //         addChild(m_popupDoiThe, INDEX_POPUP);
+                //         m_popupDoiThe->appear();
+                //     }
+                // }
+                //     break;
+                // case TAG_SHOW_BTN_NAPXU:
+                // {
+                //     if (Common::getInstance()->getServerAppVersion() < 0){
+                //     #if(CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+                //             break;
+                //         #endif
+                //     }
+                //
+                //     if (Common::getInstance()->getEnableCashToGold()){
+                //         auto m_popupDoiThe = (PopupDoiThe*) this->getChildByTag(POPUP_TAG_DOITHE);
+                //         if (m_popupDoiThe == nullptr){
+                //             m_popupDoiThe = PopupDoiThe::create();
+                //             m_popupDoiThe->setTag(POPUP_TAG_DOITHE);
+                //             m_popupDoiThe->showPositionTabDoiXu();
+                //             addChild(m_popupDoiThe, INDEX_POPUP);
+                //             m_popupDoiThe->appear();
+                //         }
+                //     }
+                //     else {
+                //         this->showToast(MSG_MAINTAIN, 2);
+                //     }
+                // }
+                //     break;
+                // case TAG_SHOW_SORT_NUMPLAYER:
+                //     listRoomPlay.clear();
+                //     orderByField = TABLE_ORDERBY::NUM_PLAYER;
+                //     //asc = false;
+                //     isReloadRoom = false;
+                //
+                //     if (btn_sort_songuoichoi->getRotation() == 0){
+                //         btn_sort_songuoichoi->setRotation(-180);
+                //         asc = false;
+                //     }
+                //     else {
+                //         btn_sort_songuoichoi->setRotation(0);
+                //         asc = true;
+                //     }
+                //     //btn_sort_toithieu->setRotation(0);
+                //     btn_sort_muccuoc->setRotation(0);
+                //
+                //     NetworkManager::getInstance()->
+                //     getFilterRoomMessageFromServer(Common::getInstance()->getZoneId(),
+                //         roomType, 0, LOAD_MORE_XUKEN, orderByField, asc);
+                //     break;
+                // case TAG_SHOW_SORT_MUCCUOC:
+                //     listRoomPlay.clear();
+                //     orderByField = TABLE_ORDERBY::MIN_BET;
+                //     //asc = false;
+                //     if (btn_sort_muccuoc->getRotation() == 0){
+                //         btn_sort_muccuoc->setRotation(-180);
+                //         asc = false;
+                //     }
+                //     else {
+                //         btn_sort_muccuoc->setRotation(0);
+                //         asc = true;
+                //     }
+                //     btn_sort_songuoichoi->setRotation(0);
+                //     //btn_sort_toithieu->setRotation(0);
+                //     //asc = !asc;
+                //     isReloadRoom = false;
+                //     NetworkManager::getInstance()->
+                //     getFilterRoomMessageFromServer(Common::getInstance()->getZoneId(),
+                //         roomType, 0, LOAD_MORE_XUKEN, orderByField, asc);
+                //     break;
+                // case TAG_SHOW_SORT_TOITHIEU:
+                //     /*listRoomPlay.clear();
+                //      orderByField = TABLE_ORDERBY::;
+                //      NetworkManager::getInstance()->
+                //      getFilterRoomMessageFromServer(Common::getInstance()->getZoneId(),
+                //      is_vip_room, -1, -1, orderByField, true);*/
+                //     break;
+                // case TAG_TABLE_BTN_PHONE:
+                //     if(this->getChildByTag(POPUP_TAG_HOTLINE) == nullptr){
+                //         auto m_popupHotLine = PopupHotLine::create();
+                //         m_popupHotLine->setTag(POPUP_TAG_HOTLINE);
+                //         addChild(m_popupHotLine,INDEX_POPUP);
+                //         m_popupHotLine->appear();
+                //     }
+                //     break;
+                // case TAG_SHOW_BTN_TROGIUP:
+                //     if (this->getChildByTag(POPUP_TAG_HELP_TO_PLAY) == nullptr){
+                //         auto m_popup = PopupHelpToPlay::create();
+                //         m_popup->setTag(POPUP_TAG_HELP_TO_PLAY);
+                //         addChild(m_popup, INDEX_POPUP);
+                //         m_popup->appear(false);
+                //
+                //     }
+                //     break;
+                // case TAG_TABLE_BTN_MUCCUOC:
+                //     showToast(TEXT_NOTIFY_FUNCTION_FUTURE, 2);
+                //     break;
+                default:
+                    break;
+            }
+        }
+    },
+    ongamestatus: function(e) {
+        cc.log("data 1", e);
+        if(e.data!==null || e.data !== 'undefined')
+        {
+            var listMessages = parseFrom(e.data, e.data.byteLength);
+            while(listMessages.length > 0) {
+                var buffer = listMessages.shift();
+                this.exitZoneHandleMessage(buffer);
+            }
+        }
+    },
+    exitZoneHandleMessage: function(e) {
+        var buffer = e;
+        switch (buffer.message_id) {
+            case NetworkManager.EXIT_ZONE:
+                var msg = buffer.response;
+                exitZoneResponseHandler(msg);
+                break;
+        }
     }
 });
 
@@ -397,5 +606,23 @@ var initTitleTable = function(posX, posY, thisObj, widthObj, heightObj){
     thisObj.addChild(lb_trangthai);
 
 }
+
+var exitZoneResponseHandler = function (exitZoneResponse) {
+
+    if (exitZoneResponse != 0) {
+        cc.log("exit zone response: ", exitZoneResponse);
+        if (exitZoneResponse.responseCode) {
+            setZoneId(-1);
+            // this->unscheduleUpdate();
+            //
+            // notify->onHideNotify();
+
+            var scene = new ShowGameScene();
+            cc.director.runScene(scene);
+        }
+    }
+
+}
+
 
 

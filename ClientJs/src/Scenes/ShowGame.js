@@ -332,6 +332,8 @@ var ShowGameLayer = cc.Layer.extend({
             this.scrollView.addChild(game_button);
         }
 
+        ws.onmessage = this.ongamestatus.bind(this);
+
         return true;
     },
     scrollEvent: function () {
@@ -574,6 +576,28 @@ var ShowGameLayer = cc.Layer.extend({
             }
             getEnterZoneMessageFromServer(getZoneId());
         }
+
+
+    },
+    ongamestatus: function(e) {
+        cc.log("data 1", e);
+        if(e.data!==null || e.data !== 'undefined')
+        {
+            var listMessages = parseFrom(e.data, e.data.byteLength);
+            while(listMessages.length > 0) {
+                var buffer = listMessages.shift();
+                this.enterZoneHandleMessage(buffer);
+            }
+        }
+    },
+    enterZoneHandleMessage: function(e) {
+        var buffer = e;
+        switch (buffer.message_id) {
+            case NetworkManager.ENTER_ZONE:
+                var msg = buffer.response;
+                enterZoneResponseHandler(msg);
+                break;
+        }
     }
 });
 
@@ -625,3 +649,80 @@ var getNodeHello = function(node){
 
     node->setContentSize(Size(size_text, sprite_thongtin->getContentSize().height));
 }*/
+
+var enterZoneResponseHandler = function (enterZoneResponse) {
+    //handle login
+    // BINEnterZoneResponse* enter_zone_response = (BINEnterZoneResponse*) Common
+    //     ::getInstance()->checkEvent(NetworkManager::ENTER_ZONE);
+
+    if (enterZoneResponse != 0) { //found
+        cc.log("enter zone: %s", enterZoneResponse);
+        if (enterZoneResponse.responseCode) {
+            //Common::getInstance()->setZoneId(enter_zone_response->);
+
+            setRequestRoomType(enterZoneResponse.defaultRoomTypeLoad);
+
+            // if (enterZoneResponse->has_enabledisplayroomlist() &&
+            //     enter_zone_response->enabledisplayroomlist()) {
+                /*
+                 Sau này xử lý phần người chơi click vào một mức cược cụ thể không cần hiển thị danh sách phòng chơi
+                 */
+                var cashRoomList = [];
+                var goldRoomList = [];
+                if (enterZoneResponse.cashRoomConfigs.length > 0) {
+                    for (i = 0; i < enterZoneResponse.cashRoomConfigs.length; i++) {
+                        cashRoomList.push(enterZoneResponse.cashRoomConfigs[i]);
+                    }
+                }
+                if (enterZoneResponse.goldRoomConfigs.length > 0) {
+                    for (i = 0; i < enterZoneResponse.goldRoomConfigs.length; i++) {
+                        goldRoomList.push(enterZoneResponse.goldRoomConfigs[i]);
+                    }
+                }
+                setGoldRoomList(goldRoomList);
+                setCashRoomList(cashRoomList);
+            // }
+
+            var zoneId = getZoneId();
+            cc.log("zoneId", zoneId);
+            if (zoneId == Common.TAMXINGAU_ZONE){
+                cc.log("tam_xi_ngau");
+                // var tam_xi_ngau = TamXiNgau::create(this);
+                // tam_xi_ngau->setPosition(MVec2(0, 0));
+                // this->addChild(tam_xi_ngau);
+            }
+            else if (zoneId == Common.WHEEL_ZONE) {
+                cc.log("WHEEL_ZONE");
+                // auto node = VongQuayMayMan::create(this);
+                // node->setPosition(MVec2(0, 0));
+                // this->addChild(node, INDEX_POPUP);
+            }
+            else if (zoneId == Common.MINIPOKER_ZONE) {
+                cc.log("MINIPOKER_ZONE");
+                // auto node = MiniPoker::create(this);
+                // node->setPosition(MVec2(0, 0));
+                // this->addChild(node, INDEX_POPUP);
+            }
+            // else if (zoneId == Common.MINITHREECARDS_ZONE) {
+            //     cc.log("MINITHREECARDS_ZONE");
+            //     // auto node = MiniThreeCards::create(this);
+            //     // node->setPosition(MVec2(0, 0));
+            //     // this->addChild(node, INDEX_POPUP);
+            // }
+            else {
+                // notify->onHideNotify();
+                // this->unscheduleUpdate();
+                var scenetable = new SceneTable(enterZoneResponse.enableDisplayRoomList, enterZoneResponse.defaultRoomTypeLoad);
+                cc.director.runScene(scenetable);
+
+            }
+            //    return;
+        } else {
+            cc.log("MINIPOKER_ZONE");
+            // setRequestRoomType(-1);
+            // setZoneId(-1);  //reset zone id
+            // showToast(enter_zone_response->message().c_str(), 2);
+        }
+    }
+
+}

@@ -484,3 +484,27 @@ var getDisplayNameSubText = function(displayName){
 
     return displayName;
 }
+
+var setRequestRoomType = function(requestRoomType){
+    this._requestRoomType = requestRoomType;
+}
+
+var getRequestRoomType = function(){
+    return this._requestRoomType;
+}
+
+var setGoldRoomList = function(goldRoomList) {
+    this.goldRoomList = goldRoomList;
+}
+
+var getGoldRoomList = function() {
+    return this.goldRoomList;
+}
+
+var setCashRoomList = function(cashRoomList) {
+    this.cashRoomList = cashRoomList;
+}
+
+var getCashRoomList = function() {
+    return this.cashRoomList;
+}
