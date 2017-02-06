@@ -48,6 +48,7 @@
         "src/Scenes/SocdiaScene.js",
         "src/Scenes/ThreeCardsScene.js",
         "src/Scenes/VongQuayMayMan.js",
+        "src/Scenes/ItemCell.js",
         "src/Scenes/TLMienNam.js",
         "src/Utils/TLMNConfig.js",
         "src/Utils/common.js",
@@ -70,6 +71,7 @@
         "src/protobufObject/BINRegisterResponse.js",
         "src/protobufObject/BINEnterZoneRequest.js",
         "src/protobufObject/BINEnterZoneResponse.js",
-        "src/protobufObject/BINExitZoneResponse.js"
+        "src/protobufObject/BINExitZoneResponse.js",
+        "src/protobufObject/BINFilterRoomResponse.js"
     ]
 }

@@ -1,10 +1,30 @@
 var totalNewMail = 0;
+var LOAD_MORE_XUKEN = 10;
+var isReloadRoom = false;
+var roomType;
+var orderByField = -1;
+var asc = false;
+var label_number_new_mail;
+var sprite_new_mail;
+var enableDisplayRoomList;
+var scrollBkg = new cc.Sprite();
+var message;
+
 var SceneTableLayer = cc.Layer.extend({
     sprite:null,
     ctor:function () {
         //////////////////////////////
         // 1. super init first
         this._super();
+
+        // var tempEnableDisplayRoomList = true;
+        //
+        var defaultRoomTypeLoad = 0;
+        //
+        // setEnableDisplayRoomList(tempEnableDisplayRoomList);
+        requestRoomType(defaultRoomTypeLoad);
+        // setMessage(notEnoughMoney, message);
+
         this.init();
 
 
@@ -13,6 +33,7 @@ var SceneTableLayer = cc.Layer.extend({
 
     init: function () {
         this._super();
+
         setGameState(GAME_STATE.SCENE_TABLE);
 
         var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
@@ -36,6 +57,215 @@ var SceneTableLayer = cc.Layer.extend({
         background_screen.setPosition(cc.p(originX, originY));
         this.addChild(background_screen);
 
+        this.initMenu();
+
+        // getUserStatusRequest(USER_STATUS_CONFIG.FILL_MAIL);
+
+        // reloadRoom(0);
+        ws.onmessage = this.ongamestatus.bind(this);
+
+    },
+    menuCallBack: function(sender, type){
+        if(type == ccui.Widget.TOUCH_ENDED){
+            var tag = sender.tag;
+            // SoundManager::getInstance().playSound("sounds/button_click.mp3");
+            switch (tag) {
+                case TAG.SCENE_TABLE.BTN_BACK:
+                    cc.log("Button Back");
+                {
+                    getExitZoneMessageFromServer(getZoneId());
+                }
+                    break;
+                default:
+                    break;
+            }
+        }
+    },
+    ongamestatus: function(e) {
+        cc.log("data 1", e);
+        if(e.data!==null || e.data !== 'undefined')
+        {
+            var listMessages = parseFrom(e.data, e.data.byteLength);
+            while(listMessages.length > 0) {
+                var buffer = listMessages.shift();
+                this.exitZoneHandleMessage(buffer);
+            }
+        }
+    },
+    exitZoneHandleMessage: function(e) {
+        var buffer = e;
+        switch (buffer.message_id) {
+            case NetworkManager.EXIT_ZONE:
+                var msg = buffer.response;
+                exitZoneResponseHandler(msg);
+                break;
+            case NetworkManager.FILTER_ROOM:
+                var msg = buffer.response;
+                filterRoomResponseHandler(msg);
+                break;
+            case NetworkManager.USER_STATUS:
+                var msg = buffer.response;
+                userStatusResponseHandler(msg);
+                break;
+        }
+    },
+
+    //========================= TableView
+
+    tableCellSizeForIndex:function (table, idx) {
+        return cc.size(300,100);
+    },
+    tableCellAtIndex:function (table, idx) {
+
+        var strValue = idx.toFixed(0);
+        var cell = table.dequeueCell();
+        var label;
+        if (!cell) {
+            cell = new MTableViewCell();
+
+            // cell._autoRelease();
+
+            // label = cc.LabelTTF.create(strValue, "Helvetica", 15);
+            // label.setPosition(50,0);
+            // label.setAnchorPoint(0,0);
+            // label.setTag("comment");
+            // cell.addChild(label);
+
+            // new cell created
+            var bg = MSprite.create(res.TABLE_BG_CONTENT_CELL, cc.size(this.bg_lst_table.getWidth(), this.hightTable / 6));
+            bg.setTag(789);
+            cell.addChild(bg);
+
+            cc.log("listRoomPlay", listRoomPlay);
+
+            if(listRoomPlay.length > 0){
+                var itemCell = ItemCell(listRoomPlay[idx].roomIndex, listRoomPlay[idx].passwordRequired,
+                    this.bg_lst_table.getWidth(), this.hightTable / 6, listRoomPlay[idx].minBet,
+                    listRoomPlay[idx].playingPlayer, listRoomPlay[idx].vipRoom, listRoomPlay[idx].playerSize, listRoomPlay[idx].minEnterMoney, this);
+
+                cc.log("itemCell", itemCell);
+
+                itemCell.setAnchorPoint(cc.p(0, 0));
+                itemCell.setContentSize(cc.size(this.bg_lst_table.getWidth(), bg.getHeight()));
+                // cell.addChild(itemCell);
+
+            }
+
+
+
+        }
+        // else {
+        //     label = cell.getChildByTag("comment");
+        //     var txt = "ha_ha";//responses[strValue];
+        //     label.setString(txt);
+        // }
+        // cell.removeAllChildrenWithCleanup();
+
+
+
+        // var loadMore = roomType = ROOM_TYPE.TONG_HOP ? 2 * LOAD_MORE_XUKEN : LOAD_MORE_XUKEN;
+        //
+        // if (roomType != ROOM_TYPE.TONG_HOP && idx + 1 == listRoomPlay.length && listRoomPlay.length % loadMore == 0){
+        //     cc.log("here1");
+        //     isReloadRoom = false;
+        //     getFilterRoomMessageFromServer(getZoneId(), roomType, idx + 1, LOAD_MORE_XUKEN, orderByField, asc);
+        // }
+        // else if (roomType == ROOM_TYPE.TONG_HOP && idx + 1 == listRoomPlay.length){
+        //     cc.log("here2");
+        //     isReloadRoom = false;
+        //     var round = listRoomPlay.length / (2 * LOAD_MORE_XUKEN);
+        //     getFilterRoomMessageFromServer(getZoneId(), roomType, round * LOAD_MORE_XUKEN, LOAD_MORE_XUKEN, orderByField, asc);
+        // }
+
+        return cell;
+    },
+    numberOfCellsInTableView:function (table) {
+        return 10;//responses.length;
+    },
+
+    initTitleTable: function(posX, posY, widthObj, heightObj){
+        var width = widthObj;
+        var height = heightObj / 6;
+        var sizeText = height / 3;
+
+        //so ban
+        var lb_soban = MLabel.create(TABLE_TXT_SOBAN, sizeText, true);
+        lb_soban.setAnchorPoint(cc.p(0.5,0.5));
+        lb_soban.setPosition(cc.p(posX + width / 12, posY));
+        this.addChild(lb_soban);
+
+        //muc cuoc
+        var lb_muccuoc = MLabel.create(TABLE_TXT_MUCCUOC, sizeText, true);
+        lb_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
+        lb_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (8 * 6) - 10, posY));
+        this.addChild(lb_muccuoc);
+
+        var btn_sort_muccuoc = MButton.create(res.TABLE_IC_SORT);
+        btn_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
+        btn_sort_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (4 * 6) + btn_sort_muccuoc.getWidth()/2, posY));
+        //btn_sort_muccuoc.setTag(TAG_SHOW_SORT_MUCCUOC);
+        //btn_sort_muccuoc.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
+        this.addChild(btn_sort_muccuoc);
+
+        //bg sort muc cuoc
+        var bg_sort_muccuoc = MButton.create(res.TABLE_BTN_SORT);
+        bg_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
+        bg_sort_muccuoc.setPosition(cc.p(lb_muccuoc.getPosition().x - lb_muccuoc.getWidth() / 2
+            + (lb_muccuoc.getWidth()/2 + btn_sort_muccuoc.getWidth()/2 + btn_sort_muccuoc.getPosition().x - lb_muccuoc.getPosition().x) / 2
+            , posY));
+        bg_sort_muccuoc.setTag(TAG.SHOW_SORT_MUCCUOC);
+        bg_sort_muccuoc.addTouchEventListener(this.menuCallBack, this);
+        this.addChild(bg_sort_muccuoc);
+
+        //so nguoi choi
+        var lb_songuoichoi = MLabel.create(TABLE_TXT_SONGUOICHOI, sizeText, true);
+        lb_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
+        lb_songuoichoi.setPosition(cc.p(posX + 3 * width / 6, posY));
+        this.addChild(lb_songuoichoi);
+
+        //sort songuoichoi
+        var btn_sort_songuoichoi = MButton.create(res.TABLE_IC_SORT);
+        btn_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
+        btn_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x + lb_songuoichoi.getWidth()/2
+            + btn_sort_songuoichoi.getWidth()/2 + 10, posY));
+        //btn_sort_songuoichoi.setTag(TAG_SHOW_SORT_NUMPLAYER);
+        //btn_sort_songuoichoi.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
+        this.addChild(btn_sort_songuoichoi);
+        btn_sort_songuoichoi.setRotation(-180);
+
+        //bg sort so nguoi choi
+        var bg_sort_songuoichoi = MButton.create(res.TABLE_BTN_SORT);
+        bg_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
+        bg_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x - lb_songuoichoi.getWidth() / 2
+            + (lb_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getPosition().x - lb_songuoichoi.getPosition().x) / 2
+            , posY));
+        bg_sort_songuoichoi.setTag(TAG.SHOW_SORT_NUMPLAYER);
+        bg_sort_songuoichoi.addTouchEventListener(this.menuCallBack, this);
+        this.addChild(bg_sort_songuoichoi);
+
+        //toi thieu
+        var lb_toithieu = MLabel.create(TABLE_TXT_TOITHIEU, sizeText, true);
+        lb_toithieu.setAnchorPoint(cc.p(0.5,0.5));
+        lb_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (8 * 6) - 10, posY));
+        this.addChild(lb_toithieu);
+
+        //sort toi thieu
+        var btn_sort_toithieu = MButton.create(res.TABLE_IC_SORT);
+        btn_sort_toithieu.setAnchorPoint(cc.p(0.5,0.5));
+        btn_sort_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (4 * 6) + btn_sort_toithieu.getWidth() / 2, posY));
+        //btn_sort_toithieu.setTag(TAG_SHOW_SORT_TOITHIEU);
+        //btn_sort_toithieu.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
+        // this.addChild(btn_sort_toithieu);
+
+        //trang thai
+        var lb_trangthai = MLabel.create(TABLE_TXT_TRANGTHAI, sizeText, true);
+        lb_trangthai.setAnchorPoint(cc.p(0.5,0.5));
+        lb_trangthai.setPosition(cc.p(posX + 5 * width / 6 + width / (2 * 6), posY));
+        this.addChild(lb_trangthai);
+
+    },
+
+    initMenu: function(){
         //init menu
         var btn_back = MButton.create(res.TABLE_BTN_BACK,TAG.SCENE_TABLE.BTN_BACK);
         btn_back.setPosition(MVec2(padding - btn_back.getHeight()/6,
@@ -57,12 +287,12 @@ var SceneTableLayer = cc.Layer.extend({
             btnCaiDat.getPositionY()));
         btnHopThu.addTouchEventListener(this.menuCallBack, this);
 
-        var sprite_new_mail = MSprite.create(res.bg_songuoixem);
+        sprite_new_mail = MSprite.create(res.bg_songuoixem);
         sprite_new_mail.setPosition(cc.p(btnHopThu.getWidth() - sprite_new_mail.getWidth()*0.8,
-        btnHopThu.getHeight() - sprite_new_mail.getHeight()*0.8));
+            btnHopThu.getHeight() - sprite_new_mail.getHeight()*0.8));
         btnHopThu.addChild(sprite_new_mail);
 
-        var label_number_new_mail = MLabel.create(totalNewMail, 20);
+        label_number_new_mail = MLabel.create(totalNewMail, 20);
         label_number_new_mail.setAnchorPoint(cc.p(0.5,0.5));
         label_number_new_mail.setPosition(cc.p(sprite_new_mail.getWidth() / 2
             , sprite_new_mail.getHeight() / 2));
@@ -223,35 +453,35 @@ var SceneTableLayer = cc.Layer.extend({
         //ban choi
         var scrollHeight = txt_game_name.getPosition().y - originY - bar.getHeight() - 12;
         var scrollY = bar.getHeight() - 5;
-        var scrollBkg = MSprite.create(res.TABLE_BG_PHONGCHO);
+        scrollBkg = MSprite.create(res.TABLE_BG_PHONGCHO);
         scrollBkg.setScaleX((width - 30) / scrollBkg.getWidth());
         scrollBkg.setScaleY(scrollHeight / scrollBkg.getHeight());
         scrollBkg.setContentSize(cc.size(width - 30, scrollHeight));
         scrollBkg.setPosition(MVec2(15, scrollY));
         this.addChild(scrollBkg);
 
-        var bg_lst_table = MSprite.create(res.TABLE_BG_LST_TABLE);
-        bg_lst_table.setScaleX((width - 40) / bg_lst_table.getWidth());
-        bg_lst_table.setScaleY((scrollHeight - 8) / bg_lst_table.getHeight());
-        bg_lst_table.setContentSize(cc.size(width - 40, scrollHeight - 8));
-        bg_lst_table.setPosition(MVec2(15 + (scrollBkg.getWidth() - bg_lst_table.getWidth()) / 2, scrollY));
-        this.addChild(bg_lst_table);
+        this.bg_lst_table = MSprite.create(res.TABLE_BG_LST_TABLE);
+        this.bg_lst_table.setScaleX((width - 40) / this.bg_lst_table.getWidth());
+        this.bg_lst_table.setScaleY((scrollHeight - 8) / this.bg_lst_table.getHeight());
+        this.bg_lst_table.setContentSize(cc.size(width - 40, scrollHeight - 8));
+        this.bg_lst_table.setPosition(MVec2(15 + (scrollBkg.getWidth() - this.bg_lst_table.getWidth()) / 2, scrollY));
+        this.addChild(this.bg_lst_table);
 
-        var hightTable = bg_lst_table.getHeight() - 0.76 * bg_lst_table.getHeight() / 6;
+        this.hightTable = this.bg_lst_table.getHeight() - 0.76 * this.bg_lst_table.getHeight() / 6;
 
-        var tableView = new cc.TableView(this, cc.size(bg_lst_table.getWidth(), hightTable));
-        tableView.setDirection(cc.SCROLLVIEW_DIRECTION_VERTICAL);
-        tableView.setVerticalFillOrder(cc.TABLEVIEW_FILL_TOPDOWN);
-        tableView.setAnchorPoint(cc.p(0.5,0.5));
-        tableView.setDelegate(this);
-        tableView.setBounceable(true);
-        tableView.setPosition(MVec2(15 + (scrollBkg.getWidth() - bg_lst_table.getWidth()) / 2, scrollY));
+        this.tableView = new cc.TableView(this, cc.size(this.bg_lst_table.getWidth(), this.hightTable));
+        this.tableView.setDirection(cc.SCROLLVIEW_DIRECTION_VERTICAL);
+        this.tableView.setVerticalFillOrder(cc.TABLEVIEW_FILL_TOPDOWN);
+        this.tableView.setAnchorPoint(cc.p(0.5,0.5));
+        this.tableView.setDelegate(this);
+        this.tableView.setBounceable(true);
+        this.tableView.setPosition(MVec2(15 + (scrollBkg.getWidth() - this.bg_lst_table.getWidth()) / 2, scrollY));
 
-        this.addChild(tableView);
+        this.addChild(this.tableView);
 
-        this.initTitleTable(originX + 15 + (scrollBkg.getWidth() - bg_lst_table.getWidth()) / 2,
-            bg_lst_table.getPosition().y + bg_lst_table.getHeight() - 0.76 * bg_lst_table.getHeight() / 12,
-            bg_lst_table.getWidth(), hightTable);
+        this.initTitleTable(originX + 15 + (scrollBkg.getWidth() - this.bg_lst_table.getWidth()) / 2,
+            this.bg_lst_table.getPosition().y + this.bg_lst_table.getHeight() - 0.76 * this.bg_lst_table.getHeight() / 12,
+            this.bg_lst_table.getWidth(), this.hightTable);
 
         //bar
         this.addChild(bar);
@@ -306,157 +536,6 @@ var SceneTableLayer = cc.Layer.extend({
         // notify = MNotify::create();
         // this.addChild(notify, INDEX_NOTIFY);
 
-        ws.onmessage = this.ongamestatus.bind(this);
-
-        return true;
-
-
-    },
-    menuCallBack: function(sender, type){
-        if(type == ccui.Widget.TOUCH_ENDED){
-            var tag = sender.tag;
-            // SoundManager::getInstance().playSound("sounds/button_click.mp3");
-            switch (tag) {
-                case TAG.SCENE_TABLE.BTN_BACK:
-                    cc.log("Button Back");
-                {
-                    getExitZoneMessageFromServer(getZoneId());
-                }
-                    break;
-                default:
-                    break;
-            }
-        }
-    },
-    ongamestatus: function(e) {
-        cc.log("data 1", e);
-        if(e.data!==null || e.data !== 'undefined')
-        {
-            var listMessages = parseFrom(e.data, e.data.byteLength);
-            while(listMessages.length > 0) {
-                var buffer = listMessages.shift();
-                this.exitZoneHandleMessage(buffer);
-            }
-        }
-    },
-    exitZoneHandleMessage: function(e) {
-        var buffer = e;
-        switch (buffer.message_id) {
-            case NetworkManager.EXIT_ZONE:
-                var msg = buffer.response;
-                exitZoneResponseHandler(msg);
-                break;
-        }
-    },
-
-    //========================= TableView
-
-    tableCellSizeForIndex:function (table, idx) {
-        return cc.size(300,100);
-    },
-    tableCellAtIndex:function (table, idx) {
-        var strValue = idx.toFixed(0);
-        var cell = table.dequeueCell();
-        var label;
-        if (!cell) {
-            cell = new MTableViewCell();
-
-            label = cc.LabelTTF.create(strValue, "Helvetica", 15);
-            label.setPosition(50,0);
-            label.setAnchorPoint(0,0);
-            label.setTag("comment");
-            cell.addChild(label);
-        } else {
-            label = cell.getChildByTag("comment");
-            var txt = "ha_ha";//responses[strValue];
-            label.setString(txt);
-        }
-        return cell;
-    },
-    numberOfCellsInTableView:function (table) {
-        return 10;//responses.length;
-    },
-
-    initTitleTable: function(posX, posY, widthObj, heightObj){
-        var width = widthObj;
-        var height = heightObj / 6;
-        var sizeText = height / 3;
-
-        //so ban
-        var lb_soban = MLabel.create(TABLE_TXT_SOBAN, sizeText, true);
-        lb_soban.setAnchorPoint(cc.p(0.5,0.5));
-        lb_soban.setPosition(cc.p(posX + width / 12, posY));
-        this.addChild(lb_soban);
-
-        //muc cuoc
-        var lb_muccuoc = MLabel.create(TABLE_TXT_MUCCUOC, sizeText, true);
-        lb_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
-        lb_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (8 * 6) - 10, posY));
-        this.addChild(lb_muccuoc);
-
-        var btn_sort_muccuoc = MButton.create(res.TABLE_IC_SORT);
-        btn_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
-        btn_sort_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (4 * 6) + btn_sort_muccuoc.getWidth()/2, posY));
-        //btn_sort_muccuoc.setTag(TAG_SHOW_SORT_MUCCUOC);
-        //btn_sort_muccuoc.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
-        this.addChild(btn_sort_muccuoc);
-
-        //bg sort muc cuoc
-        var bg_sort_muccuoc = MButton.create(res.TABLE_BTN_SORT);
-        bg_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
-        bg_sort_muccuoc.setPosition(cc.p(lb_muccuoc.getPosition().x - lb_muccuoc.getWidth() / 2
-            + (lb_muccuoc.getWidth()/2 + btn_sort_muccuoc.getWidth()/2 + btn_sort_muccuoc.getPosition().x - lb_muccuoc.getPosition().x) / 2
-            , posY));
-        bg_sort_muccuoc.setTag(TAG.SHOW_SORT_MUCCUOC);
-        bg_sort_muccuoc.addTouchEventListener(this.menuCallBack, this);
-        this.addChild(bg_sort_muccuoc);
-
-        //so nguoi choi
-        var lb_songuoichoi = MLabel.create(TABLE_TXT_SONGUOICHOI, sizeText, true);
-        lb_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
-        lb_songuoichoi.setPosition(cc.p(posX + 3 * width / 6, posY));
-        this.addChild(lb_songuoichoi);
-
-        //sort songuoichoi
-        var btn_sort_songuoichoi = MButton.create(res.TABLE_IC_SORT);
-        btn_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
-        btn_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x + lb_songuoichoi.getWidth()/2
-            + btn_sort_songuoichoi.getWidth()/2 + 10, posY));
-        //btn_sort_songuoichoi.setTag(TAG_SHOW_SORT_NUMPLAYER);
-        //btn_sort_songuoichoi.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
-        this.addChild(btn_sort_songuoichoi);
-        btn_sort_songuoichoi.setRotation(-180);
-
-        //bg sort so nguoi choi
-        var bg_sort_songuoichoi = MButton.create(res.TABLE_BTN_SORT);
-        bg_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
-        bg_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x - lb_songuoichoi.getWidth() / 2
-            + (lb_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getPosition().x - lb_songuoichoi.getPosition().x) / 2
-            , posY));
-        bg_sort_songuoichoi.setTag(TAG.SHOW_SORT_NUMPLAYER);
-        bg_sort_songuoichoi.addTouchEventListener(this.menuCallBack, this);
-        this.addChild(bg_sort_songuoichoi);
-
-        //toi thieu
-        var lb_toithieu = MLabel.create(TABLE_TXT_TOITHIEU, sizeText, true);
-        lb_toithieu.setAnchorPoint(cc.p(0.5,0.5));
-        lb_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (8 * 6) - 10, posY));
-        this.addChild(lb_toithieu);
-
-        //sort toi thieu
-        var btn_sort_toithieu = MButton.create(res.TABLE_IC_SORT);
-        btn_sort_toithieu.setAnchorPoint(cc.p(0.5,0.5));
-        btn_sort_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (4 * 6) + btn_sort_toithieu.getWidth() / 2, posY));
-        //btn_sort_toithieu.setTag(TAG_SHOW_SORT_TOITHIEU);
-        //btn_sort_toithieu.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
-        // this.addChild(btn_sort_toithieu);
-
-        //trang thai
-        var lb_trangthai = MLabel.create(TABLE_TXT_TRANGTHAI, sizeText, true);
-        lb_trangthai.setAnchorPoint(cc.p(0.5,0.5));
-        lb_trangthai.setPosition(cc.p(posX + 5 * width / 6 + width / (2 * 6), posY));
-        this.addChild(lb_trangthai);
-
     }
 });
 
@@ -473,6 +552,22 @@ var SceneTable = cc.Scene.extend({
         this.addChild(layer);
     }
 });
+
+// var setMessage = function(notEnoughMoney, message) {
+//     this.message = message;
+//     if (message != null){
+//         if (notEnoughMoney){
+//             EnoughMoneyOnEventListener* b = new EnoughMoneyOnEventListener();
+//             PopupMessageBox* popupMessage = new PopupMessageBox();
+//             popupMessage->setEvent(b);
+//             popupMessage->setMessageText(message);
+//             this->addChild(popupMessage, INDEX_POPUP);
+//         }
+//         else {
+//             this->showToast(message.c_str(), 2);
+//         }
+//     }
+// }
 
 var exitZoneResponseHandler = function (exitZoneResponse) {
 
@@ -491,5 +586,50 @@ var exitZoneResponseHandler = function (exitZoneResponse) {
 
 }
 
+var userStatusResponseHandler = function (userStatusResponse) {
+
+    if (userStatusResponse != 0) {
+        if (userStatusResponse.responseCode){
+            totalNewMail = userStatusResponse.unreadMailCount;
+
+            if (totalNewMail > 0){
+                var str_total_mail = totalNewMail > 9 ? "9+" : totalNewMail;
+                label_number_new_mail.setString(str_total_mail);
+                sprite_new_mail.setVisible(true);
+            }
+            else {
+                sprite_new_mail.setVisible(false);
+            }
+        }
+        // if (userStatusResponse->has_message()){
+        //     PopupMessageBox* popup = new PopupMessageBox();
+        //     popup->showPopup(user_status_response->message());
+        // }
+    }
+
+}
+
+var reloadRoom = function(dt){
+    cc.log("reloadRoom");
+    //neu co ket noi thi gui reload room
+    if (ws.readyState == ws.OPEN) {
+        //tim index dau tien trong danh sach hien thi cua tableview
+        // var posCurrTableView = this.tableView.getContentOffset();
+        var posCurrTableView = 0;
+        var numLineHiddenInTableView = -posCurrTableView / (this.hightTable / 6);  //so dong duoi cung bi an trong tableview
+
+        var indexRemain = listRoomPlay.length - numLineHiddenInTableView;
+        var index = indexRemain >= 7 ? (indexRemain - 7) : 0;
+
+        cc.log("reload room index------------------------------", index);
+
+        roomType = ROOM_TYPE.TONG_HOP ? 2 * LOAD_MORE_XUKEN : LOAD_MORE_XUKEN;
+
+        isReloadRoom = true;
+        getFilterRoomMessageFromServer(getZoneId(),
+            roomType, index, LOAD_MORE_XUKEN, orderByField, asc);
+        // hideLoading();
+    }
+}
 
 

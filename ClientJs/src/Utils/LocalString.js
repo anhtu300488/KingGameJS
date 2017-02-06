@@ -52,3 +52,5 @@ var TXT_XOCDIA_XINCAI      =     "Xin làm cái";
 var TXT_XOCDIA_HUYCAI      =     "huỷ làm cái";
 var XOCDIA_TEXT_CHAN       =     "CHẴN ";
 var XOCDIA_TEXT_LE         =     "LẺ ";
+var CELL_STATUS_PLAYING    =     "Đang chiến";
+var CELL_STATUS_MIS_SLOT   =     "Thiếu chân";

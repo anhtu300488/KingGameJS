@@ -132,10 +132,8 @@ var NetworkManager = {
 }
 
 var getInitializeMessageFromServer = function(cp, appversion , country, language, device_id, device_info, pakageName) {
-    cc.log("getInitializeMessageFromServer");
     var request = initInitializeMessage(cp, appversion, country, language, device_id, device_info, pakageName);
 
-    cc.log("request = ", request);
 
     var requestMess = requestMessage(request, getOS(), NetworkManager.INITIALIZE, "");
 
@@ -169,7 +167,6 @@ var initInitializeMessage = function(cp, appversion, country, language, device_i
 
 var getLoginMessageFromServer = function(username, password)
 {
-    cc.log("getLoginMessageFromServer");
     var request = initLoginMessage(username, password);
 
     var requestMess = requestMessage(request, getOS(), NetworkManager.LOGIN, "");
@@ -178,7 +175,6 @@ var getLoginMessageFromServer = function(username, password)
 }
 
 var initLoginMessage = function(username, password) {
-    cc.log("initLoginMessage");
 
     var ProtoBuf = dcodeIO.ProtoBuf,
         LoginProtobuf = ProtoBuf.loadProtoFile('res/protobuf/login.proto').build('bigken.login'),
@@ -200,7 +196,6 @@ var getRegisterMessageFromServer = function(username, password, confirm_password
 }
 
 var initRegisterMessage = function(username, password, confirm_password, full_name, sdt) {
-    cc.log("initRegisterMessage");
 
     var ProtoBuf = dcodeIO.ProtoBuf,
         RegisterProtobuf = ProtoBuf.loadProtoFile('res/protobuf/register.proto').build('bigken.register'),
@@ -219,30 +214,28 @@ var initRegisterMessage = function(username, password, confirm_password, full_na
 
 //function request message
 var requestMessage = function(request, os, message_id, session_id) {
-    cc.log("requestMessage");
     var size = 32;
 
     // if (message_id != NETWORK.INITIALIZE && message_id != NETWORK.TURN
     //     && message_id != NETWORK.INSTANT_MESSAGE && message_id != NETWORK.LOOKUP_MONEY_HISTORY
     //     && message_id != NETWORK.FILTER_MAIL && message_id != NETWORK.BET  && message_id != NETWORK.FILTER_FRIEND) {
-    //     LoadingManager::getInstance()->showLoading();
-    //     cocos2d::Director::getInstance()->getEventDispatcher()->setEnabled(false);
+    //     LoadingManager::getInstance().showLoading();
+    //     cocos2d::Director::getInstance().getEventDispatcher().setEnabled(false);
     // }
 
     var ackBuf = initData(request, os, message_id, session_id, size);
 
-    cc.log("ackBuf", ackBuf);
 
-    // if(NetworkManager::getInstance()->_disconnected) {
-    //     Director::getInstance()->getScheduler()->performFunctionInCocosThread([&]{
+    // if(NetworkManager::getInstance()._disconnected) {
+    //     Director::getInstance().getScheduler().performFunctionInCocosThread([&]{
     //         /*MToast* toast = MToast::create();
-    //          toast->show("Kết nối chậm,vui lòng chờ trong giây lát...",1);
-    //          auto visibleSize = Director::getInstance()->getVisibleSize();
-    //          auto origin = Director::getInstance()->getVisibleOrigin();
-    //          toast->setPosition(Vec2(origin + visibleSize/2));
-    //          auto scene = cocos2d::Director::getInstance()->getRunningScene();
+    //          toast.show("Kết nối chậm,vui lòng chờ trong giây lát...",1);
+    //          auto visibleSize = Director::getInstance().getVisibleSize();
+    //          auto origin = Director::getInstance().getVisibleOrigin();
+    //          toast.setPosition(Vec2(origin + visibleSize/2));
+    //          auto scene = cocos2d::Director::getInstance().getRunningScene();
     //          if (scene != nullptr) {
-    //          scene->addChild(toast,INDEX_TOAST);
+    //          scene.addChild(toast,INDEX_TOAST);
     //          }*/
     //     });
     // } else {
@@ -254,7 +247,6 @@ var requestMessage = function(request, os, message_id, session_id) {
 var initData = function(request, os, messid, _session, len)
 {
 
-    cc.log("request = ", request);
     var lenSession = 0;
 
     if(_session != null){
@@ -304,20 +296,17 @@ var initData = function(request, os, messid, _session, len)
 }
 
 var callNetwork = function(ackBuf) {
-    cc.log("status", ws.readyState);
     ws.send(ackBuf);
 }
 
 var parseFrom = function(read_str, len)
 {
-    cc.log("read_str", read_str);
-    cc.log("len", len);
+
     var ByteBuffer = dcodeIO.ByteBuffer;
     var bb = new ByteBuffer(len);
 
     bb.append(read_str);
 
-    cc.log("bb = ", bb);
 
 
     var listMessages = [];
@@ -328,7 +317,6 @@ var parseFrom = function(read_str, len)
         var bytes_size = bb.readInt32(_offset);
         _offset+= 4;
 
-        cc.log("bytes_size = ", bytes_size);
         //read compress
         var is_compress = bb.readInt8(_offset);
         _offset+= 1;
@@ -337,31 +325,22 @@ var parseFrom = function(read_str, len)
         lenPacket -= (bytes_size + 4);
         var response = 0;
 
-        cc.log("is_compress", is_compress);
-
-        cc.log("left_byte_size = ", left_byte_size);
-
-        cc.log("_offset = ", _offset);
 
         /*if is_compress = 1 */
         if (is_compress == 1) {
-            cc.log("zip");
             var left_block = bb.copy(_offset);
             var byteArray = new Uint8Array(left_block);
-            cc.log("byteArray", byteArray);
             var bufArr = left_block.view;
 
             var dataUnzip = cc.unzipBase64AsArray(left_block.toString('base64'));
 
             var _offsetZip = 0;
 
-            cc.log("dataUnzip", dataUnzip);
 
             var bbZip = new ByteBuffer(dataUnzip.length);
 
             bbZip.append(dataUnzip, "", 0);
 
-            cc.log("dataUnzip", bbZip);
 
             var data_size_block_zip = bbZip.readInt16(_offsetZip);
             _offsetZip+= 2;
@@ -380,17 +359,11 @@ var parseFrom = function(read_str, len)
 
             var protoBufVarZip = bbZip.copy(_offsetZip, data_size_block_zip + _offsetZip - 2);
 
-            cc.log("protoBufVar = ", protoBufVarZip);
-
-            cc.log("messageid:" + messageidZip);
-
             response = getTypeMessage(response, messageidZip, protoBufVarZip);
 
-            cc.log("response: " + response + ", messageid:" + messageidZip);
 
             if (response != 0) {
                 left_byte_size -= (data_size_block_zip + 2);
-                cc.log("response: " + response + ", messageid:" + messageidZip);
                 var pairZip = {
                     message_id: messageidZip,
                     response: response
@@ -428,7 +401,6 @@ var parseFrom = function(read_str, len)
 
                 if (response != 0) {
                     left_byte_size -= (data_size_block + 2);
-                    cc.log("response: " + response + ", messageid:" + messageid);
                     var pair = {
                         message_id: messageid,
                         response: response
@@ -728,8 +700,8 @@ var getPingMessageFromServer = function(disconnect_time) {
 
     // if (!_isPing) {
     //     std::thread *t = new std::thread(&NetworkManager::sendPing, this, ackBuf, size);
-    //     if (t->joinable())
-    //         t->detach();
+    //     if (t.joinable())
+    //         t.detach();
     // }
 
 }
@@ -766,10 +738,6 @@ var isInitialized = function() {
 }
 
 var getEnterZoneMessageFromServer = function(zoneId) {
-    cc.log("zone id", zoneId);
-    // var request = new BINEnterZoneRequest({
-    //     zoneId : zoneId
-    // });
 
     var ProtoBuf = dcodeIO.ProtoBuf,
         BinParamProtobuf = ProtoBuf.loadProtoFile('res/protobuf/enter_zone.proto').build('bigken.enterzone'),
@@ -783,14 +751,6 @@ var getEnterZoneMessageFromServer = function(zoneId) {
 
     requestMessage(request, getOS(),NetworkManager.ENTER_ZONE, getSessionId());
 }
-
-// var getFilterRoomMessageFromServer = function(zone_id, roomType,
-//     int first_result, int max_result, int orderByField, bool asc) {
-//     google::protobuf::Message *request = initFilterRoomMessage(zone_id,
-//         roomType, first_result, max_result, orderByField, asc);
-//     requestMessage(request, Common::getInstance()->getOS(),
-//         NetworkManager::FILTER_ROOM, Common::getInstance()->getSessionId());
-// }
 
 var getExitZoneMessageFromServer = function(zoneId) {
     var request = initExitZoneMessage(zoneId);
@@ -809,4 +769,55 @@ var initExitZoneMessage = function(zoneId) {
     });
 
     return exitZoneProto.encode();
+}
+
+var getFilterRoomMessageFromServer = function(zone_id, roomType, first_result, max_result, orderByField, asc) {
+    cc.log("getFilterRoomMessageFromServer");
+    var request = initFilterRoomMessage(zone_id, roomType, first_result, max_result, orderByField, asc);
+    requestMessage(request, getOS(), NetworkManager.FILTER_ROOM, getSessionId());
+}
+
+var filterRoomResponseHandler = function (filterRoomResponse) {
+
+    if (filterRoomResponse != 0 && filterRoomResponse.responseCode) {
+        if (filterRoomResponse.roomPlays.length > 0) {
+            // listRoomPlay.listData = filterRoomResponse.roomPlays;
+            // setTest(filterRoomResponse.roomPlays);
+            language.current = filterRoomResponse.roomPlays;
+        }
+    }
+
+}
+
+var initFilterRoomMessage = function(zone_id, roomType, first_result, max_result, orderByField, asc) {
+    var ProtoBuf = dcodeIO.ProtoBuf,
+        FilterRoomProtobuf = ProtoBuf.loadProtoFile('res/protobuf/filter_room.proto').build('bigken.filterroom'),
+        FilterRoomProto = FilterRoomProtobuf.BINFilterRoomRequest;
+    var request = new FilterRoomProto({
+        zoneId : zone_id,
+        roomType: roomType,
+        firstResult: first_result,
+        maxResult: max_result,
+        orderByField: orderByField,
+        asc: asc
+    });
+
+    return request.encode();
+}
+
+var getUserStatusRequest = function(type){
+    var request = initUserStatusRequest(type);
+    requestMessage(request, getOS(),
+        NetworkManager.USER_STATUS, getSessionId());
+}
+
+var initUserStatusRequest = function(type){
+    var ProtoBuf = dcodeIO.ProtoBuf,
+        FilterRoomProtobuf = ProtoBuf.loadProtoFile('res/protobuf/user_status.proto').build('bigken.userstatus'),
+        FilterRoomProto = FilterRoomProtobuf.BINUserStatusRequest;
+    var request = new FilterRoomProto({
+        type : type
+    });
+
+    return request.encode();
 }

@@ -3,6 +3,7 @@
  */
 var os = 0;
 var _zoneId = -1;
+var _listRoomPlay;
 var getTitleGame = function(){
     var title_game = "";
 
@@ -34,7 +35,6 @@ var getTitleGame = function(){
 
 var getZoneId = function() {
     var result = -1;
-    cc.log("this.gameTag", this.gameTag);
     switch (this.gameTag)
     {
         case TAG.SHOW_GAME_SAM:
@@ -50,7 +50,6 @@ var getZoneId = function() {
             result = TAG.TIENLENMIENNAM_ZONE;
             break;
         case TAG.SHOW_GAME_TLMN_SOLO:
-            cc.log("here SHOW_GAME_TLMN_SOLO");
             result = TAG.TLMN_SOLO_ZONE;
             break;
         case TAG.SHOW_GAME_BACAY:
@@ -81,8 +80,6 @@ var getZoneId = function() {
             result = TAG.TIENLENMIENNAM_ZONE;
             break;
     }
-
-    cc.log("_zoneId", _zoneId);
 
     return _zoneId != -1 ? _zoneId : result;
 };
@@ -508,3 +505,86 @@ var setCashRoomList = function(cashRoomList) {
 var getCashRoomList = function() {
     return this.cashRoomList;
 }
+
+var convertIntToMoneyView100k = function(varParam) {
+    var i = 0;
+    var end = [ "", "K", "M", "B" ];
+
+    if (varParam < 100000){
+        return numberFormatWithCommas(varParam);
+    }
+
+    while (varParam > 1000){
+        varParam = varParam / 1000;
+        i++;
+    }
+
+    var var_string = varParam.toString();
+    return var_string + " " + end[i];
+}
+
+var numberFormatWithCommas = function(value){
+
+    // return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return value.toLocaleString();
+}
+
+var setEnableDisplayRoomList = function(enable) {
+    enableDisplayRoomList = enable;
+}
+
+var getEnableDisplayRoomList = function() {
+    return enableDisplayRoomList;
+}
+
+var requestRoomType = function(roomTypeLoad){
+    if (roomTypeLoad == ROOM_TYPE.TONG_HOP){
+        scrollBkg.setTexture(res.TABLE_BG_PHONGCHO);
+    }
+    else if (roomTypeLoad == ROOM_TYPE.XU){
+        scrollBkg.setTexture(res.TABLE_BG_PHONGVIP);
+    }
+    else {
+        scrollBkg.setTexture(res.TABLE_BG_PHONGFREE);
+    }
+    roomType = roomTypeLoad;
+    orderByField = TABLE_ORDERBY.NUM_PLAYER;//roomTypeLoad == ROOM_TYPE::TONG_HOP ? TABLE_ORDERBY::NUM_PLAYER : orderByField;
+    isReloadRoom = false;
+    getFilterRoomMessageFromServer(getZoneId(),
+        roomTypeLoad, 0, LOAD_MORE_XUKEN, orderByField, asc);
+}
+
+var listRoomPlay = [];
+
+var language = {
+    set current(name) {
+        // var setData = [];
+        for(i = 0; i< name.length; i++){
+            var setData = {
+                enteringPlayer : name[i].enteringPlayer,
+                level : name[i].level,
+                minBet : name[i].minBet,
+                minEnterMoney : name[i].minEnterMoney.low,
+                ownerUserName : name[i].ownerUserName,
+                passwordRequired : name[i].passwordRequired,
+                playerSize : name[i].playerSize,
+                playingPlayer : name[i].playingPlayer,
+                roomCapacity : name[i].roomCapacity,
+                roomConfig : name[i].roomConfig,
+                roomGroupId : name[i].roomGroupId,
+                roomId : name[i].roomId.low,
+                roomIndex : name[i].roomIndex,
+                roomName : name[i].roomName,
+                tax : name[i].tax,
+                vipRoom : name[i].vipRoom
+            };
+            listRoomPlay.push(setData);
+        }
+
+    },
+    get current(){
+        return listRoomPlay;
+    }
+}
+
+

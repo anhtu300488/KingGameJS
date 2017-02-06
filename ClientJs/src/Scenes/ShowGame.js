@@ -107,7 +107,6 @@ var ShowGameLayer = cc.Layer.extend({
 
         var widthXuKen = btn_hopthu.getPositionX() - (label_name.getPositionX() + widthName + 3 * padding);
 
-        cc.log("widthXuKen x: ", widthXuKen);
 
 
         //ken
@@ -263,7 +262,6 @@ var ShowGameLayer = cc.Layer.extend({
 
         var scollFrameSize = new cc.Size(visibleSize.width,sprite_thongtin.getPositionY() +
             sprite_thongtin.getContentSize().height - bkg_navigationbar.getContentSize().height);
-        cc.log("scollFrameSize", scollFrameSize);
         this.scrollView = new ccui.ScrollView();
         this.scrollView.setContentSize(scollFrameSize);
         this.scrollView.setPosition(cc.p(originX, originY + bkg_navigationbar.getContentSize().height)); //- 10
@@ -300,13 +298,11 @@ var ShowGameLayer = cc.Layer.extend({
         // var enableGameIds = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
         var enableGameIds = getEnableGameIds();
 
-        cc.log("enableGameIds", enableGameIds);
 
         if(getEnableGameIds() == null){
             enableGameIds = [0,1,2,3,4,5,6,7,8,9,10];
         }
 
-        cc.log("enableGameIds", enableGameIds);
 
         for (var i = 0; i < nameTabButton.length; i++){
             var isFound = false;
@@ -340,7 +336,6 @@ var ShowGameLayer = cc.Layer.extend({
 
     },
     menuCallBack: function(sender, type){
-        cc.log("TAG.SHOW_BTN_FRIEND");
         if(type == ccui.Widget.TOUCH_ENDED) {
             var tag = sender.tag;
             // SoundManager::getInstance()->playSound("sounds/button_click.mp3");
@@ -552,9 +547,7 @@ var ShowGameLayer = cc.Layer.extend({
 
             var isFound = false;
             var enableGameIds = getEnableGameIds();
-            cc.log("enableGameIds", enableGameIds);
 
-            cc.log("getZoneId", getZoneId());
             // if(getEnableGameIds() == null){
             //     enableGameIds = [0,1,2,3,4,5,6,7,8,9,10];
             // }
@@ -580,7 +573,6 @@ var ShowGameLayer = cc.Layer.extend({
 
     },
     ongamestatus: function(e) {
-        cc.log("data 1", e);
         if(e.data!==null || e.data !== 'undefined')
         {
             var listMessages = parseFrom(e.data, e.data.byteLength);
@@ -656,7 +648,6 @@ var enterZoneResponseHandler = function (enterZoneResponse) {
     //     ::getInstance()->checkEvent(NetworkManager::ENTER_ZONE);
 
     if (enterZoneResponse != 0) { //found
-        cc.log("enter zone: %s", enterZoneResponse);
         if (enterZoneResponse.responseCode) {
             //Common::getInstance()->setZoneId(enter_zone_response->);
 
@@ -684,7 +675,8 @@ var enterZoneResponseHandler = function (enterZoneResponse) {
             // }
 
             var zoneId = getZoneId();
-            cc.log("zoneId", zoneId);
+            getFilterRoomMessageFromServer(getZoneId(),
+                0, 0, LOAD_MORE_XUKEN, TABLE_ORDERBY.NUM_PLAYER, false);
             if (zoneId == Common.TAMXINGAU_ZONE){
                 cc.log("tam_xi_ngau");
                 // var tam_xi_ngau = TamXiNgau::create(this);
@@ -712,9 +704,8 @@ var enterZoneResponseHandler = function (enterZoneResponse) {
             else {
                 // notify->onHideNotify();
                 // this->unscheduleUpdate();
-                var scenetable = new SceneTable(enterZoneResponse.enableDisplayRoomList, enterZoneResponse.defaultRoomTypeLoad);
+                var scenetable = new SceneTable();
                 cc.director.runScene(scenetable);
-
             }
             //    return;
         } else {

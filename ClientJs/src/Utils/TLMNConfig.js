@@ -30,9 +30,10 @@ ws.binaryType = "arraybuffer";
 // ws.onerror = function(e) {
 //     // called in case of error, when connection is broken in example
 // };
-//         ws.onclose = function (e) {
-//             setTimeout(function(){sendData()}, 120);
-//         };
+
+// ws.onclose = function (e) {
+//     setTimeout(function(){sendData()}, 120);
+// };
 
 var LOGIN_STATE = {
     NORMAL_LOGIN : 1,
@@ -40,9 +41,27 @@ var LOGIN_STATE = {
     GG_LOGIN : 3
 }
 
+var ROOM_TYPE = {
+    KEN : 0,
+    XU : 1,
+    TONG_HOP : 2
+};
+
+var USER_STATUS_CONFIG = {
+    FILL_ALL : 0,
+    FILL_MAIL : 1,
+    FILL_FRIEND : 2
+};
+
 var GAMECOLOR = {
     DARK_COLOR: cc.color(0,0,0,180)
 }
+
+var TABLE_ORDERBY = {
+    MIN_BET : 1,
+    NUM_PLAYER : 2,
+    INDEX : 3
+};
 
 var TAG = {
     LOGIN: {
