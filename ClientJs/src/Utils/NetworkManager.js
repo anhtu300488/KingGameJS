@@ -328,6 +328,7 @@ var parseFrom = function(read_str, len)
 
         /*if is_compress = 1 */
         if (is_compress == 1) {
+            cc.log("zip");
             var left_block = bb.copy(_offset);
             var byteArray = new Uint8Array(left_block);
             var bufArr = left_block.view;
@@ -378,6 +379,7 @@ var parseFrom = function(read_str, len)
 
         }
         else {
+            cc.log("unzip");
 
             // while (left_byte_size > 0) {
                 //read protobuf + data_size_block + mid
@@ -817,6 +819,57 @@ var initUserStatusRequest = function(type){
         FilterRoomProto = FilterRoomProtobuf.BINUserStatusRequest;
     var request = new FilterRoomProto({
         type : type
+    });
+
+    return request.encode();
+}
+
+var getEnterRoomMessageFromServer = function(room_index, password) {
+    var request = initEnterRoomMessage(room_index, password);
+    requestMessage(request, getOS(), NetworkManager.ENTER_ROOM, getSessionId());
+}
+
+var initEnterRoomMessage = function(room_index, password) {
+    var ProtoBuf = dcodeIO.ProtoBuf,
+        FilterRoomProtobuf = ProtoBuf.loadProtoFile('res/protobuf/enter_room.proto').build('bigken.enterroom'),
+        FilterRoomProto = FilterRoomProtobuf.BINEnterRoomRequest;
+    var request = new FilterRoomProto({
+        roomIndex : room_index,
+        password : password
+    });
+
+    return request.encode();
+}
+
+var getStartMatchMessageFromServer = function(room_index) {
+    var request = initStartMatchMessage(room_index);
+    requestMessage(request, getOS(), NetworkManager.START_MATCH, getSessionId());
+}
+
+var initStartMatchMessage = function(room_index) {
+    var ProtoBuf = dcodeIO.ProtoBuf,
+        FilterRoomProtobuf = ProtoBuf.loadProtoFile('res/protobuf/start_match.proto').build('bigken.startmatch'),
+        FilterRoomProto = FilterRoomProtobuf.BINStartMatchRequest;
+    var request = new FilterRoomProto({
+        roomIndex : room_index
+    });
+
+    return request.encode();
+}
+
+var getReadyToPlayMessageFromServer = function(roomIndex, tableIndex){
+    var request = initReadyMessage(roomIndex, tableIndex);
+
+    requestMessage(request, getOS(), NetworkManager.READY_TO_PLAY, getSessionId());
+}
+
+var initReadyMessage = function(roomIndex, tableIndex){
+    var ProtoBuf = dcodeIO.ProtoBuf,
+        FilterRoomProtobuf = ProtoBuf.loadProtoFile('res/protobuf/ready_to_play.proto').build('bigken.readytoplay'),
+        FilterRoomProto = FilterRoomProtobuf.BINReadyToPlayRequest;
+    var request = new FilterRoomProto({
+        roomIndex : roomIndex,
+        tableIndex: tableIndex
     });
 
     return request.encode();

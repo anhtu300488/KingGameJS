@@ -193,3 +193,13 @@ var PlayLayer = cc.Layer.extend({
     }
 });
 
+//lay ra avatar cua nguoi choi
+var findAvatarOfPlayer = function(player_id) {
+    for (i = 0; i < avatars.length; i++){
+        if (avatars[i].getPlayerId == player_id){
+            return avatars[i];
+        }
+    }
+    return null;
+}
+

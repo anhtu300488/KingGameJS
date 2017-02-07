@@ -3,7 +3,8 @@
  */
 var os = 0;
 var _zoneId = -1;
-var _listRoomPlay;
+var waitingPlayerList = [];
+var playerList = [];
 var getTitleGame = function(){
     var title_game = "";
 
@@ -585,6 +586,46 @@ var language = {
     get current(){
         return listRoomPlay;
     }
+}
+
+var getOwnerUserId = function(){
+    return this.ownerUserId;
+}
+
+var setOwnerUserId = function(ownerUserId) {
+    this.ownerUserId = ownerUserId;
+}
+
+var setDisplayRoomList = function(_isDisplayRoomList) {
+    this._displayRoomList = _isDisplayRoomList;
+}
+
+var isDisplayRoomList = function() {
+    return this._displayRoomList;
+}
+
+var setMinBet = function(minBet){
+    this.minBet = minBet;
+}
+
+var getMinBet = function(){
+    return this.minBet;
+}
+
+var setMatchCountDownTime = function(_countDownTime) {
+    this._matchCountDownTime = _countDownTime;
+}
+
+var getMatchCountDownTime = function() {
+    return this._matchCountDownTime;
+}
+
+var setFirstTurnUserId = function(_firstTurnUserId) {
+    this._firstTurnUserId = _firstTurnUserId;
+}
+
+var getFirstTurnUserId = function() {
+    return this._firstTurnUserId;
 }
 
 

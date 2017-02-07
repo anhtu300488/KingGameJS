@@ -212,8 +212,10 @@ var LoginLayer = cc.Layer.extend({
     },
 
     login: function () {
-        var user_name = this.eboxNhapTK.getString();
-        var pass_word = this.eboxNhapMK.getString();
+        // var user_name = this.eboxNhapTK.getString();
+        // var pass_word = this.eboxNhapMK.getString();
+        var user_name = 'tu_atula';
+        var pass_word = 'anhtu3004';
         cc.log("txtUserName:" + user_name);
         cc.log("txtPassWord:" + pass_word);
         var space_pos = user_name.search(' ');

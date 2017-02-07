@@ -47,6 +47,12 @@ var ROOM_TYPE = {
     TONG_HOP : 2
 };
 
+var PlayerState = {
+    NOT_IN_ROOM: 1,
+    PLAYING: 3,
+    WAITING: 2
+};
+
 var USER_STATUS_CONFIG = {
     FILL_ALL : 0,
     FILL_MAIL : 1,
@@ -399,4 +405,5 @@ var BUTTON_PADDING = 15;
 var CARD_RATIO  = 1.490909;
 var CARD_UP   = 20;
 var INDEX_CARD  = 22;
+var TAG_TIME_COUNTDOWN = 223;
 

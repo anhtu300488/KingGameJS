@@ -107,6 +107,10 @@ var SceneTableLayer = cc.Layer.extend({
                 var msg = buffer.response;
                 userStatusResponseHandler(msg);
                 break;
+            case NetworkManager.ENTER_ROOM:
+                var msg = buffer.response;
+                enterRoomResponseHandler(msg);
+                break;
         }
     },
 
@@ -119,17 +123,12 @@ var SceneTableLayer = cc.Layer.extend({
 
         var strValue = idx.toFixed(0);
         var cell = table.dequeueCell();
-        var label;
-        if (!cell) {
+        if(cell){
+           cell.removeAllChildrenWithCleanup();
+        }
+        // var label;
+        // if (!cell) {
             cell = new MTableViewCell();
-
-            // cell._autoRelease();
-
-            // label = cc.LabelTTF.create(strValue, "Helvetica", 15);
-            // label.setPosition(50,0);
-            // label.setAnchorPoint(0,0);
-            // label.setTag("comment");
-            // cell.addChild(label);
 
             // new cell created
             var bg = MSprite.create(res.TABLE_BG_CONTENT_CELL, cc.size(this.bg_lst_table.getWidth(), this.hightTable / 6));
@@ -141,9 +140,7 @@ var SceneTableLayer = cc.Layer.extend({
             if(listRoomPlay.length > 0){
                 var itemCell = ItemCell(listRoomPlay[idx].roomIndex, listRoomPlay[idx].passwordRequired,
                     this.bg_lst_table.getWidth(), this.hightTable / 6, listRoomPlay[idx].minBet,
-                    listRoomPlay[idx].playingPlayer, listRoomPlay[idx].vipRoom, listRoomPlay[idx].playerSize, listRoomPlay[idx].minEnterMoney, this);
-
-                cc.log("itemCell", itemCell);
+                    listRoomPlay[idx].playingPlayer, listRoomPlay[idx].vipRoom, listRoomPlay[idx].playerSize, listRoomPlay[idx].minEnterMoney, cell);
 
                 itemCell.setAnchorPoint(cc.p(0, 0));
                 itemCell.setContentSize(cc.size(this.bg_lst_table.getWidth(), bg.getHeight()));
@@ -151,37 +148,35 @@ var SceneTableLayer = cc.Layer.extend({
 
             }
 
-
-
-        }
-        // else {
-        //     label = cell.getChildByTag("comment");
-        //     var txt = "ha_ha";//responses[strValue];
-        //     label.setString(txt);
-        // }
-        // cell.removeAllChildrenWithCleanup();
-
-
-
-        // var loadMore = roomType = ROOM_TYPE.TONG_HOP ? 2 * LOAD_MORE_XUKEN : LOAD_MORE_XUKEN;
-        //
-        // if (roomType != ROOM_TYPE.TONG_HOP && idx + 1 == listRoomPlay.length && listRoomPlay.length % loadMore == 0){
-        //     cc.log("here1");
-        //     isReloadRoom = false;
-        //     getFilterRoomMessageFromServer(getZoneId(), roomType, idx + 1, LOAD_MORE_XUKEN, orderByField, asc);
-        // }
-        // else if (roomType == ROOM_TYPE.TONG_HOP && idx + 1 == listRoomPlay.length){
-        //     cc.log("here2");
-        //     isReloadRoom = false;
-        //     var round = listRoomPlay.length / (2 * LOAD_MORE_XUKEN);
-        //     getFilterRoomMessageFromServer(getZoneId(), roomType, round * LOAD_MORE_XUKEN, LOAD_MORE_XUKEN, orderByField, asc);
-        // }
-
         return cell;
     },
     numberOfCellsInTableView:function (table) {
-        return 10;//responses.length;
+        return listRoomPlay.length;
     },
+
+    tableCellTouched:function (table, cell) {
+        var index = cell.getIdx();
+        var roomIndex = listRoomPlay[index].roomIndex;
+
+        var currentRoomTouch = listRoomPlay[index];
+
+        // if (listRoomPlay[index].passwordRequired){
+        //     this.showPopupPassWord(roomIndex);
+        // } else {
+            getEnterRoomMessageFromServer(roomIndex, "");
+        // }
+    },
+
+    // showPopupPassWord: function(roomIndex){
+    //     var passWordPopup = getChildByTag(POPUP.TAG_PASSWORD);
+    //     if (passWordPopup == null){
+    //         passWordPopup = PasswordPopup::create();
+    //         passWordPopup->setTag(POPUP_TAG_PASSWORD);
+    //         passWordPopup->setRoomIndex(roomIndex);
+    //         addChild(passWordPopup, INDEX_POPUP);
+    //         passWordPopup->appear();
+    //     }
+    // },
 
     initTitleTable: function(posX, posY, widthObj, heightObj){
         var width = widthObj;
@@ -629,6 +624,130 @@ var reloadRoom = function(dt){
         getFilterRoomMessageFromServer(getZoneId(),
             roomType, index, LOAD_MORE_XUKEN, orderByField, asc);
         // hideLoading();
+    }
+}
+
+var enterRoomResponseHandler = function(enterroomresponse){
+    cc.log("enterroomresponse", enterroomresponse);
+    if (enterroomresponse != 0) {
+        if (enterroomresponse.responseCode) {
+            setOwnerUserId(enterroomresponse.ownerUserId);
+
+            for (i = 0; i < enterroomresponse.playingPlayers.length; i++) {
+                playerList.push(enterroomresponse.playingPlayers[i]);
+            }
+            for (i = 0; i < enterroomresponse.waitingPlayers.length; i++){
+                waitingPlayerList.push(enterroomresponse.waitingPlayers[i]);
+            }
+
+            // if (enterroomresponse->has_roomplay()){
+                var roomPlay = enterroomresponse.roomPlay;
+
+                // notify->onHideNotify();  //an thong bao di
+
+                var is_create_room = (getUserId() == enterroomresponse.ownerUserId) ? true : false;
+                if (getZoneId() == Common.TIENLENMIENNAM_ZONE) {
+                    var cardRemainingCount = "";
+                    for (i = 0; i < enterroomresponse.args.length; i++){
+                        if (enterroomresponse.args[i].key == "cardRemainingCount"){
+                            var json = enterroomresponse.args[i].value;
+                            cardRemainingCount = json;
+                            break;
+                        }
+                    }
+                    var response = NULL;
+                    // if (enterroomresponse->has_enterroomstatus() //&& enterroomresponse->enterroomstatus() == PlayerState::WAITING
+                    // ) {
+                        response = enterroomresponse;
+                    // }
+                    var tlmiennam = new TLMienNamScene(roomPlay.roomIndex,
+                        playerList, waitingPlayerList, is_create_room, TAG.SHOW_GAME_TLMN,
+                        getEnableDisplayRoomList(), roomPlay.passwordRequired,
+                        roomPlay.vipRoom, roomPlay.minBet, cardRemainingCount, response);
+                    cc.director.runScene(tlmiennam);
+                }
+                else if (getZoneId() == Common.TLMN_SOLO_ZONE) {
+                    var cardRemainingCount = "";
+                    for (i = 0; i < enterroomresponse.args.length; i++){
+                        if (enterroomresponse.args[i].key == "cardRemainingCount"){
+                            var json = enterroomresponse.args[i].value;
+                            cardRemainingCount = json;
+                            break;
+                        }
+                    }
+
+                    var response = null;
+                    // if (enterroomresponse->has_enterroomstatus() //&& enterroomresponse->enterroomstatus() == PlayerState::WAITING
+                    // ) {
+                        response = enterroomresponse;
+                    // }
+
+                    var tlmiennam = new TLMienNamScene(roomPlay.roomIndex,
+                        playerList, waitingPlayerList, is_create_room, TAG.SHOW_GAME_TLMN_SOLO,
+                        getEnableDisplayRoomList(), roomPlay.passwordRequired,
+                        roomPlay.vipRoom, roomPlay.minBet, cardRemainingCount, response);
+                    cc.director.runScene(tlmiennam);
+                }
+                else if (getZoneId() == Common.PHOM_ZONE) {
+                    var response = null;
+                    // if (enterroomresponse->has_enterroomstatus() && enterroomresponse->enterroomstatus() == PlayerState::WAITING) {
+                    if (enterroomresponse.enterRoomStatus == PlayerState.WAITING) {
+                        response = enterroomresponse;
+                    }
+                    var phom = new PhomScene(roomPlay.roomIndex,
+                        playerList, waitingPlayerList, is_create_room, TAG.SHOW_GAME_PHOM,
+                        getEnableDisplayRoomList(), roomPlay.passwordRequired,
+                        roomPlay.vipRoom, roomPlay.minBet, response);
+                    cc.director.runScene(phom);
+                }
+                else if (getZoneId() == Common.BACAY_ZONE) {
+                    var bacay = new ThreeCardsScene(roomPlay, playerList, waitingPlayerList, is_create_room,
+                        getEnableDisplayRoomList(), enterroomresponse);
+                    cc.director.runScene(bacay);
+                }
+                else if (getZoneId() == Common.MAUBINH_ZONE) {
+                    var maubinh = new MauBinhScene(roomPlay.roomIndex,
+                        playerList, waitingPlayerList, is_create_room, TAG.SHOW_GAME_MAUBINH,
+                        getEnableDisplayRoomList(), roomPlay.passwordRequired,
+                        roomPlay.vipRoom, roomPlay.minBet, enterroomresponse);
+                    cc.director.runScene(maubinh);
+                }
+                else if (getZoneId() == Common.XOCDIA_ZONE) {
+                    var currentHostId = -1;
+                    if (enterroomresponse.args.length > 0) {
+                        for (i = 0; i < enterroomresponse.args.length; i++) {
+                            var key = enterroomresponse.args[i].key;
+                            var value = enterroomresponse.args[i].value;
+                            if (key == "currentHostUserId") {
+                                currentHostId = value;
+                            }
+                        }
+                    }
+                    var xocdia = new SocdiaScene(roomPlay.roomIndex, playerList, waitingPlayerList,
+                        is_create_room, TAG.SHOW_GAME_XOCDIA, getEnableDisplayRoomList(),
+                        roomPlay.passwordRequired, roomPlay.vipRoom,
+                        roomPlay.minBet, enterroomresponse, roomPlay.roomConfig, currentHostId);
+                    cc.director.runScene(xocdia);
+                }
+                else if (getZoneId() == Common.LIENG_ZONE) {
+                    var lieng = new LiengScene(roomPlay, playerList, waitingPlayerList, is_create_room,
+                        getEnableDisplayRoomList(), enterroomresponse);
+                    cc.director.runScene(lieng);
+                }
+            // }
+        }
+        else {
+            // if (isEnabledPurchaseCash() && !currentRoomTouch.passwordrequired() && !isEnoughEnterMoney()){
+            //     EnoughMoneyOnEventListener* b = new EnoughMoneyOnEventListener();
+            //     PopupMessageBox* popupMessage = new PopupMessageBox();
+            //     popupMessage->setEvent(b);
+            //     popupMessage->showPopup(enterroomresponse->message());
+            // }
+            // else {
+            //     PopupMessageBox* popupMessage = new PopupMessageBox();
+            //     popupMessage->showPopup(enterroomresponse->message());
+            // }
+        }
     }
 }
 
