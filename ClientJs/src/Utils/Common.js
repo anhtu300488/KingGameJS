@@ -559,7 +559,7 @@ var listRoomPlay = [];
 
 var language = {
     set current(name) {
-        // var setData = [];
+        listRoomPlay.length = 0;
         for(i = 0; i< name.length; i++){
             var setData = {
                 enteringPlayer : name[i].enteringPlayer,
@@ -605,11 +605,11 @@ var isDisplayRoomList = function() {
 }
 
 var setMinBet = function(minBet){
-    this.minBet = minBet;
+    this._minBet = minBet;
 }
 
 var getMinBet = function(){
-    return this.minBet;
+    return this._minBet;
 }
 
 var setMatchCountDownTime = function(_countDownTime) {

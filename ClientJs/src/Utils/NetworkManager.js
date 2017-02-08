@@ -425,6 +425,7 @@ var parseFrom = function(read_str, len)
 }
 
 var getTypeMessage = function(msg, messageid, protoBufVar) {
+    cc.log("messageid", messageid);
     switch (messageid) {
         case NetworkManager.INITIALIZE:
             msg = BINInitializeResponse(protoBufVar);
@@ -870,6 +871,38 @@ var initReadyMessage = function(roomIndex, tableIndex){
     var request = new FilterRoomProto({
         roomIndex : roomIndex,
         tableIndex: tableIndex
+    });
+
+    return request.encode();
+}
+
+var getExitRoomMessageFromServer = function(roomIndex) {
+    var request = initExitRoomLoginMessage(roomIndex);
+    requestMessage(request, getOS(),
+        NetworkManager.EXIT_ROOM, getSessionId());
+}
+var getCancelExitRoomMessageFromServer = function(roomIndex) {
+    var request = initCancelExitRoomLoginMessage(roomIndex);
+    requestMessage(request, getOS(),
+        NetworkManager.CANCEL_EXIT_ROOM, getSessionId());
+}
+
+var initExitRoomLoginMessage = function(room_index) {
+    var ProtoBuf = dcodeIO.ProtoBuf,
+        FilterRoomProtobuf = ProtoBuf.loadProtoFile('res/protobuf/exit_room.proto').build('bigken.exitroom'),
+        FilterRoomProto = FilterRoomProtobuf.BINExitRoomRequest;
+    var request = new FilterRoomProto({
+        roomIndex : room_index
+    });
+
+    return request.encode();
+}
+var initCancelExitRoomLoginMessage = function(room_index) {
+    var ProtoBuf = dcodeIO.ProtoBuf,
+        FilterRoomProtobuf = ProtoBuf.loadProtoFile('res/protobuf/exit_room.proto').build('bigken.exitroom'),
+        FilterRoomProto = FilterRoomProtobuf.BINCancelExitAfterMatchEndRequest;
+    var request = new FilterRoomProto({
+        roomIndex : room_index
     });
 
     return request.encode();

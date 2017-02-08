@@ -5,12 +5,14 @@
 var btnInvitePlay;
 var passwordRequired = false;
 var is_create_room = false;
-var minBet;
 var is_vip_room = false;
 var roomIndex;
 var padding = 10;
-var btn_message =   new ccui.Button();
+var btn_message = new ccui.Button();
 var btn_caidat =   new ccui.Button();
+var check_exit_room = false;
+var avatars = [];
+var lstDisplayWaitingPlayer = [];
 
 //hien thi nut moi choi (neu so luong nguoi choi numPlaying >= capacity_size thi an nut moi choi di)
 var showInvitePlayer = function(numPlaying){
@@ -138,7 +140,7 @@ var PlayLayer = cc.Layer.extend({
         lb_title_game.setPosition(cc.p(posx_titlegame, originY + height - padding));
         this.addChild(lb_title_game);
 
-        var value_minbet = minBet;
+        var value_minbet = getMinBet();
         var minbet_type = is_vip_room ? "KEN" : "XU";
 
         var lb_value_minbet = MLabel.create(value_minbet + " " + minbet_type, btnKhoa.getHeight() * 0.25, cc.color.WHITE);
@@ -167,7 +169,7 @@ var PlayLayer = cc.Layer.extend({
         btn_menu.setPosition(cc.p(origin.x + padding, origin.y + visibleSize.height - btn_menu.getHeight() - padding));
         btn_menu.addTouchEventListener(this.menuCallBack, this);
 
-        var btn_message = MButton.create(res.BTN_MESSAGE, TAG.TLMN_BTN_MESSAGE);
+        btn_message = MButton.create(res.BTN_MESSAGE, TAG.TLMN_BTN_MESSAGE);
         btn_message.setPosition(MVec2(width - btn_message.getContentSize().width - padding, padding));
         btn_message.addTouchEventListener(this.menuCallBack, this);
 
@@ -189,7 +191,124 @@ var PlayLayer = cc.Layer.extend({
         this.addChild(btn_purcharse);
         this.addChild(btn_caidat);
 
+        ws.onmessage = this.ongamestatus.bind(this);
+
         return true;
+    },
+    ongamestatus: function(e) {
+        cc.log("data 1", e);
+        if(e.data!==null || e.data !== 'undefined')
+        {
+            var listMessages = parseFrom(e.data, e.data.byteLength);
+            cc.log("listMessages", listMessages);
+            while(listMessages.length > 0) {
+                var buffer = listMessages.shift();
+                this.playSceneHandleMessage(buffer);
+            }
+        }
+    },
+    menuCallBack: function(pSender, eventType){
+        if (eventType == ccui.Widget.TOUCH_ENDED) {
+            var tag = pSender.tag;
+            // SoundManager::getInstance().playSound("sounds/button_click.mp3");
+            switch (tag) {
+                case TAG.TLMN_BTN_BACK:
+                    cc.log("m_popupTLMN");
+                {
+                    if (!check_exit_room) {
+                        getExitRoomMessageFromServer(roomIndex);
+                        pSender.loadTextureNormal("res/btn_back_out.png");
+                    }else {
+                        getCancelExitRoomMessageFromServer(roomIndex);
+                        pSender.loadTextureNormal("res/btn_back_tlmn.png");
+                    }
+                    check_exit_room = !check_exit_room;
+                }
+                    break;
+                case TAG.TLMN_BTN_MESSAGE:
+                    if(this.getChildByTag(POPUP.TAG_CHAT) == null){
+                        // var m_popupChat = PopupChat::createPopup(ScopeChat::CHAT_ROOM, lstMsgChat);
+                        // m_popupChat.setTag(POPUP_TAG_CHAT);
+                        // addChild(m_popupChat,INDEX_POPUP);
+                        // m_popupChat.appear();
+                    }
+                    break;
+                case TAG.BTN_INVITE_TO_PLAY:
+                    // if(this.getChildByTag(POPUP.TAG_INVITE) == null){
+                    //     var m_popupInviteToPlay = PopupInviteToPlay::create();
+                    //     m_popupInviteToPlay.setTag(POPUP.TAG_INVITE);
+                    //     m_popupInviteToPlay.setVipRoom(is_vip_room);
+                    //     m_popupInviteToPlay.setRoomIndex(roomIndex);
+                    //     addChild(m_popupInviteToPlay, INDEX_POPUP);
+                    //
+                    //     m_popupInviteToPlay.getLookupUserToInviteFromServer();
+                    //     m_popupInviteToPlay.appear();
+                    // }
+
+                    break;
+                case TAG.TLMN_BTN_KHOA:
+                {
+                    // if (passwordRequired){
+                    //     //popup_lock.setLock(false);
+                    //     getLockRoom(roomIndex, false);
+                    // }
+                    // else{
+                    //     if(this.getChildByTag(POPUP.TAG_LOCKTABLE) == null){
+                    //         var popup_lock = PopupLockTable::create();
+                    //         popup_lock.setTag(POPUP.TAG_LOCKTABLE);
+                    //         this.addChild(popup_lock, INDEX_POPUP);
+                    //         popup_lock.appear();
+                    //     }
+                    // }
+                }
+                    break;
+                case TAG.TLMN_BTN_PURCHASE:
+                    cc.log("purchase");
+                // {
+                //     if (getServerAppVersion() < 0){
+                //             this.showToast(MSG_COMMING_SOON, 2);
+                //         break;
+                //     }
+                //     var m_popupDoiThe = this.getChildByTag(POPUP.TAG_DOITHE);
+                //     if (m_popupDoiThe == null){
+                //         m_popupDoiThe = PopupDoiThe::create();
+                //         m_popupDoiThe.setTag(POPUP.TAG_DOITHE);
+                //         m_popupDoiThe.addMenuNapThe();
+                //         addChild(m_popupDoiThe, INDEX_POPUP);
+                //         m_popupDoiThe.appear();
+                //     }
+                // }
+                    break;
+                case TAG.TLMN_BTN_CAIDAT:
+                    cc.log("sound");
+                    // if (this.getChildByTag(POPUP.TAG_SETTING) == null){
+                    //     var m_popupSetting = PopupSetting::create();
+                    //     m_popupSetting.setTag(POPUP.TAG_SETTING);
+                    //     addChild(m_popupSetting, INDEX_POPUP);
+                    //     m_popupSetting.appear();
+                    // }
+                    break;
+                case TAG.TLMN_BTN_FACEBOOK:
+                    // captureScreenShareFace();
+                    break;
+                default:
+                    break;
+            }
+        }
+    },
+    playSceneHandleMessage: function(e) {
+        var buffer = e;
+        cc.log("buffer.message_id", buffer.message_id);
+        switch (buffer.message_id) {
+            case NetworkManager.EXIT_ROOM:
+                var msg = buffer.response;
+                exitRoomResponseHandler(msg);
+                break;
+            case NetworkManager.CANCEL_EXIT_ROOM:
+                var msg = buffer.response;
+                cancelExitRoomResponseHandler(msg);
+                break;
+        }
     }
 });
 
@@ -202,4 +321,36 @@ var findAvatarOfPlayer = function(player_id) {
     }
     return null;
 }
+
+var exitRoomResponseHandler = function(exit_room_response) {
+    if (exit_room_response != 0) {
+        cc.log("exit_room_response", exit_room_response);
+        // if (exit_room_response.responseCode && exit_room_response.exitAfterMatchEnd) {
+        if (exit_room_response.responseCode) {
+            // if (!exit_room_response.exitAfterMatchEnd) {
+                cc.log("exit_room_response.exitAfterMatchEnd", exit_room_response.exitAfterMatchEnd);
+                var enter_room_response = 0; //xoa bien luu trang thai dang choi khi nguoi choi join lai ban choi
+                var default_room_type = getRequestRoomType() != -1 ? getRequestRoomType() : ROOM_TYPE.XU;
+                cc.log("default_room_type", default_room_type);
+                // onHideNotify();  //an thong bao di
+
+                var showtable = new SceneTable(isDisplayRoomList(), default_room_type, exit_room_response.notEnoughMoney,
+                    exit_room_response.message ? exit_room_response.message : "");
+                cc.director.runScene(showtable);
+            // }else{
+            //     // showToast(TXT_REGISTER_EXITROOM, 2);
+            // }
+        }
+        else {
+            // this.showToast(exit_room_response.message().c_str(), 2);
+        }
+    }
+}
+
+//an cac nut moi choi va chat doi voi nguoi cho
+// var showBtnWithWatingPlayer = function(isShow){
+//     btnInvitePlay.setVisible(isShow);
+//     btn_message.setVisible(isShow);
+// }
+
 

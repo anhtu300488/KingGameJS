@@ -73,6 +73,15 @@
         "src/protobufObject/BINEnterZoneResponse.js",
         "src/protobufObject/BINExitZoneResponse.js",
         "src/protobufObject/BINFilterRoomResponse.js",
-        "src/protobufObject/BINEnterRoomResponse.js"
+        "src/protobufObject/BINEnterRoomResponse.js",
+        "src/protobufObject/BINStartMatchResponse.js",
+        "src/protobufObject/BINReadyToPlayResponse.js",
+        "src/protobufObject/BINExitRoomResponse.js",
+        "src/protobufObject/BINCancelExitAfterMatchEndResponse.js",
+        "src/Objects/TLMNPlayer.js",
+        "src/Objects/Card.js",
+        "src/Objects/CardSprite.js",
+        "src/Objects/WaitingPlayer.js",
+        "src/Objects/Player.js"
     ]
 }

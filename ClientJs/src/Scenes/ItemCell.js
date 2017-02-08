@@ -40,42 +40,42 @@ var ItemCell = function (_index, passwordRequired, width, height, minBet, number
     cell.addChild(sprite);
 
 
-    // var loadingBar = new cc.LoadingBar();
-    // loadingBar.setAnchorPoint(ANCHOR_MIDDLE);
-    // loadingBar.setCapInsets(cc.Rect(sprite.getContentSize().width*0.25, sprite.getContentSize().height*0.25,
-    //     sprite.getContentSize().width*0.5, sprite.getContentSize().height*0.5));
-    // loadingBar.setName("LoadingBar");
-    //
-    // if (max_number_user >= 25 && number_user > 0 && number_user < 4){
-    //     loadingBar.setPercent(100 * 4 / max_number_user);
-    // }
-    // else {
-    //     loadingBar.setPercent(100 * number_user / max_number_user);
-    // }
-    //
-    // loadingBar.setScaleX(((5 * width) / (7 * 3)) / sprite.getContentSize().width);
-    // loadingBar.setPosition(cc.p(3 * width / 6, posY));
-    // loadingBar.setScale9Enabled(true);
-    //
-    // var trangthai_text = "";
-    // var colorTxt;
-    //
-    // if (number_user / max_number_user >= 1){
-    //     trangthai_text = CELL_STATUS_PLAYING;
-    //     loadingBar.loadTexture("res/inside_progressbar.png");  //max_progressbar.png
-    //     loadingBar.setContentSize(cc.Size(sprite.getContentSize().width, sprite.getContentSize().height));
-    //     loadingBar.setColor(cc.color.RED);
-    //     colorTxt = cc.color.YELLOW;
-    // }
-    // else {
-    //     trangthai_text = CELL_STATUS_MIS_SLOT;
-    //     loadingBar.loadTexture("res/inside_progressbar.png");
-    //     loadingBar.setContentSize(cc.size(sprite.getContentSize().width, sprite.getContentSize().height));
-    //     loadingBar.setColor(cc.color.GREEN);
-    //     colorTxt = cc.color.WHITE;
-    // }
-    //
-    // cell.addChild(loadingBar);
+    var loadingBar = new ccui.LoadingBar();
+    loadingBar.setAnchorPoint(ANCHOR_MIDDLE);
+    loadingBar.setCapInsets(cc.Rect(sprite.getContentSize().width*0.25, sprite.getContentSize().height*0.25,
+        sprite.getContentSize().width*0.5, sprite.getContentSize().height*0.5));
+    loadingBar.setName("LoadingBar");
+
+    if (max_number_user >= 25 && number_user > 0 && number_user < 4){
+        loadingBar.setPercent(100 * 4 / max_number_user);
+    }
+    else {
+        loadingBar.setPercent(100 * number_user / max_number_user);
+    }
+
+    loadingBar.setScaleX(((5 * width) / (7 * 3)) / sprite.getContentSize().width);
+    loadingBar.setPosition(cc.p(3 * width / 6, posY));
+    loadingBar.setScale9Enabled(true);
+
+    var trangthai_text = "";
+    var colorTxt;
+
+    if (number_user / max_number_user >= 1){
+        trangthai_text = CELL_STATUS_PLAYING;
+        loadingBar.loadTexture("res/inside_progressbar.png");  //max_progressbar.png
+        loadingBar.setContentSize(cc.Size(sprite.getContentSize().width, sprite.getContentSize().height));
+        loadingBar.setColor(cc.color.RED);
+        colorTxt = cc.color.YELLOW;
+    }
+    else {
+        trangthai_text = CELL_STATUS_MIS_SLOT;
+        loadingBar.loadTexture("res/inside_progressbar.png");
+        loadingBar.setContentSize(cc.size(sprite.getContentSize().width, sprite.getContentSize().height));
+        loadingBar.setColor(cc.color.GREEN);
+        colorTxt = cc.color.WHITE;
+    }
+
+    cell.addChild(loadingBar);
 
     //xuken
     var sprite_xuken_min = MSprite.create(bg_xuken);
@@ -90,11 +90,11 @@ var ItemCell = function (_index, passwordRequired, width, height, minBet, number
     cell.addChild(lb_toithieu);
 
     // //trang thai
-    // var lb_trangthai = MLabel.create(trangthai_text, sizeText, true);
-    // lb_trangthai.setAnchorPoint(ANCHOR_MIDDLE);
-    // lb_trangthai.setColor(colorTxt);
-    // lb_trangthai.setPosition(cc.p(5 * width / 6 + width / (2 * 6), posY));
-    // cell.addChild(lb_trangthai);
+    var lb_trangthai = MLabel.create(trangthai_text, sizeText, true);
+    lb_trangthai.setAnchorPoint(ANCHOR_MIDDLE);
+    lb_trangthai.setColor(colorTxt);
+    lb_trangthai.setPosition(cc.p(5 * width / 6 + width / (2 * 6), posY));
+    cell.addChild(lb_trangthai);
 
     var labelSoNguoi = MLabel.create(cc.formatStr("%d/%d", number_user, max_number_user), sizeText, true);
     labelSoNguoi.setAnchorPoint(ANCHOR_MIDDLE);

@@ -12,18 +12,22 @@ var message;
 
 var SceneTableLayer = cc.Layer.extend({
     sprite:null,
-    ctor:function () {
+    ctor:function (tempEnableDisplayRoomList, defaultRoomTypeLoad, notEnoughMoney, message) {
         //////////////////////////////
         // 1. super init first
         this._super();
 
         // var tempEnableDisplayRoomList = true;
         //
-        var defaultRoomTypeLoad = 0;
+        // var defaultRoomTypeLoad = 0;
         //
         // setEnableDisplayRoomList(tempEnableDisplayRoomList);
+        getFilterRoomMessageFromServer(getZoneId(),
+            0, 0, LOAD_MORE_XUKEN, TABLE_ORDERBY.NUM_PLAYER, false);
         requestRoomType(defaultRoomTypeLoad);
         // setMessage(notEnoughMoney, message);
+
+        ws.onmessage = this.ongamestatus.bind(this);
 
         this.init();
 
@@ -61,8 +65,8 @@ var SceneTableLayer = cc.Layer.extend({
 
         // getUserStatusRequest(USER_STATUS_CONFIG.FILL_MAIL);
 
-        // reloadRoom(0);
-        ws.onmessage = this.ongamestatus.bind(this);
+        reloadRoom(0);
+
 
     },
     menuCallBack: function(sender, type){
@@ -81,91 +85,6 @@ var SceneTableLayer = cc.Layer.extend({
             }
         }
     },
-    ongamestatus: function(e) {
-        cc.log("data 1", e);
-        if(e.data!==null || e.data !== 'undefined')
-        {
-            var listMessages = parseFrom(e.data, e.data.byteLength);
-            while(listMessages.length > 0) {
-                var buffer = listMessages.shift();
-                this.exitZoneHandleMessage(buffer);
-            }
-        }
-    },
-    exitZoneHandleMessage: function(e) {
-        var buffer = e;
-        switch (buffer.message_id) {
-            case NetworkManager.EXIT_ZONE:
-                var msg = buffer.response;
-                exitZoneResponseHandler(msg);
-                break;
-            case NetworkManager.FILTER_ROOM:
-                var msg = buffer.response;
-                filterRoomResponseHandler(msg);
-                break;
-            case NetworkManager.USER_STATUS:
-                var msg = buffer.response;
-                userStatusResponseHandler(msg);
-                break;
-            case NetworkManager.ENTER_ROOM:
-                var msg = buffer.response;
-                enterRoomResponseHandler(msg);
-                break;
-        }
-    },
-
-    //========================= TableView
-
-    tableCellSizeForIndex:function (table, idx) {
-        return cc.size(300,100);
-    },
-    tableCellAtIndex:function (table, idx) {
-
-        var strValue = idx.toFixed(0);
-        var cell = table.dequeueCell();
-        if(cell){
-           cell.removeAllChildrenWithCleanup();
-        }
-        // var label;
-        // if (!cell) {
-            cell = new MTableViewCell();
-
-            // new cell created
-            var bg = MSprite.create(res.TABLE_BG_CONTENT_CELL, cc.size(this.bg_lst_table.getWidth(), this.hightTable / 6));
-            bg.setTag(789);
-            cell.addChild(bg);
-
-            cc.log("listRoomPlay", listRoomPlay);
-
-            if(listRoomPlay.length > 0){
-                var itemCell = ItemCell(listRoomPlay[idx].roomIndex, listRoomPlay[idx].passwordRequired,
-                    this.bg_lst_table.getWidth(), this.hightTable / 6, listRoomPlay[idx].minBet,
-                    listRoomPlay[idx].playingPlayer, listRoomPlay[idx].vipRoom, listRoomPlay[idx].playerSize, listRoomPlay[idx].minEnterMoney, cell);
-
-                itemCell.setAnchorPoint(cc.p(0, 0));
-                itemCell.setContentSize(cc.size(this.bg_lst_table.getWidth(), bg.getHeight()));
-                // cell.addChild(itemCell);
-
-            }
-
-        return cell;
-    },
-    numberOfCellsInTableView:function (table) {
-        return listRoomPlay.length;
-    },
-
-    tableCellTouched:function (table, cell) {
-        var index = cell.getIdx();
-        var roomIndex = listRoomPlay[index].roomIndex;
-
-        var currentRoomTouch = listRoomPlay[index];
-
-        // if (listRoomPlay[index].passwordRequired){
-        //     this.showPopupPassWord(roomIndex);
-        // } else {
-            getEnterRoomMessageFromServer(roomIndex, "");
-        // }
-    },
 
     // showPopupPassWord: function(roomIndex){
     //     var passWordPopup = getChildByTag(POPUP.TAG_PASSWORD);
@@ -177,88 +96,6 @@ var SceneTableLayer = cc.Layer.extend({
     //         passWordPopup->appear();
     //     }
     // },
-
-    initTitleTable: function(posX, posY, widthObj, heightObj){
-        var width = widthObj;
-        var height = heightObj / 6;
-        var sizeText = height / 3;
-
-        //so ban
-        var lb_soban = MLabel.create(TABLE_TXT_SOBAN, sizeText, true);
-        lb_soban.setAnchorPoint(cc.p(0.5,0.5));
-        lb_soban.setPosition(cc.p(posX + width / 12, posY));
-        this.addChild(lb_soban);
-
-        //muc cuoc
-        var lb_muccuoc = MLabel.create(TABLE_TXT_MUCCUOC, sizeText, true);
-        lb_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
-        lb_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (8 * 6) - 10, posY));
-        this.addChild(lb_muccuoc);
-
-        var btn_sort_muccuoc = MButton.create(res.TABLE_IC_SORT);
-        btn_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
-        btn_sort_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (4 * 6) + btn_sort_muccuoc.getWidth()/2, posY));
-        //btn_sort_muccuoc.setTag(TAG_SHOW_SORT_MUCCUOC);
-        //btn_sort_muccuoc.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
-        this.addChild(btn_sort_muccuoc);
-
-        //bg sort muc cuoc
-        var bg_sort_muccuoc = MButton.create(res.TABLE_BTN_SORT);
-        bg_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
-        bg_sort_muccuoc.setPosition(cc.p(lb_muccuoc.getPosition().x - lb_muccuoc.getWidth() / 2
-            + (lb_muccuoc.getWidth()/2 + btn_sort_muccuoc.getWidth()/2 + btn_sort_muccuoc.getPosition().x - lb_muccuoc.getPosition().x) / 2
-            , posY));
-        bg_sort_muccuoc.setTag(TAG.SHOW_SORT_MUCCUOC);
-        bg_sort_muccuoc.addTouchEventListener(this.menuCallBack, this);
-        this.addChild(bg_sort_muccuoc);
-
-        //so nguoi choi
-        var lb_songuoichoi = MLabel.create(TABLE_TXT_SONGUOICHOI, sizeText, true);
-        lb_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
-        lb_songuoichoi.setPosition(cc.p(posX + 3 * width / 6, posY));
-        this.addChild(lb_songuoichoi);
-
-        //sort songuoichoi
-        var btn_sort_songuoichoi = MButton.create(res.TABLE_IC_SORT);
-        btn_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
-        btn_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x + lb_songuoichoi.getWidth()/2
-            + btn_sort_songuoichoi.getWidth()/2 + 10, posY));
-        //btn_sort_songuoichoi.setTag(TAG_SHOW_SORT_NUMPLAYER);
-        //btn_sort_songuoichoi.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
-        this.addChild(btn_sort_songuoichoi);
-        btn_sort_songuoichoi.setRotation(-180);
-
-        //bg sort so nguoi choi
-        var bg_sort_songuoichoi = MButton.create(res.TABLE_BTN_SORT);
-        bg_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
-        bg_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x - lb_songuoichoi.getWidth() / 2
-            + (lb_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getPosition().x - lb_songuoichoi.getPosition().x) / 2
-            , posY));
-        bg_sort_songuoichoi.setTag(TAG.SHOW_SORT_NUMPLAYER);
-        bg_sort_songuoichoi.addTouchEventListener(this.menuCallBack, this);
-        this.addChild(bg_sort_songuoichoi);
-
-        //toi thieu
-        var lb_toithieu = MLabel.create(TABLE_TXT_TOITHIEU, sizeText, true);
-        lb_toithieu.setAnchorPoint(cc.p(0.5,0.5));
-        lb_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (8 * 6) - 10, posY));
-        this.addChild(lb_toithieu);
-
-        //sort toi thieu
-        var btn_sort_toithieu = MButton.create(res.TABLE_IC_SORT);
-        btn_sort_toithieu.setAnchorPoint(cc.p(0.5,0.5));
-        btn_sort_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (4 * 6) + btn_sort_toithieu.getWidth() / 2, posY));
-        //btn_sort_toithieu.setTag(TAG_SHOW_SORT_TOITHIEU);
-        //btn_sort_toithieu.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
-        // this.addChild(btn_sort_toithieu);
-
-        //trang thai
-        var lb_trangthai = MLabel.create(TABLE_TXT_TRANGTHAI, sizeText, true);
-        lb_trangthai.setAnchorPoint(cc.p(0.5,0.5));
-        lb_trangthai.setPosition(cc.p(posX + 5 * width / 6 + width / (2 * 6), posY));
-        this.addChild(lb_trangthai);
-
-    },
 
     initMenu: function(){
         //init menu
@@ -531,6 +368,174 @@ var SceneTableLayer = cc.Layer.extend({
         // notify = MNotify::create();
         // this.addChild(notify, INDEX_NOTIFY);
 
+    },
+
+    initTitleTable: function(posX, posY, widthObj, heightObj){
+        var width = widthObj;
+        var height = heightObj / 6;
+        var sizeText = height / 3;
+
+        //so ban
+        var lb_soban = MLabel.create(TABLE_TXT_SOBAN, sizeText, true);
+        lb_soban.setAnchorPoint(cc.p(0.5,0.5));
+        lb_soban.setPosition(cc.p(posX + width / 12, posY));
+        this.addChild(lb_soban);
+
+        //muc cuoc
+        var lb_muccuoc = MLabel.create(TABLE_TXT_MUCCUOC, sizeText, true);
+        lb_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
+        lb_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (8 * 6) - 10, posY));
+        this.addChild(lb_muccuoc);
+
+        var btn_sort_muccuoc = MButton.create(res.TABLE_IC_SORT);
+        btn_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
+        btn_sort_muccuoc.setPosition(cc.p(posX + width / 6 + 3 * width / (4 * 6) + btn_sort_muccuoc.getWidth()/2, posY));
+        //btn_sort_muccuoc.setTag(TAG_SHOW_SORT_MUCCUOC);
+        //btn_sort_muccuoc.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
+        this.addChild(btn_sort_muccuoc);
+
+        //bg sort muc cuoc
+        var bg_sort_muccuoc = MButton.create(res.TABLE_BTN_SORT);
+        bg_sort_muccuoc.setAnchorPoint(cc.p(0.5,0.5));
+        bg_sort_muccuoc.setPosition(cc.p(lb_muccuoc.getPosition().x - lb_muccuoc.getWidth() / 2
+            + (lb_muccuoc.getWidth()/2 + btn_sort_muccuoc.getWidth()/2 + btn_sort_muccuoc.getPosition().x - lb_muccuoc.getPosition().x) / 2
+            , posY));
+        bg_sort_muccuoc.setTag(TAG.SHOW_SORT_MUCCUOC);
+        bg_sort_muccuoc.addTouchEventListener(this.menuCallBack, this);
+        this.addChild(bg_sort_muccuoc);
+
+        //so nguoi choi
+        var lb_songuoichoi = MLabel.create(TABLE_TXT_SONGUOICHOI, sizeText, true);
+        lb_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
+        lb_songuoichoi.setPosition(cc.p(posX + 3 * width / 6, posY));
+        this.addChild(lb_songuoichoi);
+
+        //sort songuoichoi
+        var btn_sort_songuoichoi = MButton.create(res.TABLE_IC_SORT);
+        btn_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
+        btn_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x + lb_songuoichoi.getWidth()/2
+            + btn_sort_songuoichoi.getWidth()/2 + 10, posY));
+        //btn_sort_songuoichoi.setTag(TAG_SHOW_SORT_NUMPLAYER);
+        //btn_sort_songuoichoi.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
+        this.addChild(btn_sort_songuoichoi);
+        btn_sort_songuoichoi.setRotation(-180);
+
+        //bg sort so nguoi choi
+        var bg_sort_songuoichoi = MButton.create(res.TABLE_BTN_SORT);
+        bg_sort_songuoichoi.setAnchorPoint(cc.p(0.5,0.5));
+        bg_sort_songuoichoi.setPosition(cc.p(lb_songuoichoi.getPosition().x - lb_songuoichoi.getWidth() / 2
+            + (lb_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getWidth() / 2 + btn_sort_songuoichoi.getPosition().x - lb_songuoichoi.getPosition().x) / 2
+            , posY));
+        bg_sort_songuoichoi.setTag(TAG.SHOW_SORT_NUMPLAYER);
+        bg_sort_songuoichoi.addTouchEventListener(this.menuCallBack, this);
+        this.addChild(bg_sort_songuoichoi);
+
+        //toi thieu
+        var lb_toithieu = MLabel.create(TABLE_TXT_TOITHIEU, sizeText, true);
+        lb_toithieu.setAnchorPoint(cc.p(0.5,0.5));
+        lb_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (8 * 6) - 10, posY));
+        this.addChild(lb_toithieu);
+
+        //sort toi thieu
+        var btn_sort_toithieu = MButton.create(res.TABLE_IC_SORT);
+        btn_sort_toithieu.setAnchorPoint(cc.p(0.5,0.5));
+        btn_sort_toithieu.setPosition(cc.p(posX + 4 * width / 6 + 3 * width / (4 * 6) + btn_sort_toithieu.getWidth() / 2, posY));
+        //btn_sort_toithieu.setTag(TAG_SHOW_SORT_TOITHIEU);
+        //btn_sort_toithieu.addTouchEventListener(CC_CALLBACK_2(SceneTable::menuCallBack, this));
+        // this.addChild(btn_sort_toithieu);
+
+        //trang thai
+        var lb_trangthai = MLabel.create(TABLE_TXT_TRANGTHAI, sizeText, true);
+        lb_trangthai.setAnchorPoint(cc.p(0.5,0.5));
+        lb_trangthai.setPosition(cc.p(posX + 5 * width / 6 + width / (2 * 6), posY));
+        this.addChild(lb_trangthai);
+
+    },
+    //========================= TableView
+
+    tableCellSizeForIndex:function (table, idx) {
+        return cc.size(300,100);
+    },
+    tableCellAtIndex:function (table, idx) {
+
+        // var strValue = idx.toFixed(0);
+        var cell = table.dequeueCell();
+        // if(cell){
+        //    cell.removeAllChildrenWithCleanup();
+        // }
+        // var label;
+        // if (!cell) {
+        cell = new MTableViewCell();
+
+        // new cell created
+        var bg = MSprite.create(res.TABLE_BG_CONTENT_CELL, cc.size(this.bg_lst_table.getWidth(), this.hightTable / 6));
+        bg.setTag(789);
+        cell.addChild(bg);
+
+        cc.log("listRoomPlay", listRoomPlay);
+
+        if(listRoomPlay.length > 0){
+            var itemCell = ItemCell(listRoomPlay[idx].roomIndex, listRoomPlay[idx].passwordRequired,
+                this.bg_lst_table.getWidth(), this.hightTable / 6, listRoomPlay[idx].minBet,
+                listRoomPlay[idx].playingPlayer, listRoomPlay[idx].vipRoom, listRoomPlay[idx].playerSize, listRoomPlay[idx].minEnterMoney, cell);
+
+            itemCell.setAnchorPoint(cc.p(0, 0));
+            itemCell.setContentSize(cc.size(this.bg_lst_table.getWidth(), bg.getHeight()));
+            // cell.addChild(itemCell);
+
+        }
+
+        return cell;
+    },
+    numberOfCellsInTableView:function (table) {
+        return listRoomPlay.length;
+    },
+
+    tableCellTouched:function (table, cell) {
+        var index = cell.getIdx();
+        var roomIndex = listRoomPlay[index].roomIndex;
+
+        var currentRoomTouch = listRoomPlay[index];
+
+        // if (listRoomPlay[index].passwordRequired){
+        //     this.showPopupPassWord(roomIndex);
+        // } else {
+        getEnterRoomMessageFromServer(roomIndex, "");
+        // }
+    },
+
+    ongamestatus: function(e) {
+        cc.log("data 1", e);
+        if(e.data!==null || e.data !== 'undefined')
+        {
+            var listMessages = parseFrom(e.data, e.data.byteLength);
+            while(listMessages.length > 0) {
+                var buffer = listMessages.shift();
+                this.exitZoneHandleMessage(buffer);
+            }
+        }
+    },
+    exitZoneHandleMessage: function(e) {
+        var buffer = e;
+        switch (buffer.message_id) {
+            case NetworkManager.EXIT_ZONE:
+                var msg = buffer.response;
+                exitZoneResponseHandler(msg);
+                break;
+            case NetworkManager.FILTER_ROOM:
+                cc.log("FILTER_ROOM 2");
+                var msg = buffer.response;
+                filterRoomResponseHandler(msg);
+                break;
+            case NetworkManager.USER_STATUS:
+                var msg = buffer.response;
+                userStatusResponseHandler(msg);
+                break;
+            case NetworkManager.ENTER_ROOM:
+                var msg = buffer.response;
+                enterRoomResponseHandler(msg);
+                break;
+        }
     }
 });
 
@@ -541,9 +546,16 @@ var MTableViewCell = cc.TableViewCell.extend({
 });
 
 var SceneTable = cc.Scene.extend({
-    onEnter:function () {
+    ctor:function (tempEnableDisplayRoomList, defaultRoomTypeLoad, notEnoughMoney, message)
+    {
         this._super();
-        var layer = new SceneTableLayer();
+        this.init(tempEnableDisplayRoomList, defaultRoomTypeLoad, notEnoughMoney, message);
+    },
+
+    init:function (tempEnableDisplayRoomList, defaultRoomTypeLoad, notEnoughMoney, message)
+    {
+        var layer = new SceneTableLayer(tempEnableDisplayRoomList, defaultRoomTypeLoad, notEnoughMoney, message);
+
         this.addChild(layer);
     }
 });
@@ -643,9 +655,13 @@ var enterRoomResponseHandler = function(enterroomresponse){
             // if (enterroomresponse->has_roomplay()){
                 var roomPlay = enterroomresponse.roomPlay;
 
+
+
                 // notify->onHideNotify();  //an thong bao di
 
-                var is_create_room = (getUserId() == enterroomresponse.ownerUserId) ? true : false;
+                var is_create_room = (getUserId() == enterroomresponse.ownerUserId.low) ? true : false;
+                cc.log("enterroomresponse.ownerUserId", enterroomresponse.ownerUserId.low);
+                cc.log("is_create_room", is_create_room);
                 if (getZoneId() == Common.TIENLENMIENNAM_ZONE) {
                     var cardRemainingCount = "";
                     for (i = 0; i < enterroomresponse.args.length; i++){
@@ -655,11 +671,15 @@ var enterRoomResponseHandler = function(enterroomresponse){
                             break;
                         }
                     }
-                    var response = NULL;
+                    var response = null;
                     // if (enterroomresponse->has_enterroomstatus() //&& enterroomresponse->enterroomstatus() == PlayerState::WAITING
                     // ) {
                         response = enterroomresponse;
                     // }
+                    cc.log("roomPlay.roomIndex", roomPlay.roomIndex);
+                    cc.log("roomPlay.passwordRequired", roomPlay.passwordRequired);
+                    cc.log("roomPlay.vipRoom", roomPlay.vipRoom);
+                    cc.log("roomPlay.minBet", roomPlay.minBet);
                     var tlmiennam = new TLMienNamScene(roomPlay.roomIndex,
                         playerList, waitingPlayerList, is_create_room, TAG.SHOW_GAME_TLMN,
                         getEnableDisplayRoomList(), roomPlay.passwordRequired,
