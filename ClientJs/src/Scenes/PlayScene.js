@@ -2,7 +2,7 @@
  * Created by MyPC on 12/12/2016.
  */
 
-var btnInvitePlay;
+var btnInvitePlay = new ccui.Button();
 var passwordRequired = false;
 var is_create_room = false;
 var is_vip_room = false;
@@ -13,6 +13,8 @@ var btn_caidat =   new ccui.Button();
 var check_exit_room = false;
 var avatars = [];
 var lstDisplayWaitingPlayer = [];
+var capacity_size = 4;
+var _ownerUserId;
 
 //hien thi nut moi choi (neu so luong nguoi choi numPlaying >= capacity_size thi an nut moi choi di)
 var showInvitePlayer = function(numPlaying){
@@ -59,6 +61,14 @@ var getEnterRoomResponse = function(){
     return this.enter_room_response;
 }
 
+var setPlayerEnterRoomResponse = function(playerEnterRoomResponse){
+    this.player_enter_room_response = playerEnterRoomResponse;
+}
+
+var getPlayerEnterRoomResponse = function(){
+    return this.player_enter_room_response;
+}
+
 var setCreateRoom = function(is_create_room){
     this.is_create_room = is_create_room;
 }
@@ -102,19 +112,6 @@ var PlayLayer = cc.Layer.extend({
             }
         }
 
-        // var bkg = MSprite.create("res/item_background_game.png");
-        //
-        // var rows = width / bkg.getWidth() + 1;
-        // var cols = height / bkg.getHeight() + 1;
-        // for (i = 0; i<rows; i++) {
-        //     for (j = 0; j<cols; j++) {
-        //         var itemBackground = MSprite.create("res/item_background_game.png");
-        //         itemBackground.setPosition(MVec2(i*itemBackground.getWidth(),
-        //             j*itemBackground.getHeight()));
-        //         this.addChild(itemBackground);
-        //     }
-        // }
-
         var btnBack = MButton.create("res/btn_back_tlmn.png", TAG.TLMN_BTN_BACK);
         btnBack.setPosition(MVec2(padding - btnBack.getHeight()/6,
             height - padding - btnBack.getHeight()*(1.0-1.0/6)));
@@ -140,7 +137,7 @@ var PlayLayer = cc.Layer.extend({
         lb_title_game.setPosition(cc.p(posx_titlegame, originY + height - padding));
         this.addChild(lb_title_game);
 
-        var value_minbet = getMinBet();
+        var value_minbet = common.minBet;
         var minbet_type = is_vip_room ? "KEN" : "XU";
 
         var lb_value_minbet = MLabel.create(value_minbet + " " + minbet_type, btnKhoa.getHeight() * 0.25, cc.color.WHITE);
@@ -199,7 +196,7 @@ var PlayLayer = cc.Layer.extend({
         cc.log("data 1", e);
         if(e.data!==null || e.data !== 'undefined')
         {
-            var listMessages = parseFrom(e.data, e.data.byteLength);
+            parseFrom(e.data, e.data.byteLength);
             cc.log("listMessages", listMessages);
             while(listMessages.length > 0) {
                 var buffer = listMessages.shift();
@@ -330,7 +327,7 @@ var exitRoomResponseHandler = function(exit_room_response) {
             // if (!exit_room_response.exitAfterMatchEnd) {
                 cc.log("exit_room_response.exitAfterMatchEnd", exit_room_response.exitAfterMatchEnd);
                 var enter_room_response = 0; //xoa bien luu trang thai dang choi khi nguoi choi join lai ban choi
-                var default_room_type = getRequestRoomType() != -1 ? getRequestRoomType() : ROOM_TYPE.XU;
+                var default_room_type = common.requestRoomType != -1 ? common.requestRoomType : ROOM_TYPE.XU;
                 cc.log("default_room_type", default_room_type);
                 // onHideNotify();  //an thong bao di
 
@@ -348,9 +345,43 @@ var exitRoomResponseHandler = function(exit_room_response) {
 }
 
 //an cac nut moi choi va chat doi voi nguoi cho
-// var showBtnWithWatingPlayer = function(isShow){
-//     btnInvitePlay.setVisible(isShow);
-//     btn_message.setVisible(isShow);
-// }
+var showBtnWithWatingPlayer = function(isShow){
+    btnInvitePlay.setVisible(isShow);
+    btn_message.setVisible(isShow);
+}
+
+var posYCard = function(){
+    return 5*3 +btn_message.getHeight() + cardWidth() * CARD_RATIO * 0.5;
+}
+
+var resetListWaiting = function(){
+    for (i = 0; i < lstDisplayWaitingPlayer.length; i++)
+    {
+        if (lstDisplayWaitingPlayer[i].getParent() != null){
+            lstDisplayWaitingPlayer[i].removeFromParentAndCleanup(true);
+        }
+    }
+    lstDisplayWaitingPlayer.length = 0;
+}
+
+var addCountDown = function(countDown,start){
+    var background_countDown = MSprite.create("background_text_countdown.png");
+    background_countDown.setPosition(MVec2(width/2+background_countDown.getWidth()*0.2,
+    height/2 - background_countDown.getHeight()/2));
+    background_countDown.setTag(TAG_TIME_COUNTDOWN);
+    this.addChild(background_countDown);
+
+    var bg = !start ? "text_chuphongsedoisau.png" : "text_vanchoisebatdausau.png";
+    var background_countDownLeft = MSprite.create(bg);
+    background_countDownLeft.setPosition(Vec2(- background_countDownLeft.getWidth(),
+        background_countDown.getHeight()/2 - background_countDownLeft.getHeight()/2));
+    background_countDown.addChild(background_countDownLeft);
+
+    var timerCountDown = MLabel.createCountDown(countDown);
+    timerCountDown.setPosition(Vec2(background_countDown.getWidth()/2,background_countDown.getHeight()/2));
+    background_countDown.addChild(timerCountDown);
+
+    background_countDown.runAction(cc.Sequence(cc.delayTime(countDown),cc.RemoveSelf(), null));
+}
 
 

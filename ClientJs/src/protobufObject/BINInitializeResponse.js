@@ -13,3 +13,6 @@ var BINInitializeResponse = function (protoBufVar) {
 
     return protoBufData;
 }
+
+
+// function BINInitializeResponse(value) {}

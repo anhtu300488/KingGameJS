@@ -9,8 +9,8 @@ var RegisterLayer = cc.Layer.extend({
         // 1. super init first
         this._super();
 
-        setGameState(GAME_STATE.REGISTER_SCENE);
-
+        // setGameState(GAME_STATE.REGISTER_SCENE);
+        common.gameState  = GAME_STATE.REGISTER_SCENE;
         //var spriteBG = new cc.Sprite(res.item_background);
 		var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
         var spriteWidth = spriteBG.getContentSize().width;
@@ -238,7 +238,7 @@ var RegisterLayer = cc.Layer.extend({
         cc.log("data 1", e);
         if(e.data!==null || e.data !== 'undefined')
         {
-            var listMessages = parseFrom(e.data, e.data.byteLength);
+            parseFrom(e.data, e.data.byteLength);
             while(listMessages.length > 0) {
                 var buffer = listMessages.shift();
                 this.registerhandleMessage(buffer);

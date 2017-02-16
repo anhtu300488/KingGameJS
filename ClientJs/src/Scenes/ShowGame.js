@@ -77,7 +77,8 @@ var ShowGameLayer = cc.Layer.extend({
 
         // avartar
         // var avatar_id = 100000;
-        var avatar_id = getAvatarId() ? getAvatarId() : 100000;
+        // var avatar_id = getAvatarId() ? getAvatarId() : 100000;
+        var avatar_id = common.avatarId ? common.avatarId : 100000;
         var btn_avatar = MButton.createWidthSize(cc.formatStr("res/avatar%d.png", avatar_id),
             cc.size(btn_phone.getWidth(),btn_phone.getWidth()),TAG.SHOW_BTN_AVATAR);
         btn_avatar.setAnchorPoint(cc.p(0,1));
@@ -88,7 +89,7 @@ var ShowGameLayer = cc.Layer.extend({
 
         //info
         var user_id = getUserId() ? getUserId() : '';
-        var label_id = MLabel.create(cc.formatStr("ID: %d", user_id), bk_avatar.getContentSize().height / 4, true);
+        var label_id = MLabel.create(cc.formatStr("ID:",user_id), bk_avatar.getContentSize().height / 4, true);
         label_id.setAnchorPoint(cc.p(0,1));
         label_id.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width,
             btn_avatar.getPositionY()));
@@ -96,7 +97,8 @@ var ShowGameLayer = cc.Layer.extend({
 
         //ten hien thi
         // var userName = 'Tu_Atula';
-        var userName = getDisplayName() ? getDisplayName() : '';
+        // var userName = getDisplayName() ? getDisplayName() : '';
+        var userName = common.displayName ? common.displayName : '';
         var label_name = MLabel.create(userName, bk_avatar.getContentSize().height / 4, true);
         label_name.setPosition(cc.p(btn_avatar.getPositionX() + bk_avatar.getContentSize().width +
             label_name.getWidth()/2,
@@ -130,7 +132,8 @@ var ShowGameLayer = cc.Layer.extend({
             _bgr_ken.getContentSize().height / 2 - sprite_napken.getContentSize().height / 2));
         this.addChild(sprite_napken);
 
-        var number_gold = getGold();
+        // var number_gold = getGold();
+        var number_gold = common.gold;
         cc.log("gold", number_gold);
         var text_ken_scale = number_gold.toString().length > 9 ? 0.42 : 0.5;
         var label_ken = MLabel.create(number_gold, _bgr_ken.getHeight()*text_ken_scale, cc.color(40, 189, 212), true);
@@ -157,7 +160,8 @@ var ShowGameLayer = cc.Layer.extend({
             _bgr_xu.getPositionY() + _bgr_xu.getContentSize().height / 2 - sprite_napxu.getContentSize().height / 2));
         this.addChild(sprite_napxu);
 
-        var number_cash = getCash();
+        // var number_cash = getCash();
+        var number_cash = common.cash;
         var text_xu_scale = number_cash.toString().length > 9 ? 0.42 : 0.5;
         var label_xu = MLabel.create(number_cash, _bgr_xu.getHeight()*text_xu_scale, cc.color(255, 214, 0), true);
         label_xu.setAnchorPoint(cc.p(1,0));
@@ -204,7 +208,8 @@ var ShowGameLayer = cc.Layer.extend({
 
         // doi thuong
         // var icon_doithuong_text = res.btn_tro_giup;
-        var icon_doithuong_text = getServerAppVersion() < 0 ? "res/btn_tro_giup.png" : res.ICON_DOI_THUONG;
+        // var icon_doithuong_text = getServerAppVersion() < 0 ? "res/btn_tro_giup.png" : res.ICON_DOI_THUONG;
+        var icon_doithuong_text = common.serverAppVersion < 0 ? "res/btn_tro_giup.png" : res.ICON_DOI_THUONG;
         var btn_doithuong = MButton.create(icon_doithuong_text, "", 30, TAG.SHOW_BTN_DOI_THUONG);
         btn_doithuong.setPosition(MVec2(visibleSize.width / 2 - btn_doithuong.getContentSize().width / 2, 0));
         // btn_doithuong.addTouchEventListener();
@@ -296,10 +301,11 @@ var ShowGameLayer = cc.Layer.extend({
         var distance_button = (scollFrameSize.width - 4.2*button_size.width) / 8;
 
         // var enableGameIds = [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
-        var enableGameIds = getEnableGameIds();
+        // var enableGameIds = getEnableGameIds();
+        var enableGameIds = common.enableGameIds;
 
 
-        if(getEnableGameIds() == null){
+        if(common.enableGameIds == null){
             enableGameIds = [0,1,2,3,4,5,6,7,8,9,10];
         }
 
@@ -542,17 +548,20 @@ var ShowGameLayer = cc.Layer.extend({
 
             var gameTag = sender.tag;
 
-            setGameTag(gameTag);
+            // setGameTag(gameTag);
+            common.gameTag = gameTag;
             // SoundManager::getInstance().playSound("sounds/button_click.mp3");
 
             var isFound = false;
-            var enableGameIds = getEnableGameIds();
+            // var enableGameIds = getEnableGameIds();
+            var enableGameIds = common.enableGameIds;
 
             // if(getEnableGameIds() == null){
             //     enableGameIds = [0,1,2,3,4,5,6,7,8,9,10];
             // }
             for (var j = 0; j < enableGameIds.length; j++) {
-                if (enableGameIds[j] == getZoneId()) {
+                // if (enableGameIds[j] == getZoneId()) {
+                if (enableGameIds[j] == common.zoneId) {
                     isFound = true;
                     break;
                 }
@@ -567,7 +576,8 @@ var ShowGameLayer = cc.Layer.extend({
                 popupMessage.appear();
                 return;
             }
-            getEnterZoneMessageFromServer(getZoneId());
+            // getEnterZoneMessageFromServer(getZoneId());
+            getEnterZoneMessageFromServer(common.zoneId);
 
         }
 
@@ -576,7 +586,7 @@ var ShowGameLayer = cc.Layer.extend({
     ongamestatus: function(e) {
         if(e.data!==null || e.data !== 'undefined')
         {
-            var listMessages = parseFrom(e.data, e.data.byteLength);
+            parseFrom(e.data, e.data.byteLength);
             while(listMessages.length > 0) {
                 var buffer = listMessages.shift();
                 this.enterZoneHandleMessage(buffer);
@@ -587,10 +597,84 @@ var ShowGameLayer = cc.Layer.extend({
         var buffer = e;
         switch (buffer.message_id) {
             case NetworkManager.ENTER_ZONE:
-                var msg = buffer.response;
-                enterZoneResponseHandler(msg);
+                this.msg = buffer.response;
+                this.enterZoneResponseHandler();
                 break;
         }
+    },
+    enterZoneResponseHandler : function () {
+        //handle login
+        enterZoneResponse = this.msg;
+        if (enterZoneResponse != 0) { //found
+            if (enterZoneResponse.responseCode) {
+
+                // setRequestRoomType(enterZoneResponse.defaultRoomTypeLoad);
+                common.requestRoomType = enterZoneResponse.defaultRoomTypeLoad;
+
+                if (enterZoneResponse.enableDisplayRoomList) {
+                    /*
+                     Sau này xử lý phần người chơi click vào một mức cược cụ thể không cần hiển thị danh sách phòng chơi
+                     */
+                    var cashRoomList = [];
+                    var goldRoomList = [];
+                    if (enterZoneResponse.cashRoomConfigs.length > 0) {
+                        for (i = 0; i < enterZoneResponse.cashRoomConfigs.length; i++) {
+                            cashRoomList.push(enterZoneResponse.cashRoomConfigs[i]);
+                        }
+                    }
+                    if (enterZoneResponse.goldRoomConfigs.length > 0) {
+                        for (i = 0; i < enterZoneResponse.goldRoomConfigs.length; i++) {
+                            goldRoomList.push(enterZoneResponse.goldRoomConfigs[i]);
+                        }
+                    }
+                    // setGoldRoomList(goldRoomList);
+                    // setCashRoomList(cashRoomList);
+                    common.goldRoomList = goldRoomList;
+                    common.cashRoomList = cashRoomList;
+                }
+
+                var zoneId = common.zoneId;
+                if (zoneId == Common.TAMXINGAU_ZONE){
+                    cc.log("tam_xi_ngau");
+                    // var tam_xi_ngau = TamXiNgau::create(this);
+                    // tam_xi_ngau.setPosition(MVec2(0, 0));
+                    // this.addChild(tam_xi_ngau);
+                }
+                else if (zoneId == Common.WHEEL_ZONE) {
+                    cc.log("WHEEL_ZONE");
+                    // auto node = VongQuayMayMan::create(this);
+                    // node.setPosition(MVec2(0, 0));
+                    // this.addChild(node, INDEX_POPUP);
+                }
+                else if (zoneId == Common.MINIPOKER_ZONE) {
+                    cc.log("MINIPOKER_ZONE");
+                    // auto node = MiniPoker::create(this);
+                    // node.setPosition(MVec2(0, 0));
+                    // this.addChild(node, INDEX_POPUP);
+                }
+                // else if (zoneId == Common.MINITHREECARDS_ZONE) {
+                //     cc.log("MINITHREECARDS_ZONE");
+                //     // auto node = MiniThreeCards::create(this);
+                //     // node.setPosition(MVec2(0, 0));
+                //     // this.addChild(node, INDEX_POPUP);
+                // }
+                else {
+                    // notify.onHideNotify();
+                    // this.unscheduleUpdate();
+                    var scenetable = new SceneTable(enterZoneResponse.enableDisplayRoomList, enterZoneResponse.defaultRoomTypeLoad);
+                    cc.director.runScene(scenetable);
+                }
+                //    return;
+            } else {
+                cc.log("MINIPOKER_ZONE");
+                // setRequestRoomType(-1);
+                // setZoneId(-1);  //reset zone id
+                common.requestRoomType = -1;
+                common.zoneId = -1;  //reset zone id
+                // showToast(enter_zone_response.message().c_str(), 2);
+            }
+        }
+
     }
 });
 
@@ -642,75 +726,3 @@ var getNodeHello = function(node){
 
     node.setContentSize(Size(size_text, sprite_thongtin.getContentSize().height));
 }*/
-
-var enterZoneResponseHandler = function (enterZoneResponse) {
-    //handle login
-
-    if (enterZoneResponse != 0) { //found
-        if (enterZoneResponse.responseCode) {
-            //Common::getInstance().setZoneId(enter_zone_response.);
-
-            setRequestRoomType(enterZoneResponse.defaultRoomTypeLoad);
-
-            // if (enterZoneResponse.has_enabledisplayroomlist() &&
-            //     enter_zone_response.enabledisplayroomlist()) {
-                /*
-                 Sau này xử lý phần người chơi click vào một mức cược cụ thể không cần hiển thị danh sách phòng chơi
-                 */
-                var cashRoomList = [];
-                var goldRoomList = [];
-                if (enterZoneResponse.cashRoomConfigs.length > 0) {
-                    for (i = 0; i < enterZoneResponse.cashRoomConfigs.length; i++) {
-                        cashRoomList.push(enterZoneResponse.cashRoomConfigs[i]);
-                    }
-                }
-                if (enterZoneResponse.goldRoomConfigs.length > 0) {
-                    for (i = 0; i < enterZoneResponse.goldRoomConfigs.length; i++) {
-                        goldRoomList.push(enterZoneResponse.goldRoomConfigs[i]);
-                    }
-                }
-                setGoldRoomList(goldRoomList);
-                setCashRoomList(cashRoomList);
-            // }
-
-            var zoneId = getZoneId();
-            if (zoneId == Common.TAMXINGAU_ZONE){
-                cc.log("tam_xi_ngau");
-                // var tam_xi_ngau = TamXiNgau::create(this);
-                // tam_xi_ngau.setPosition(MVec2(0, 0));
-                // this.addChild(tam_xi_ngau);
-            }
-            else if (zoneId == Common.WHEEL_ZONE) {
-                cc.log("WHEEL_ZONE");
-                // auto node = VongQuayMayMan::create(this);
-                // node.setPosition(MVec2(0, 0));
-                // this.addChild(node, INDEX_POPUP);
-            }
-            else if (zoneId == Common.MINIPOKER_ZONE) {
-                cc.log("MINIPOKER_ZONE");
-                // auto node = MiniPoker::create(this);
-                // node.setPosition(MVec2(0, 0));
-                // this.addChild(node, INDEX_POPUP);
-            }
-            // else if (zoneId == Common.MINITHREECARDS_ZONE) {
-            //     cc.log("MINITHREECARDS_ZONE");
-            //     // auto node = MiniThreeCards::create(this);
-            //     // node.setPosition(MVec2(0, 0));
-            //     // this.addChild(node, INDEX_POPUP);
-            // }
-            else {
-                // notify.onHideNotify();
-                // this.unscheduleUpdate();
-                var scenetable = new SceneTable(enterZoneResponse.enableDisplayRoomList, enterZoneResponse.defaultRoomTypeLoad);
-                cc.director.runScene(scenetable);
-            }
-            //    return;
-        } else {
-            cc.log("MINIPOKER_ZONE");
-            // setRequestRoomType(-1);
-            // setZoneId(-1);  //reset zone id
-            // showToast(enter_zone_response.message().c_str(), 2);
-        }
-    }
-
-}

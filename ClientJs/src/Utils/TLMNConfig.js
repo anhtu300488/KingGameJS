@@ -3,7 +3,7 @@
  */
 
 var WebSocket = WebSocket || window.WebSocket || window.MozWebSocket;
-// var ws = null;
+var ws = null;
 
 
 //anh Linh
@@ -22,8 +22,12 @@ var PATH = "bigken";
 
 // var url = "ws://"+SERVER_NAME+":"+SERVER_PORT+"/"+PATH;
 var url = "ws://192.168.100.250:1280/bigken";
-var ws = new WebSocket(url);
+ws = new WebSocket(url);
+// setTimeout(bindEvents, 1000);
+
 ws.binaryType = "arraybuffer";
+
+// cc.log("ws = ", ws);
 // ws.onopen = function() {
 //     // called when connection is opened
 // };
@@ -34,6 +38,19 @@ ws.binaryType = "arraybuffer";
 // ws.onclose = function (e) {
 //     setTimeout(function(){sendData()}, 120);
 // };
+
+function connect() {
+    ws = new WebSocket('ws://192.168.100.250:1280/bigken');
+    ws.binaryType = "arraybuffer";
+    setTimeout(bindEvents, 1000);
+}
+
+function bindEvents() {
+    ws.onopen = function() {
+        log('onopen called');
+    };
+}
+
 
 var LOGIN_STATE = {
     NORMAL_LOGIN : 1,
@@ -406,4 +423,6 @@ var CARD_RATIO  = 1.490909;
 var CARD_UP   = 20;
 var INDEX_CARD  = 22;
 var TAG_TIME_COUNTDOWN = 223;
+var INDEX_AVATAR = 21;
+var TAG_NODE_EMOTICON = 299;
 

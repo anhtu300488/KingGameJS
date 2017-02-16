@@ -135,9 +135,8 @@ var getInitializeMessageFromServer = function(cp, appversion , country, language
     var request = initInitializeMessage(cp, appversion, country, language, device_id, device_info, pakageName);
 
 
-    var requestMess = requestMessage(request, getOS(), NetworkManager.INITIALIZE, "");
+    requestMessage(request, getOS(), NetworkManager.INITIALIZE, "");
 
-    return requestMess;
 }
 
 var initInitializeMessage = function(cp, appversion, country, language, device_id, device_info, pakageName) {
@@ -169,9 +168,8 @@ var getLoginMessageFromServer = function(username, password)
 {
     var request = initLoginMessage(username, password);
 
-    var requestMess = requestMessage(request, getOS(), NetworkManager.LOGIN, "");
+    requestMessage(request, getOS(), NetworkManager.LOGIN, "");
 
-    return requestMess;
 }
 
 var initLoginMessage = function(username, password) {
@@ -191,7 +189,7 @@ var initLoginMessage = function(username, password) {
 }
 
 var getRegisterMessageFromServer = function(username, password, confirm_password, full_name, sdt) {
-    request = initRegisterMessage(username, password, confirm_password, full_name, sdt);
+    var request = initRegisterMessage(username, password, confirm_password, full_name, sdt);
     requestMessage(request, getOS(), NetworkManager.REGISTER, "");
 }
 
@@ -239,9 +237,11 @@ var requestMessage = function(request, os, message_id, session_id) {
     //          }*/
     //     });
     // } else {
-        callNetwork(ackBuf);
+    callNetwork(ackBuf);
 
     // }
+
+    // return ackBuf;
 }
 
 var initData = function(request, os, messid, _session, len)
@@ -268,7 +268,6 @@ var initData = function(request, os, messid, _session, len)
     bb.writeUint32(dataSize, _offset);
     _offset+= 4;
 
-    // cc.log("bb =  " + bb.toDebug());
 
     bb.writeUint16(lenSession, _offset);
     _offset+= 2;
@@ -299,6 +298,8 @@ var callNetwork = function(ackBuf) {
     ws.send(ackBuf);
 }
 
+var listMessages = [];
+
 var parseFrom = function(read_str, len)
 {
 
@@ -306,10 +307,6 @@ var parseFrom = function(read_str, len)
     var bb = new ByteBuffer(len);
 
     bb.append(read_str);
-
-
-
-    var listMessages = [];
 
     var lenPacket = len;
     while (lenPacket > 0) {
@@ -325,15 +322,16 @@ var parseFrom = function(read_str, len)
         lenPacket -= (bytes_size + 4);
         var response = 0;
 
+        bb = bb.copy(_offset);
+
 
         /*if is_compress = 1 */
         if (is_compress == 1) {
-            cc.log("zip");
-            var left_block = bb.copy(_offset);
-            var byteArray = new Uint8Array(left_block);
-            var bufArr = left_block.view;
+            // var left_block = bb.copy(_offset);
+            var byteArray = new Uint8Array(bb);
+            var bufArr = bb.view;
 
-            var dataUnzip = cc.unzipBase64AsArray(left_block.toString('base64'));
+            var dataUnzip = cc.unzipBase64AsArray(bb.toString('base64'));
 
             var _offsetZip = 0;
 
@@ -370,7 +368,6 @@ var parseFrom = function(read_str, len)
                     response: response
                 };
                 listMessages.push(pairZip);
-                cc.log("list message size: " + listMessages.length);
             }
             else {
                 cc.error("unknown message");
@@ -379,30 +376,39 @@ var parseFrom = function(read_str, len)
 
         }
         else {
-            cc.log("unzip");
 
-            // while (left_byte_size > 0) {
+            while (left_byte_size > 0) {
                 //read protobuf + data_size_block + mid
                 //read datasizeblock
 
-                var data_size_block = bb.readInt16(_offset);
-                _offset+= 2;
+                var _offsetUnzip = 0;
+
+
+                var data_size_block = bb.readInt16(_offsetUnzip);
+                    _offsetUnzip+= 2;
+
+
+                // if(data_size_block != bb.limit - _offset){
+                //     data_size_block = bb.limit - _offset;
+                // }
 
                 // read messageid
-                var messageid = bb.readInt16(_offset);
-                _offset+= 2;
+                var messageid = bb.readInt16(_offsetUnzip);
+                    _offsetUnzip+= 2;
 
-                left_byte_size -= (data_size_block + 2);
 
                 //read protobuf
 
-                var protoBufVar = bb.copy(_offset, data_size_block + _offset - 2);
+                var protoBufVar = bb.copy(_offsetUnzip, data_size_block + _offsetUnzip - 2);
+
 
                 response = getTypeMessage(response, messageid, protoBufVar);
 
 
                 if (response != 0) {
                     left_byte_size -= (data_size_block + 2);
+                    bb = bb.copy(data_size_block + _offsetUnzip - 2);
+
                     var pair = {
                         message_id: messageid,
                         response: response
@@ -413,7 +419,7 @@ var parseFrom = function(read_str, len)
                     cc.error("unknown message");
                 }
 
-            // }
+            }
         }
     }
 
@@ -421,11 +427,11 @@ var parseFrom = function(read_str, len)
         cc.log("NetworkManager: error packet length = 0");
     }
 
-    return listMessages;
+
+    // return listMessages;
 }
 
 var getTypeMessage = function(msg, messageid, protoBufVar) {
-    cc.log("messageid", messageid);
     switch (messageid) {
         case NetworkManager.INITIALIZE:
             msg = BINInitializeResponse(protoBufVar);
@@ -750,9 +756,8 @@ var getEnterZoneMessageFromServer = function(zoneId) {
         zoneId : zoneId
     }).encode();
 
-    // var request = zoneIdMessage.encode();
-
     requestMessage(request, getOS(),NetworkManager.ENTER_ZONE, getSessionId());
+
 }
 
 var getExitZoneMessageFromServer = function(zoneId) {
@@ -775,21 +780,8 @@ var initExitZoneMessage = function(zoneId) {
 }
 
 var getFilterRoomMessageFromServer = function(zone_id, roomType, first_result, max_result, orderByField, asc) {
-    cc.log("getFilterRoomMessageFromServer");
     var request = initFilterRoomMessage(zone_id, roomType, first_result, max_result, orderByField, asc);
     requestMessage(request, getOS(), NetworkManager.FILTER_ROOM, getSessionId());
-}
-
-var filterRoomResponseHandler = function (filterRoomResponse) {
-
-    if (filterRoomResponse != 0 && filterRoomResponse.responseCode) {
-        if (filterRoomResponse.roomPlays.length > 0) {
-            // listRoomPlay.listData = filterRoomResponse.roomPlays;
-            // setTest(filterRoomResponse.roomPlays);
-            language.current = filterRoomResponse.roomPlays;
-        }
-    }
-
 }
 
 var initFilterRoomMessage = function(zone_id, roomType, first_result, max_result, orderByField, asc) {
@@ -826,6 +818,7 @@ var initUserStatusRequest = function(type){
 }
 
 var getEnterRoomMessageFromServer = function(room_index, password) {
+    cc.log("getEnterRoomMessageFromServer");
     var request = initEnterRoomMessage(room_index, password);
     requestMessage(request, getOS(), NetworkManager.ENTER_ROOM, getSessionId());
 }

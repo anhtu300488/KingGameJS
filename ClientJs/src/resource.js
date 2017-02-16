@@ -4,7 +4,7 @@ var res = {
     FONT_THIN_X : {type:"font", name:"FONT_THIN_X", srcs:["res/fonts/gamevina_thin.ttf","res/fonts/gamevina_thin.eot"]},
     FONT_TITLE_X : {type:"font", name:"FONT_TITLE_X", srcs:["res/fonts/font_title.ttf","res/fonts/font_title.eot"]},
 
-    FONT_BOLD: "res/fonts/gamevina_bold.ttt",
+    FONT_BOLD: "res/fonts/gamevina_bold.ttf",
     FONT_THIN: "res/fonts/gamevina_thin.ttf",
     FONT_TITLE: "res/fonts/font_title.ttf",
 

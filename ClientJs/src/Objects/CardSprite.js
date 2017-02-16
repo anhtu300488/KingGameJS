@@ -29,12 +29,15 @@ var CardSprite = cc.Sprite.extend({
     },
     getCurentX: function () {
         return this.value;
+    },
+    setPosY : function(posY) {
+        this.posY = posY;
     }
 });
 
 CardSprite.create = function(card, posX, width,cardEvent) {
     var cardSprite = new CardSprite();
-    var name = getActualName();
+    var name = card.getActualName();
 
     cardSprite.setTexture(name);
     cardSprite.setNumberValue(card.getValue());
