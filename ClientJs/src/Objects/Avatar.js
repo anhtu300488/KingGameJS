@@ -151,7 +151,7 @@ var Avatar = cc.Layer.extend({
                 pos = cc.p(origin.x + this.PADDING/2 + sizeS, origin.y + visibleSize.height / 2 - this.getContentSize().height / 2);
                 break;
             case 2:
-                if(getZoneId() == Common.MAUBINH_ZONE){
+                if(common.zoneId == Common.MAUBINH_ZONE){
                     pos = cc.p(origin.x + visibleSize.width / 2 + visibleSize.width* 2 / 12.5,
                     origin.y + visibleSize.height - this.getContentSize().height - (this.PADDING/2 + sizeS));
                 }else{
@@ -164,7 +164,7 @@ var Avatar = cc.Layer.extend({
                     origin.y + visibleSize.height / 2 - this.getContentSize().height / 2);
                 break;
             case 0:
-                if(getZoneId() == Common.PHOM_ZONE){
+                if(common.zoneId == Common.PHOM_ZONE){
                     pos = cc.p(origin.x + visibleSize.width / 2 - visibleSize.width * 5 / 18.0 - this.getContentSize().width,
                     origin.y + 5*3 + buttonHeight + this.under_money.getHeight());
                 }else{
@@ -181,7 +181,7 @@ var Avatar = cc.Layer.extend({
     },
     loadAvatar: function(index, id, _name, _money, roomIndex) {
         this.roomIndex = roomIndex;
-        var player_id = id;
+        player_id = id;
 
         cc.log("avatar id", index);
 

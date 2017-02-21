@@ -298,10 +298,9 @@ var callNetwork = function(ackBuf) {
     ws.send(ackBuf);
 }
 
-var listMessages = [];
-
 var parseFrom = function(read_str, len)
 {
+    var lstMess = [];
 
     var ByteBuffer = dcodeIO.ByteBuffer;
     var bb = new ByteBuffer(len);
@@ -367,7 +366,19 @@ var parseFrom = function(read_str, len)
                     message_id: messageidZip,
                     response: response
                 };
+
+                for(var i = 0; i < listMessages.length; i++) {
+                    var obj = listMessages[i];
+
+                    if(obj.message_id == messageidZip) {
+                        listMessages.splice(i, 1);
+                    }
+                }
+
                 listMessages.push(pairZip);
+
+                lstMess.push(pairZip);
+
             }
             else {
                 cc.error("unknown message");
@@ -413,7 +424,19 @@ var parseFrom = function(read_str, len)
                         message_id: messageid,
                         response: response
                     };
+
+                    for(var i = 0; i < listMessages.length; i++) {
+                        var obj = listMessages[i];
+
+                        if(obj.message_id == messageid) {
+                            listMessages.splice(i, 1);
+                        }
+                    }
+
                     listMessages.push(pair);
+
+                    lstMess.push(pair);
+
                 }
                 else {
                     cc.error("unknown message");
@@ -427,8 +450,9 @@ var parseFrom = function(read_str, len)
         cc.log("NetworkManager: error packet length = 0");
     }
 
+    cc.log("listMessages parse", listMessages);
 
-    // return listMessages;
+    return lstMess;
 }
 
 var getTypeMessage = function(msg, messageid, protoBufVar) {

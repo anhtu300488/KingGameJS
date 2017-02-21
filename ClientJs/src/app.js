@@ -1,4 +1,6 @@
+var listMessages = [];
 
+var listRoomPlay = [];
 
 var HelloWorldLayer = cc.Layer.extend({
     sprite:null,

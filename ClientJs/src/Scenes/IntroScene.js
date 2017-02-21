@@ -68,9 +68,10 @@ var IntroLayer = cc.Layer.extend({
         this.updateProgress(timeSchedule);
         
         this.scheduleOnce(this.gotoLoginScene,3,"login");
-        this.scheduleUpdate();
 
         ws.onmessage = this.ongamestatus.bind(this);
+
+        this.scheduleUpdate();
 
         return true;
     },
@@ -82,11 +83,14 @@ var IntroLayer = cc.Layer.extend({
         cc.log("data 1", e);
         if(e.data!==null || e.data !== 'undefined')
         {
-            parseFrom(e.data, e.data.byteLength);
-            while(listMessages.length > 0) {
-                var buffer = listMessages.shift();
+            var lstMess = parseFrom(e.data, e.data.byteLength);
+            cc.log("lstMess", lstMess);
+
+            while(lstMess.length > 0) {
+                var buffer = lstMess.shift();
                 this.handleMessage(buffer);
             }
+
         }
     },
     handleMessage: function(e) {
@@ -147,6 +151,22 @@ var IntroLayer = cc.Layer.extend({
     },
     update:function(dt){
 
+        cc.delayTime(1000);
+
+        if(listMessages.length > 0) {
+            for (i = 0; i < listMessages.length; i++) {
+                if (listMessages[i].message_id == NetworkManager.INITIALIZE) {
+                    cc.log("listMessages", listMessages[i].message_id);
+                    initialMessage = listMessages[i].response;
+
+                    this.initialMessageResponseHandler(initialMessage);
+                }
+            }
+        }
+
+
+
+        cc.log("update");
         if(ws.readyState == ws.CLOSED){
             cc.sys.localStorage.removeItem(Common.KEY_SESSION_ID);
             common.sessionId = "-1";
@@ -168,94 +188,101 @@ var IntroLayer = cc.Layer.extend({
         // getIapCompleteResponse();
     },
     initialMessageResponseHandler : function(initialMessage) {
-        if (initialMessage != 0) {
-            // setInitialize(initialMessage.responseCode);
-            common.initialize = initialMessage.responseCode;
-            if (initialMessage.responseCode) {
-                // setEnablePurchaseCash(initialMessage.enablePurchaseCash);
-                common.enablePurchaseCash = initialMessage.enablePurchaseCash;
-                // setEnableTopup(initialMessage.enableTopup);
-                common.enableTopup = initialMessage.enableTopup;
-                var serverAppVersion = initialMessage.currentAppVersion;
-                // setServerAppVersion(serverAppVersion);
-                common.serverAppVersion = serverAppVersion;
-                // setFanpageUrl(initialMessage.fanpageUrl);
-                common.fanpageUrl = initialMessage.fanpageUrl;
-                // setWebsiteUrl(initialMessage.websiteUrl);
-                common.websiteUrl = initialMessage.websiteUrl;
-                var hotlines = [];
-                cc.log("hotline size", initialMessage.hotlines.length);
-                for (i = 0; i < initialMessage.hotlines.length; i++){
-                    hotlines.push(initialMessage.hotlines[i]);
-                }
+        // if(listMessages.length > 0){
+        //     for(i = 0; i < listMessages.length; i++){
+        //         if(listMessages[i].message_id == NetworkManager.INITIALIZE){
+        //             initialMessage = listMessages[i].response;
+                    if (initialMessage != 0) {
+                        // setInitialize(initialMessage.responseCode);
+                        common.initialize = initialMessage.responseCode;
+                        if (initialMessage.responseCode) {
+                            // setEnablePurchaseCash(initialMessage.enablePurchaseCash);
+                            common.enablePurchaseCash = initialMessage.enablePurchaseCash;
+                            // setEnableTopup(initialMessage.enableTopup);
+                            common.enableTopup = initialMessage.enableTopup;
+                            var serverAppVersion = initialMessage.currentAppVersion;
+                            // setServerAppVersion(serverAppVersion);
+                            common.serverAppVersion = serverAppVersion;
+                            // setFanpageUrl(initialMessage.fanpageUrl);
+                            common.fanpageUrl = initialMessage.fanpageUrl;
+                            // setWebsiteUrl(initialMessage.websiteUrl);
+                            common.websiteUrl = initialMessage.websiteUrl;
+                            var hotlines = [];
+                            cc.log("hotline size", initialMessage.hotlines.length);
+                            for (i = 0; i < initialMessage.hotlines.length; i++){
+                                hotlines.push(initialMessage.hotlines[i]);
+                            }
 
 
-                // setHotLines(hotlines);
-                common.hotLines = hotlines;
-                // setEnableCashToGold(initialMessage.enableCashToGold);
-                common.enableCashToGold = initialMessage.enableCashToGold;
-                // setCashToGoldRatio(initialMessage.cashToGoldRatio);
-                common.cashToGoldRatio = initialMessage.cashToGoldRatio;
-                // setEnableQuickPlay(initialMessage.enableQuickPlay);
-                common.enableQuickPlay = initialMessage.enableQuickPlay;
-                // setEnableCashTranfer(initialMessage.enableCashTransfer);
-                common.enableCashTransfer = initialMessage.enableCashTransfer;
-                // setEnableGiftCode(initialMessage.enableGiftCode);
-                common.enableGiftCode = initialMessage.enableGiftCode;
-                // setResetPwSmsSyntax(initialMessage.resetPwSmsSyntax);
-                common.resetPwSmsSyntax = initialMessage.resetPwSmsSyntax;
-                /*Set enable game ids*/
-                var _gameIds = [];
-                for (i = 0; i < initialMessage.enableGameIds.length; i++) {
-                    _gameIds.push(initialMessage.enableGameIds[i]);
-                }
-                // setEnableGameIds(_gameIds);
-                common.enableGameIds = _gameIds;
+                            // setHotLines(hotlines);
+                            common.hotLines = hotlines;
+                            // setEnableCashToGold(initialMessage.enableCashToGold);
+                            common.enableCashToGold = initialMessage.enableCashToGold;
+                            // setCashToGoldRatio(initialMessage.cashToGoldRatio);
+                            common.cashToGoldRatio = initialMessage.cashToGoldRatio;
+                            // setEnableQuickPlay(initialMessage.enableQuickPlay);
+                            common.enableQuickPlay = initialMessage.enableQuickPlay;
+                            // setEnableCashTranfer(initialMessage.enableCashTransfer);
+                            common.enableCashTransfer = initialMessage.enableCashTransfer;
+                            // setEnableGiftCode(initialMessage.enableGiftCode);
+                            common.enableGiftCode = initialMessage.enableGiftCode;
+                            // setResetPwSmsSyntax(initialMessage.resetPwSmsSyntax);
+                            common.resetPwSmsSyntax = initialMessage.resetPwSmsSyntax;
+                            /*Set enable game ids*/
+                            var _gameIds = [];
+                            for (i = 0; i < initialMessage.enableGameIds.length; i++) {
+                                _gameIds.push(initialMessage.enableGameIds[i]);
+                            }
+                            // setEnableGameIds(_gameIds);
+                            common.enableGameIds = _gameIds;
 
-                var app_version = getVersionCode();
+                            var app_version = getVersionCode();
 
-                // if (app_version < serverAppVersion) {
-                //     class InitializeOnEventListener : public OnEvenListener<BINInitializeResponse*> {
-                //         public:
-                //             void onEvent(int eventType, BINInitializeResponse* sender) override {
-                //         if (eventType == OnEvenListener::EVENT_CONFIRM_OK) {
-                //             Common::getInstance().openUrl(url);
-                //         }
-                //         else if (eventType == OnEvenListener::EVENT_CANCEL_CONFIRM) {
-                //             BaseScene::goGame();
-                //         }
-                //     };
-                //     void onEventClickMessageBox(int enventType) override {
-                //
-                //     };  //su kien khi an vao nut ok cua popupm essage box
-                //
-                //     void setUrl(string url) { this.url = url; }
-                //     private:
-                //         string url;
-                // } *b = new InitializeOnEventListener();
-                //     b.setUrl(init_response.downloadurl());
-                //     bool force_update = init_response.forceupdate();
-                //     if (force_update) {
-                //         Common::getInstance().setForceUpdate(true);
-                //         NodeConfirm<BINInitializeResponse*> *nodeConfirm =
-                //             NodeConfirm<BINInitializeResponse*>::create(b, "Cập nhật",
-                //                 init_response.message(),
-                //                 NodeConfirm<BINInitializeResponse*>::MESSAGEBOX_TYPE);
-                //         nodeConfirm.setSender(init_response);
-                //         nodeConfirm.showDlg();
-                //         return;
-                //     }
-                //     else {
-                //         Common::getInstance().setUpdateMessage(init_response.message());
-                //     }
-                // }
-                goGame();
-                //restore session
-            }else {
-                // PopupMessageBox* popupMessage = new PopupMessageBox();
-                // popupMessage.showPopup(init_response.message());
-            }
-        }
+                            // if (app_version < serverAppVersion) {
+                            //     class InitializeOnEventListener : public OnEvenListener<BINInitializeResponse*> {
+                            //         public:
+                            //             void onEvent(int eventType, BINInitializeResponse* sender) override {
+                            //         if (eventType == OnEvenListener::EVENT_CONFIRM_OK) {
+                            //             Common::getInstance().openUrl(url);
+                            //         }
+                            //         else if (eventType == OnEvenListener::EVENT_CANCEL_CONFIRM) {
+                            //             BaseScene::goGame();
+                            //         }
+                            //     };
+                            //     void onEventClickMessageBox(int enventType) override {
+                            //
+                            //     };  //su kien khi an vao nut ok cua popupm essage box
+                            //
+                            //     void setUrl(string url) { this.url = url; }
+                            //     private:
+                            //         string url;
+                            // } *b = new InitializeOnEventListener();
+                            //     b.setUrl(init_response.downloadurl());
+                            //     bool force_update = init_response.forceupdate();
+                            //     if (force_update) {
+                            //         Common::getInstance().setForceUpdate(true);
+                            //         NodeConfirm<BINInitializeResponse*> *nodeConfirm =
+                            //             NodeConfirm<BINInitializeResponse*>::create(b, "Cập nhật",
+                            //                 init_response.message(),
+                            //                 NodeConfirm<BINInitializeResponse*>::MESSAGEBOX_TYPE);
+                            //         nodeConfirm.setSender(init_response);
+                            //         nodeConfirm.showDlg();
+                            //         return;
+                            //     }
+                            //     else {
+                            //         Common::getInstance().setUpdateMessage(init_response.message());
+                            //     }
+                            // }
+                            goGame();
+                            //restore session
+                        }else {
+                            // PopupMessageBox* popupMessage = new PopupMessageBox();
+                            // popupMessage.showPopup(init_response.message());
+                        }
+                    }
+        //         }
+        //     }
+        // }
     }
 });
 
@@ -266,22 +293,4 @@ var IntroScene = cc.Scene.extend({
         this.addChild(layer);
     }
 });
-
-var checkEvent = function(message_id) {
-    cc.log("listEvent", this.listEvent);
-//     try {
-// //      bool isSuccess = false;
-//         var k = -1;
-//         var result;
-//         var rs = 0;
-//
-//         if (this.listEvent.length > 0) {
-//             return this.listEvent[message_id];
-//         }
-//
-//     }
-//     catch (e) {
-//         cc.log("error", e);
-//     }
-}
 

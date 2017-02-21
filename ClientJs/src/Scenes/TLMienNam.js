@@ -165,9 +165,9 @@ var TLMienNamLayer = cc.Layer.extend({
         console.log("TLMienNam->.ws.onmessage():"+e.data);
         if(e.data!==null || e.data !== 'undefined')
         {
-            parseFrom(e.data, e.data.byteLength);
-            while(listMessages.length > 0) {
-                var buffer = listMessages.shift();
+            var lstMess = parseFrom(e.data, e.data.byteLength);
+            while(lstMess.length > 0) {
+                var buffer = lstMess.shift();
                 this.tlmnHandleMessage(buffer);
             }
         }
@@ -212,13 +212,6 @@ var TLMienNamLayer = cc.Layer.extend({
             this.handleReEnterRoom(enterRoomResponse);
         }
 
-        cc.log("playerEnterRoomResponse", playerEnterRoomResponse.length);
-
-        cc.log("playerEnterRoomResponse", playerEnterRoomResponse);
-
-        if (playerEnterRoomArray.current.length != 0) {
-            this.playerEnterRoom(playerEnterRoomArray.current);
-        }
 
         // showChangeRule(this.isHiddenCardRemaining, this.isPreviousWinnerGoFirst);
     },
@@ -418,63 +411,6 @@ var TLMienNamLayer = cc.Layer.extend({
     },
     onerror:function (e) {
 
-    },
-    playerEnterRoom : function(newplayerresponse) {
-        cc.log("newplayerresponse", newplayerresponse);
-        // if (newplayerresponse != 0) {
-        cc.log("newplayerresponse.responseCode", newplayerresponse[0].responseCode);
-            if (newplayerresponse[0].responseCode) {
-                var player = convertFromBINPlayer(newplayerresponse[0].player);
-                cc.log("player", player);
-                cc.log("getOwnerUserId", getOwnerUserId());
-                var playerId = player.id;
-                if (playerId != getUserId()) {
-                    if (newplayerresponse[0].enterRoomStatus == PlayerState.PLAYING){
-                        // player_list.push(newplayerresponse.player);
-                        playerList.push(newplayerresponse[0].player);
-                        lst_player.push(player);
-
-                        showInvitePlayer(lst_player.length);
-
-                        sortListPlayer();
-                        var index_pos_newplayer = findIndexPlayer(lst_player, player);
-                        if (index_pos_newplayer != -1){
-                            setPositionPlayer(lst_player[index_pos_newplayer], index_pos_newplayer);
-                        }
-                        if (getUserId() == getOwnerUserId() && lst_player.length >= 2){
-                            this.btn_start_match.setVisible(true);
-                            this.btn_doi_luat.setVisible(false);
-                        }
-                    } else {
-                        if (newplayerresponse[0].enterRoomStatus == PlayerState.WAITING){
-                            lst_waiting.push(player);
-                            resetListWaiting();
-                            showWaitingPlayerOnScene(lst_waiting);
-                            //dddd
-                        }
-                    }
-                }
-
-                if (newplayerresponse[0].enterRoomStatus == PlayerState.PLAYING) {
-                    if (newplayerresponse[0].changeOwnerRoomCd > 0) {
-
-                        if (this.getChildByTag(TAG_TIME_COUNTDOWN) != null){
-                            this.removeChildByTag(TAG_TIME_COUNTDOWN);
-                        }
-
-                        var time_wait = newplayerresponse[0].changeOwnerRoomCd / 1000;
-                        // addCountDown(time_wait);
-                    }
-                }
-
-            } else {
-                // this.showToast(newplayerresponse.message, 2);
-                if (getUserId() == getOwnerUserId()) {
-                    this.is_create_room = true;
-                    this.btn_start_match.setVisible(this.is_create_room);
-                }
-            }
-        // }
     }
 });
 
@@ -922,7 +858,7 @@ var setPositionPlayer = function(player, indexPos, thisObj){
         position_index = 0;
     }
 
-    if (getZoneId() == Common.TLMN_SOLO_ZONE) {
+    if (common.zoneId == Common.TLMN_SOLO_ZONE) {
         if(indexPos == 1) position_index = 2;
     }
 
@@ -951,7 +887,7 @@ var setPositionPlayer = function(player, indexPos, thisObj){
     avatar.setPosition(pos);
 
     var cardCoverWidth = cardWidth() * 0.8;
-
+cc.log("aaaaaaaaaaa", (avatar.getPlayerId()));
     if(avatar.getPlayerId() == getUserId()){
         cc.log("cardCoverWidth", cardCoverWidth);
         avatar.loadCardCover(cardCoverWidth, position_index, _numberCard,true);

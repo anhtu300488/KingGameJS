@@ -151,6 +151,8 @@ var LoginLayer = cc.Layer.extend({
 
         ws.onmessage = this.loginongamestatus.bind(this);
 
+        this.scheduleUpdate();
+
         return true;
 
     },
@@ -258,9 +260,9 @@ var LoginLayer = cc.Layer.extend({
         cc.log("data 1", e);
         if(e.data!==null || e.data !== 'undefined')
         {
-            parseFrom(e.data, e.data.byteLength);
-            while(listMessages.length > 0) {
-                var buffer = listMessages.shift();
+            var lstMess = parseFrom(e.data, e.data.byteLength);
+            while(lstMess.length > 0) {
+                var buffer = lstMess.shift();
                 this.loginhandleMessage(buffer);
             }
         }
@@ -269,71 +271,107 @@ var LoginLayer = cc.Layer.extend({
         var buffer = e;
         switch (buffer.message_id) {
             case NetworkManager.LOGIN:
-                this.msg = buffer.response;
-                this.loginResponseHandler();
+                var msg = buffer.response;
+                this.loginResponseHandler(msg);
                 break;
         }
     },
-    loginResponseHandler : function() {
-        loginresponse = this.msg;
-        if (loginresponse != 0) {
-            cc.log("loginresponse", loginresponse);
-            if (loginresponse.responseCode) {
-                // if (loginType == FB_LOGIN)
-                //     tryLoginFacebook = false;
-                var session_id = loginresponse.sessionId;
+    loginResponseHandler : function(loginresponse) {
+        // if(listMessages.length > 0){
+        //     for(i = 0; i < listMessages.length; i++){
+        //         if(listMessages[i].message_id == NetworkManager.LOGIN) {
+        //
+        //             loginresponse = listMessages[i].response;
+                    cc.log("loginresponse", loginresponse);
+                    if (loginresponse != 0) {
+                        if (loginresponse.responseCode) {
+                            // if (loginType == FB_LOGIN)
+                            //     tryLoginFacebook = false;
+                            var session_id = loginresponse.sessionId;
 
-                cc.sys.localStorage.setItem(Common.KEY_SESSION_ID,
-                    loginresponse.sessionId);
-                // setSessionId(session_id);
+                            cc.sys.localStorage.setItem(Common.KEY_SESSION_ID,
+                                loginresponse.sessionId);
+                            // setSessionId(session_id);
 
-                cc.sys.localStorage.setItem(Common.KEY_USER_ID,
-                    loginresponse.userInfo.userId.low);
+                            cc.sys.localStorage.setItem(Common.KEY_USER_ID,
+                                loginresponse.userInfo.userId.low);
 
 
-                // setHasPlayingMatch(loginresponse.hasPlayingMatch);
-                common.hasPlayingMatch = loginresponse.hasPlayingMatch;
-                if (loginresponse.userInfo) {
-                    saveUserInfo(loginresponse.userInfo);
-                }
+                            // setHasPlayingMatch(loginresponse.hasPlayingMatch);
+                            common.hasPlayingMatch = loginresponse.hasPlayingMatch;
+                            if (loginresponse.userInfo) {
+                                saveUserInfo(loginresponse.userInfo);
+                            }
 
-                if (loginresponse.userSetting) {
-                    saveUserSetting(loginresponse.userSetting);
-                }
+                            if (loginresponse.userSetting) {
+                                saveUserSetting(loginresponse.userSetting);
+                            }
 
-                // if (!isHasPlayingMatch()) {
-                if (!common.hasPlayingMatch) {
-                    // setPrefString(USER_NAME, edit_user->getText());
-                    // setPrefString(USER_PASSWORD, edit_matkhau->getText());
-                    var showgame = new ShowGameScene();
-                    cc.director.runScene(showgame);
+                            // if (!isHasPlayingMatch()) {
+                            if (!common.hasPlayingMatch) {
+                                // setPrefString(USER_NAME, edit_user->getText());
+                                // setPrefString(USER_PASSWORD, edit_matkhau->getText());
+                                var showgame = new ShowGameScene();
+                                cc.director.runScene(showgame);
+                            }
+                        }
+                        else {
+                            // if (loginType == FB_LOGIN) {
+                            //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ACCESS_TOKEN);
+                            //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ID);
+                            //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_FIRST_NAME);
+                            //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_LAST_NAME);
+                            //     if (tryLoginFacebook) {
+                            //         PopupMessageBox* popupMessage = new PopupMessageBox();
+                            //         popupMessage->showPopup(loginresponse->message().c_str());
+                            //     }
+                            //     else {
+                            //         tryLoginFacebook = true;
+                            //         Common::getInstance()->loginFacebook();
+                            //     }
+                            //     return;
+                            // }
+                            //
+                            // PopupMessageBox* popupMessage = new PopupMessageBox();
+                            // popupMessage->showPopup(loginresponse->message().c_str());
+                        }
+                        // // Code kill room index
+                        // if (Common::getInstance()->getUserName() == "sanglx") {
+                        //     NetworkManager::getInstance()->getKillRoomMessageFromServer(4, 10);
+                        // }
+                    }
+        //         }
+        //     }
+        //
+        // }
+
+    },
+    update: function(delta){
+        // BaseScene::update(delta);
+        //handle login
+        // if(oneTouch == true){
+        //     countDownTouch+=delta;
+        //     if(countDownTouch > 2){
+        //         oneTouch = false;
+        //         countDownTouch = 0;
+        //     }
+        // }
+
+        if(listMessages.length > 0) {
+            for (i = 0; i < listMessages.length; i++) {
+                if (listMessages[i].message_id == NetworkManager.LOGIN) {
+
+                    loginresponse = listMessages[i].response;
+
+                    this.loginResponseHandler(loginresponse);
+
                 }
             }
-            else {
-                // if (loginType == FB_LOGIN) {
-                //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ACCESS_TOKEN);
-                //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ID);
-                //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_FIRST_NAME);
-                //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_LAST_NAME);
-                //     if (tryLoginFacebook) {
-                //         PopupMessageBox* popupMessage = new PopupMessageBox();
-                //         popupMessage->showPopup(loginresponse->message().c_str());
-                //     }
-                //     else {
-                //         tryLoginFacebook = true;
-                //         Common::getInstance()->loginFacebook();
-                //     }
-                //     return;
-                // }
-                //
-                // PopupMessageBox* popupMessage = new PopupMessageBox();
-                // popupMessage->showPopup(loginresponse->message().c_str());
-            }
-            // // Code kill room index
-            // if (Common::getInstance()->getUserName() == "sanglx") {
-            //     NetworkManager::getInstance()->getKillRoomMessageFromServer(4, 10);
-            // }
         }
+
+
+        // this.enterRoomResponseHandler();
+        // this.resetPasswordResponseHandler();
     }
 });
 

@@ -336,6 +336,8 @@ var ShowGameLayer = cc.Layer.extend({
 
         ws.onmessage = this.ongamestatus.bind(this);
 
+        this.scheduleUpdate();
+
         return true;
     },
     scrollEvent: function () {
@@ -586,9 +588,9 @@ var ShowGameLayer = cc.Layer.extend({
     ongamestatus: function(e) {
         if(e.data!==null || e.data !== 'undefined')
         {
-            parseFrom(e.data, e.data.byteLength);
-            while(listMessages.length > 0) {
-                var buffer = listMessages.shift();
+            var lstMess = parseFrom(e.data, e.data.byteLength);
+            while(lstMess.length > 0) {
+                var buffer = lstMess.shift();
                 this.enterZoneHandleMessage(buffer);
             }
         }
@@ -597,85 +599,140 @@ var ShowGameLayer = cc.Layer.extend({
         var buffer = e;
         switch (buffer.message_id) {
             case NetworkManager.ENTER_ZONE:
-                this.msg = buffer.response;
-                this.enterZoneResponseHandler();
+                var msg = buffer.response;
+                this.enterZoneResponseHandler(msg);
                 break;
         }
     },
-    enterZoneResponseHandler : function () {
+    enterZoneResponseHandler : function (enterZoneResponse) {
         //handle login
-        enterZoneResponse = this.msg;
-        if (enterZoneResponse != 0) { //found
-            if (enterZoneResponse.responseCode) {
+        // if(listMessages.length > 0) {
+        //     for (i = 0; i < listMessages.length; i++) {
+        //         if (listMessages[i].message_id == NetworkManager.ENTER_ZONE) {
+        //
+        //             enterZoneResponse = listMessages[i].response;
+                    if (enterZoneResponse != 0) { //found
+                        if (enterZoneResponse.responseCode) {
 
-                // setRequestRoomType(enterZoneResponse.defaultRoomTypeLoad);
-                common.requestRoomType = enterZoneResponse.defaultRoomTypeLoad;
+                            // setRequestRoomType(enterZoneResponse.defaultRoomTypeLoad);
+                            common.requestRoomType = enterZoneResponse.defaultRoomTypeLoad;
 
-                if (enterZoneResponse.enableDisplayRoomList) {
-                    /*
-                     Sau này xử lý phần người chơi click vào một mức cược cụ thể không cần hiển thị danh sách phòng chơi
-                     */
-                    var cashRoomList = [];
-                    var goldRoomList = [];
-                    if (enterZoneResponse.cashRoomConfigs.length > 0) {
-                        for (i = 0; i < enterZoneResponse.cashRoomConfigs.length; i++) {
-                            cashRoomList.push(enterZoneResponse.cashRoomConfigs[i]);
+                            if (enterZoneResponse.enableDisplayRoomList) {
+                                /*
+                                 Sau này xử lý phần người chơi click vào một mức cược cụ thể không cần hiển thị danh sách phòng chơi
+                                 */
+                                var cashRoomList = [];
+                                var goldRoomList = [];
+                                if (enterZoneResponse.cashRoomConfigs.length > 0) {
+                                    for (i = 0; i < enterZoneResponse.cashRoomConfigs.length; i++) {
+                                        cashRoomList.push(enterZoneResponse.cashRoomConfigs[i]);
+                                    }
+                                }
+                                if (enterZoneResponse.goldRoomConfigs.length > 0) {
+                                    for (i = 0; i < enterZoneResponse.goldRoomConfigs.length; i++) {
+                                        goldRoomList.push(enterZoneResponse.goldRoomConfigs[i]);
+                                    }
+                                }
+                                // setGoldRoomList(goldRoomList);
+                                // setCashRoomList(cashRoomList);
+                                common.goldRoomList = goldRoomList;
+                                common.cashRoomList = cashRoomList;
+                            }
+
+                            var zoneId = common.zoneId;
+                            if (zoneId == Common.TAMXINGAU_ZONE){
+                                cc.log("tam_xi_ngau");
+                                // var tam_xi_ngau = TamXiNgau::create(this);
+                                // tam_xi_ngau.setPosition(MVec2(0, 0));
+                                // this.addChild(tam_xi_ngau);
+                            }
+                            else if (zoneId == Common.WHEEL_ZONE) {
+                                cc.log("WHEEL_ZONE");
+                                // auto node = VongQuayMayMan::create(this);
+                                // node.setPosition(MVec2(0, 0));
+                                // this.addChild(node, INDEX_POPUP);
+                            }
+                            else if (zoneId == Common.MINIPOKER_ZONE) {
+                                cc.log("MINIPOKER_ZONE");
+                                // auto node = MiniPoker::create(this);
+                                // node.setPosition(MVec2(0, 0));
+                                // this.addChild(node, INDEX_POPUP);
+                            }
+                            // else if (zoneId == Common.MINITHREECARDS_ZONE) {
+                            //     cc.log("MINITHREECARDS_ZONE");
+                            //     // auto node = MiniThreeCards::create(this);
+                            //     // node.setPosition(MVec2(0, 0));
+                            //     // this.addChild(node, INDEX_POPUP);
+                            // }
+                            else {
+                                // notify.onHideNotify();
+                                // this.unscheduleUpdate();
+                                var scenetable = new SceneTable(enterZoneResponse.enableDisplayRoomList, enterZoneResponse.defaultRoomTypeLoad);
+                                cc.director.runScene(scenetable);
+                            }
+                            //    return;
+                        } else {
+                            cc.log("MINIPOKER_ZONE");
+                            // setRequestRoomType(-1);
+                            // setZoneId(-1);  //reset zone id
+                            common.requestRoomType = -1;
+                            common.zoneId = -1;  //reset zone id
+                            // showToast(enter_zone_response.message().c_str(), 2);
                         }
                     }
-                    if (enterZoneResponse.goldRoomConfigs.length > 0) {
-                        for (i = 0; i < enterZoneResponse.goldRoomConfigs.length; i++) {
-                            goldRoomList.push(enterZoneResponse.goldRoomConfigs[i]);
-                        }
-                    }
-                    // setGoldRoomList(goldRoomList);
-                    // setCashRoomList(cashRoomList);
-                    common.goldRoomList = goldRoomList;
-                    common.cashRoomList = cashRoomList;
-                }
+        //         }
+        //     }
+        // }
 
-                var zoneId = common.zoneId;
-                if (zoneId == Common.TAMXINGAU_ZONE){
-                    cc.log("tam_xi_ngau");
-                    // var tam_xi_ngau = TamXiNgau::create(this);
-                    // tam_xi_ngau.setPosition(MVec2(0, 0));
-                    // this.addChild(tam_xi_ngau);
+
+    },
+    update: function(dt) {
+        // BaseScene::update(dt);
+    
+        // getHeadLineResponse();
+    
+        //=====
+        // var position = node_hello.getPosition();
+        // position.x -= 50 * dt;
+        // if (position.x  < (-node_hello.getContentSize().width))
+        //     position.x = sprite_thongtin.getContentSize().width;
+        // node_hello.setPosition(position);
+        //
+        // getUserStatusResponse();
+    
+        //handle login
+        if(listMessages.length > 0) {
+            for (i = 0; i < listMessages.length; i++) {
+                if (listMessages[i].message_id == NetworkManager.ENTER_ZONE) {
+
+                    enterZoneResponse = listMessages[i].response;
+                    this.enterZoneResponseHandler(enterZoneResponse);
                 }
-                else if (zoneId == Common.WHEEL_ZONE) {
-                    cc.log("WHEEL_ZONE");
-                    // auto node = VongQuayMayMan::create(this);
-                    // node.setPosition(MVec2(0, 0));
-                    // this.addChild(node, INDEX_POPUP);
-                }
-                else if (zoneId == Common.MINIPOKER_ZONE) {
-                    cc.log("MINIPOKER_ZONE");
-                    // auto node = MiniPoker::create(this);
-                    // node.setPosition(MVec2(0, 0));
-                    // this.addChild(node, INDEX_POPUP);
-                }
-                // else if (zoneId == Common.MINITHREECARDS_ZONE) {
-                //     cc.log("MINITHREECARDS_ZONE");
-                //     // auto node = MiniThreeCards::create(this);
-                //     // node.setPosition(MVec2(0, 0));
-                //     // this.addChild(node, INDEX_POPUP);
-                // }
-                else {
-                    // notify.onHideNotify();
-                    // this.unscheduleUpdate();
-                    var scenetable = new SceneTable(enterZoneResponse.enableDisplayRoomList, enterZoneResponse.defaultRoomTypeLoad);
-                    cc.director.runScene(scenetable);
-                }
-                //    return;
-            } else {
-                cc.log("MINIPOKER_ZONE");
-                // setRequestRoomType(-1);
-                // setZoneId(-1);  //reset zone id
-                common.requestRoomType = -1;
-                common.zoneId = -1;  //reset zone id
-                // showToast(enter_zone_response.message().c_str(), 2);
             }
         }
 
+        //logout
+    
+        // //response email
+        // filterEmailResponse();
+        // sendMailResponse();
+        // readMailResponse();
+        // deleteMailResponse();
+        // claimMailResponse();
+        // //end
+        //
+        // //user_info
+        // //viewUserInfoFromServer();
+        //
+        // //update money
+        // updateMoneyResponseHandler();
+        //
+        // //ls doi thuong
+        // lookupMoneyHistoryResponse();
+        // // friend pop up
+        // turnOnPopupFriendResponseHandler();
     }
+
 });
 
 var ShowGameScene = cc.Scene.extend({

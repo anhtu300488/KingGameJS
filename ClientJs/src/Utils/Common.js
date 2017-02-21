@@ -924,8 +924,6 @@ var requestRoomType = function(roomTypeLoad){
         roomTypeLoad, 0, LOAD_MORE_XUKEN, orderByField, asc);
 }
 
-var listRoomPlay = [];
-
 var language = {
     set current(name) {
         listRoomPlay.length = 0;
@@ -957,7 +955,30 @@ var language = {
     }
 }
 
-var a = new String();
+var setListRoomPlay = function (lstRoomPlay) {
+    listRoomPlay.length = 0;
+    for(i = 0; i< lstRoomPlay.length; i++){
+        var setData = {
+            enteringPlayer : lstRoomPlay[i].enteringPlayer,
+            level : lstRoomPlay[i].level,
+            minBet : lstRoomPlay[i].minBet,
+            minEnterMoney : lstRoomPlay[i].minEnterMoney.low,
+            ownerUserName : lstRoomPlay[i].ownerUserName,
+            passwordRequired : lstRoomPlay[i].passwordRequired,
+            playerSize : lstRoomPlay[i].playerSize,
+            playingPlayer : lstRoomPlay[i].playingPlayer,
+            roomCapacity : lstRoomPlay[i].roomCapacity,
+            roomConfig : lstRoomPlay[i].roomConfig,
+            roomGroupId : lstRoomPlay[i].roomGroupId,
+            roomId : lstRoomPlay[i].roomId.low,
+            roomIndex : lstRoomPlay[i].roomIndex,
+            roomName : lstRoomPlay[i].roomName,
+            tax : lstRoomPlay[i].tax,
+            vipRoom : lstRoomPlay[i].vipRoom
+        };
+        listRoomPlay.push(setData);
+    }
+}
 
 // var getOwnerUserId = function(){
 //     return this.ownerUserId;
