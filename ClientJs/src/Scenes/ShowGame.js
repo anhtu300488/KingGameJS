@@ -1,17 +1,25 @@
 /**
  * Created by MyPC on 13/12/2016.
  */
-
+var padding = 12;
 var ShowGameLayer = cc.Layer.extend({
     ctor: function () {
         this._super();
+
         this.init();
+
+        return true;
     },
 
     init: function () {
         this._super();
 
-        var padding = 12;
+        if (!baseSceneConnect.init()) {
+            return false;
+        }
+
+        common.gameState = GAME_STATE.SHOW_GAME;
+        // common.jarStatus = false;
 
         var spriteBG = new cc.Sprite(res.item_background);
 
@@ -336,9 +344,12 @@ var ShowGameLayer = cc.Layer.extend({
 
         ws.onmessage = this.ongamestatus.bind(this);
 
-        this.scheduleUpdate();
 
-        return true;
+        // this.scheduleUpdate();
+    },
+
+    onExit:function () {
+        baseSceneConnect.onExit();
     },
     scrollEvent: function () {
 
@@ -578,9 +589,7 @@ var ShowGameLayer = cc.Layer.extend({
                 popupMessage.appear();
                 return;
             }
-            // getEnterZoneMessageFromServer(getZoneId());
-            getEnterZoneMessageFromServer(common.zoneId);
-
+            getEnterZoneMessageFromServer(getZoneId());
         }
 
 
@@ -687,7 +696,7 @@ var ShowGameLayer = cc.Layer.extend({
 
     },
     update: function(dt) {
-        // BaseScene::update(dt);
+        baseSceneConnect.update(dt);
     
         // getHeadLineResponse();
     
@@ -707,6 +716,7 @@ var ShowGameLayer = cc.Layer.extend({
 
                     enterZoneResponse = listMessages[i].response;
                     this.enterZoneResponseHandler(enterZoneResponse);
+                    listMessages.splice(i, 1);
                 }
             }
         }

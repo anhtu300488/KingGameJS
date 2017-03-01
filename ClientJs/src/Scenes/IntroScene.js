@@ -1,4 +1,3 @@
-
 var IntroLayer = cc.Layer.extend({
     sprite:null,
     listEvent:[],
@@ -7,33 +6,47 @@ var IntroLayer = cc.Layer.extend({
         // 1. super init first
         this._super();
 
+        this.init();
+
+        return true;
+    },
+    init:function () {
+        this._super();
+
+        if (!baseSceneConnect.init()) {
+            return false;
+        }
+
+        // connect();
+
         common.intro = true;
         common.gameState = GAME_STATE.INTRO;
 
         timeSchedule = 1.0;
 
-        // if(!common.firstLogin){
-        //     common.firstLogin(true);
-        //
-        //     timeSchedule = 3.0;
-        //
-        //     spriteFrameCache.addSpriteFramesWithFile("res/loading.plist");
-        //     spriteFrameCache.addSpriteFramesWithFile("res/nem.plist");
-        //     spriteFrameCache.addSpriteFramesWithFile("res/avatar_win_animation.plist");
-        //     spriteFrameCache.addSpriteFramesWithFile("res/sprite_cards.plist");
-        //     spriteFrameCache.addSpriteFramesWithFile("res/cogai_xocdia.plist");
-        //     spriteFrameCache.addSpriteFramesWithFile("res/daily_gift/hom_sprite.plist");
-        //     spriteFrameCache.addSpriteFramesWithFile("res/level_up/levelup_sprites.plist");
-        //     spriteFrameCache.addSpriteFramesWithFile("res/xoc.plist");
-        //     spriteFrameCache.addSpriteFramesWithFile("res/cangat.plist");
-        //     spriteFrameCache.addSpriteFramesWithFile("res/an.plist");
-        //     spriteFrameCache.addSpriteFramesWithFile("res/xocdia/chip_sprites.plist");
-        //
-        //     // SoundManager::getInstance().preLoadAudio(soundTLMN);
-        //     // SoundManager::getInstance().preLoadAudio(soundPhom);
-        //     // SoundManager::getInstance().preLoadAudio(soundSocdia);
-        //     // SoundManager::getInstance().preLoadAudio(soundOther);
-        // }
+        if(!common.firstLogin){
+            common.firstLogin = true;
+            //
+            //     timeSchedule = 3.0;
+            //
+            cc.spriteFrameCache.addSpriteFrames("res/cidade.plist");
+            cc.spriteFrameCache.addSpriteFrames("res/loading.plist");
+            cc.spriteFrameCache.addSpriteFrames("res/nem.plist");
+            cc.spriteFrameCache.addSpriteFrames("res/avatar_win_animation.plist");
+            cc.spriteFrameCache.addSpriteFrames("res/sprite_cards.plist");
+            cc.spriteFrameCache.addSpriteFrames("res/cogai_xocdia.plist");
+            cc.spriteFrameCache.addSpriteFrames("res/daily_gift/hom_sprite.plist");
+            cc.spriteFrameCache.addSpriteFrames("res/level_up/levelup_sprites.plist");
+            cc.spriteFrameCache.addSpriteFrames("res/xoc.plist");
+            cc.spriteFrameCache.addSpriteFrames("res/cangat.plist");
+            cc.spriteFrameCache.addSpriteFrames("res/an.plist");
+            cc.spriteFrameCache.addSpriteFrames("res/xocdia/chip_sprites.plist");
+            //
+            //     // SoundManager::getInstance().preLoadAudio(soundTLMN);
+            //     // SoundManager::getInstance().preLoadAudio(soundPhom);
+            //     // SoundManager::getInstance().preLoadAudio(soundSocdia);
+            //     // SoundManager::getInstance().preLoadAudio(soundOther);
+        }
 
         var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
 
@@ -66,18 +79,24 @@ var IntroLayer = cc.Layer.extend({
         this.addChild(label);
 
         this.updateProgress(timeSchedule);
-        
-        this.scheduleOnce(this.gotoLoginScene,3,"login");
+
+        this.scheduleOnce(this.gotoStartScene,3,"login");
 
         ws.onmessage = this.ongamestatus.bind(this);
 
-        this.scheduleUpdate();
+        // this.scheduleUpdate();
 
-        return true;
     },
-    
-    gotoLoginScene: function () {
-        initConnect();
+
+    onExit:function () {
+        baseSceneConnect.onExit();
+        // this._super();
+    },
+
+    gotoStartScene: function () {
+        cc.log("connect");
+        baseSceneConnect.connect();
+        // initConnect();
     },
     ongamestatus: function(e) {
         cc.log("data 1", e);
@@ -98,7 +117,7 @@ var IntroLayer = cc.Layer.extend({
         switch (buffer.message_id) {
             case NetworkManager.INITIALIZE:
                 var msg = buffer.response;
-                this.initialMessageResponseHandler(msg);
+                baseSceneConnect.initialMessageResponseHandler(msg);
                 break;
         }
     },
@@ -150,139 +169,39 @@ var IntroLayer = cc.Layer.extend({
 
     },
     update:function(dt){
-
-        cc.delayTime(1000);
-
-        if(listMessages.length > 0) {
-            for (i = 0; i < listMessages.length; i++) {
-                if (listMessages[i].message_id == NetworkManager.INITIALIZE) {
-                    cc.log("listMessages", listMessages[i].message_id);
-                    initialMessage = listMessages[i].response;
-
-                    this.initialMessageResponseHandler(initialMessage);
-                }
-            }
-        }
-
-
-
-        cc.log("update");
-        if(ws.readyState == ws.CLOSED){
-            cc.sys.localStorage.removeItem(Common.KEY_SESSION_ID);
-            common.sessionId = "-1";
-
-            if(isConnected()){
-                closeConnection();
-                this.scheduleOnce(goToIntroScene,2,"Intro");
-            }
-        }
-
-        // getEmergencyNotificationResponse();
-        //
-        // //level up
-        // levelResponseHandler();
-        //
-        // //huy chuong up
-        // medalResonseHandler();
-        //
-        // getIapCompleteResponse();
-    },
-    initialMessageResponseHandler : function(initialMessage) {
-        // if(listMessages.length > 0){
-        //     for(i = 0; i < listMessages.length; i++){
-        //         if(listMessages[i].message_id == NetworkManager.INITIALIZE){
+        baseSceneConnect.update(dt);
+        // if(listMessages.length > 0) {
+        //     for (i = 0; i < listMessages.length; i++) {
+        //         if (listMessages[i].message_id == NetworkManager.INITIALIZE) {
         //             initialMessage = listMessages[i].response;
-                    if (initialMessage != 0) {
-                        // setInitialize(initialMessage.responseCode);
-                        common.initialize = initialMessage.responseCode;
-                        if (initialMessage.responseCode) {
-                            // setEnablePurchaseCash(initialMessage.enablePurchaseCash);
-                            common.enablePurchaseCash = initialMessage.enablePurchaseCash;
-                            // setEnableTopup(initialMessage.enableTopup);
-                            common.enableTopup = initialMessage.enableTopup;
-                            var serverAppVersion = initialMessage.currentAppVersion;
-                            // setServerAppVersion(serverAppVersion);
-                            common.serverAppVersion = serverAppVersion;
-                            // setFanpageUrl(initialMessage.fanpageUrl);
-                            common.fanpageUrl = initialMessage.fanpageUrl;
-                            // setWebsiteUrl(initialMessage.websiteUrl);
-                            common.websiteUrl = initialMessage.websiteUrl;
-                            var hotlines = [];
-                            cc.log("hotline size", initialMessage.hotlines.length);
-                            for (i = 0; i < initialMessage.hotlines.length; i++){
-                                hotlines.push(initialMessage.hotlines[i]);
-                            }
-
-
-                            // setHotLines(hotlines);
-                            common.hotLines = hotlines;
-                            // setEnableCashToGold(initialMessage.enableCashToGold);
-                            common.enableCashToGold = initialMessage.enableCashToGold;
-                            // setCashToGoldRatio(initialMessage.cashToGoldRatio);
-                            common.cashToGoldRatio = initialMessage.cashToGoldRatio;
-                            // setEnableQuickPlay(initialMessage.enableQuickPlay);
-                            common.enableQuickPlay = initialMessage.enableQuickPlay;
-                            // setEnableCashTranfer(initialMessage.enableCashTransfer);
-                            common.enableCashTransfer = initialMessage.enableCashTransfer;
-                            // setEnableGiftCode(initialMessage.enableGiftCode);
-                            common.enableGiftCode = initialMessage.enableGiftCode;
-                            // setResetPwSmsSyntax(initialMessage.resetPwSmsSyntax);
-                            common.resetPwSmsSyntax = initialMessage.resetPwSmsSyntax;
-                            /*Set enable game ids*/
-                            var _gameIds = [];
-                            for (i = 0; i < initialMessage.enableGameIds.length; i++) {
-                                _gameIds.push(initialMessage.enableGameIds[i]);
-                            }
-                            // setEnableGameIds(_gameIds);
-                            common.enableGameIds = _gameIds;
-
-                            var app_version = getVersionCode();
-
-                            // if (app_version < serverAppVersion) {
-                            //     class InitializeOnEventListener : public OnEvenListener<BINInitializeResponse*> {
-                            //         public:
-                            //             void onEvent(int eventType, BINInitializeResponse* sender) override {
-                            //         if (eventType == OnEvenListener::EVENT_CONFIRM_OK) {
-                            //             Common::getInstance().openUrl(url);
-                            //         }
-                            //         else if (eventType == OnEvenListener::EVENT_CANCEL_CONFIRM) {
-                            //             BaseScene::goGame();
-                            //         }
-                            //     };
-                            //     void onEventClickMessageBox(int enventType) override {
-                            //
-                            //     };  //su kien khi an vao nut ok cua popupm essage box
-                            //
-                            //     void setUrl(string url) { this.url = url; }
-                            //     private:
-                            //         string url;
-                            // } *b = new InitializeOnEventListener();
-                            //     b.setUrl(init_response.downloadurl());
-                            //     bool force_update = init_response.forceupdate();
-                            //     if (force_update) {
-                            //         Common::getInstance().setForceUpdate(true);
-                            //         NodeConfirm<BINInitializeResponse*> *nodeConfirm =
-                            //             NodeConfirm<BINInitializeResponse*>::create(b, "Cập nhật",
-                            //                 init_response.message(),
-                            //                 NodeConfirm<BINInitializeResponse*>::MESSAGEBOX_TYPE);
-                            //         nodeConfirm.setSender(init_response);
-                            //         nodeConfirm.showDlg();
-                            //         return;
-                            //     }
-                            //     else {
-                            //         Common::getInstance().setUpdateMessage(init_response.message());
-                            //     }
-                            // }
-                            goGame();
-                            //restore session
-                        }else {
-                            // PopupMessageBox* popupMessage = new PopupMessageBox();
-                            // popupMessage.showPopup(init_response.message());
-                        }
-                    }
+        //
+        //             initialMessageResponseHandler(initialMessage);
         //         }
         //     }
         // }
+        //
+        //
+        //
+        // cc.log("update");
+        // if(ws.readyState == ws.CLOSED){
+        //     cc.sys.localStorage.removeItem(Common.KEY_SESSION_ID);
+        //     common.sessionId = "-1";
+        //
+        //     if(isConnected()){
+        //         closeConnection();
+        //         this.scheduleOnce(goToIntroScene,2,"Intro");
+        //     }
+        // }
+        //
+        // // getEmergencyNotificationResponse();
+        // //
+        // // //level up
+        // // levelResponseHandler();
+        // //
+        // // //huy chuong up
+        // // medalResonseHandler();
+        // //
+        // // getIapCompleteResponse();
     }
 });
 

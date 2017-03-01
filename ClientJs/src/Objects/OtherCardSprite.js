@@ -11,9 +11,10 @@ var OtherCardSprite = cc.Sprite.extend({
     }
 });
 
+
 OtherCardSprite.createCardCover = function(width) {
     var cardSprite = new OtherCardSprite();
-    cardSprite.setSpriteFrame("res/card_cover.png");
+    cardSprite.setSpriteFrame(cc.spriteFrameCache.getSpriteFrame("card_cover.png"));
     cardSprite.setAnchorPoint(Vec2(0,0));
     cardSprite.setScale(width/cardSprite.getWidth());
     cardSprite.setContentSize(cc.size(width,width*CARD_RATIO));
@@ -22,7 +23,7 @@ OtherCardSprite.createCardCover = function(width) {
 }
 
 OtherCardSprite.addHidden = function() {
-    var hidden = MSprite.createWithSpriteFrameName("res/card_hidden.png");
+    var hidden = MSprite.createWithSpriteFrameName(cc.spriteFrameCache.getSpriteFrame("card_hidden.png"));
     hidden.setTag(CARD_HIDDEN);
     hidden.setColor(cc.color.BLACK);
     hidden.setOpacity(100);

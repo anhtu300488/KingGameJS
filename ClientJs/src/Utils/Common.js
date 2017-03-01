@@ -160,7 +160,7 @@ var common = {
         return _zoneId != -1 ? _zoneId : result;
     },
     set gameState(state){
-        this._state = state;
+        this._gameState = state;
     },
     get gameState(){
         return this._gameState;

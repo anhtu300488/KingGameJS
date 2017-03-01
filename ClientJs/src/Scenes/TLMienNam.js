@@ -1,7 +1,6 @@
 var cards = [];
 var card_tag = [];
-var lst_player = [];
-var lst_waiting = [];
+
 var padding = 20;
 var currentTableIndex;
 var cardViews = [4];
@@ -31,7 +30,11 @@ var TLMienNamLayer = cc.Layer.extend({
         // 1. super init first
         this._super();
 
-        this.newPlayerResponse = newPlayerResponse;
+        cc.log("TLMN");
+
+        this.roomIndex = roomIndex;
+
+        this.cardRemainingCount = cardRemainingCount;
 
         // TLMNgameTag = _gameTag;
 
@@ -47,27 +50,46 @@ var TLMienNamLayer = cc.Layer.extend({
         setEnterRoomResponse(reEnterRoomResponse);
         // setMinBet(minBet);
         common.minBet  = minBet;
+
+        // ws.onmessage = this.ongamestatus.bind(this);
+        // ws.onclose = this.onclose.bind(this);
+        // ws.onerror = this.onerror.bind(this);
+
+        // this.scheduleUpdate();
+
+        this.init();
+
+        return true;
+    },
+
+    init: function () {
+        this._super();
+
+        cc.log("playScene.init", playScene.init());
+        if (!playScene.init() ) {
+            return false;
+        }
+
+        capacity_size = 4;
+
         this.initMenu();
-        this.initGame(cardRemainingCount);
+        this.initGame(this.cardRemainingCount);
 
         ws.onmessage = this.ongamestatus.bind(this);
-        ws.onclose = this.onclose.bind(this);
-        ws.onerror = this.onerror.bind(this);
 
-        // this.init();
-
+        this.scheduleUpdate();
     },
-    //
-    // init: function () {
-    //     this._super();
-    //
-    //     return true;
-    //
-    // },
+
+
+    onExit:function () {
+        playScene.onExit();
+        is_create_room = false;
+        player_list.length = 0;
+    },
 
     initMenu: function () {
-        var playLayer = new PlayLayer();
-        this.addChild(playLayer);
+        // var playLayer = new PlayLayer();
+        // this.addChild(playLayer);
 
         var bkgTable = MSprite.create(res.sprite_table);
         bkgTable.setScale(width*0.8/bkgTable.getWidth());
@@ -125,16 +147,23 @@ var TLMienNamLayer = cc.Layer.extend({
         this.addChild(this.btn_doi_luat);
         this.addChild(lb_luatchoi);
 
+        bkgTable.runAction(cc.repeatForever(cc.sequence(cc.delayTime(6.0),
+            cc.callFunc(function(){
+                reloadEnterRoom(0);
+            }))));
+
 
     },
     menuCallBack: function(pSender, eventType) {
         //PlayScene::menuCallBack(pSender, eventType);
         if(eventType == ccui.Widget.TOUCH_ENDED) {
             var tag = pSender.tag;
+            cc.log("tag", tag);
+            cc.log("this.roomIndex", this.roomIndex);
             switch (tag) {
                 case TAG.TLMN_START_MATCH:
                     if (playerList.length >= 2) {
-                        getStartMatchMessageFromServer(roomIndex);
+                        getStartMatchMessageFromServer(this.roomIndex);
                         this.btn_start_match.setVisible(false);
                         this.btn_doi_luat.setVisible(false);
                     } else {
@@ -142,7 +171,7 @@ var TLMienNamLayer = cc.Layer.extend({
                     }
                     break;
                 case TAG.TLMN_BTN_SANSANG:
-                    getReadyToPlayMessageFromServer(roomIndex, -1);
+                    getReadyToPlayMessageFromServer(this.roomIndex, -1);
                     break;
                 // case TAG.TLMN_BTN_DOILUAT:
                 // {
@@ -177,15 +206,17 @@ var TLMienNamLayer = cc.Layer.extend({
         switch (buffer.message_id) {
             case NetworkManager.START_MATCH:
                 var msg = buffer.response;
-                startMatchResponseHandler(msg);
+                this.startMatchResponseHandler(msg);
                 break;
             case NetworkManager.READY_TO_PLAY:
                 var msg = buffer.response;
-                readyToPlayResponseHandler(msg);
+                cc.log("PLAYER_ENTER_ROOM");
+                this.readyToPlayResponseHandler(msg);
                 break;
-            case NetworkManager.EXIT_ROOM:
+            case NetworkManager.PLAYER_ENTER_ROOM:
+                cc.log("PLAYER_ENTER_ROOM");
                 var msg = buffer.response;
-                exitRoomResponseHandler(msg);
+                this.playerEnterRoomResponseHandler(msg);
                 break;
             // case NetworkManager.CANCEL_EXIT_ROOM:
             //     var msg = buffer.response;
@@ -205,7 +236,7 @@ var TLMienNamLayer = cc.Layer.extend({
             }
         }
 
-        setListPlayerFromParams(playerList, waitingPlayerList, cardRemainingCount, this);
+        this.setListPlayerFromParams(player_list, waiting_player_list, this.cardRemainingCount, this);
 
 
         if (enterRoomResponse != 0) {
@@ -406,12 +437,431 @@ var TLMienNamLayer = cc.Layer.extend({
     setCurrentTurnUserId: function(_currentTurnUserId) {
         this._currentTurnUserId = _currentTurnUserId;
     },
+    update: function(delta) {
+        playScene.update(delta);
+        // /*
+        //  nguoi choi huy dang ky roi ban
+        //  */
+        // this.cancelExitAfterMatchEndResponseHandler();
+        //
+        // /*
+        //  nguoi choi khac nhan duoc thong bao khi co nguoi dang ky roi ban
+        //  */
+        // this.playerExitAfterMatchEndResponse();
+        //
+        // /*
+        //  update thong tin ban choi khi co nguoi roi ban
+        //  */
+        // this.playerExitRoomResponse();
+        //
+        // /*
+        //  Thay đổi chủ bàn
+        //  */
+        // this.roomOwnerChangedResponseHandler();
+        //
+        // /*
+        //  TURN response
+        //  */
+        // this.turnResponse();
+        //
+        // /*
+        //  begin UPDATE_MONEY
+        //  */
+        // this.updateMoneyResponseHandler();
+        //
+        //
+        // this.prepareNewMatchResponseHandler();
+        //
+        // /*
+        //  Match End
+        //  */
+        // this.matchEndResponseHandler();
+        //
+        // /*
+        //  match begin
+        //  */
+        // this.matchBeginResponseHandler();
+        //
+
+        // /*
+        //  player enter room
+        //  */
+        if(listMessages.length > 0) {
+            for (i = 0; i < listMessages.length; i++) {
+                if (listMessages[i].message_id == NetworkManager.PLAYER_ENTER_ROOM) {
+
+                    newplayerresponse = listMessages[i].response;
+                    this.playerEnterRoomResponseHandler(newplayerresponse);
+
+                    listMessages.splice(i, 1);
+                }
+            }
+        }
+        // /*
+        //  startMatch
+        //  */
+        // this.startMatchResponseHandler();
+        //
+        // /*
+        //  kick user
+        //  */
+        // this.kickUserResponseHandler();
+        //
+        // /*
+        //  readyToPlay
+        //  */
+        // this.readyToPlayResponseHandler();
+        //
+        // /*
+        //  change_rule
+        //  */
+        // this.changeRuleResponseHandler();
+    },
+    setPositionPlayer : function(player, indexPos, thisObj){
+
+        var position_index = 0;  //vi tri that cua nguoi choi
+        //tinh toan vi tri that cua nguoi choi
+        if (parseInt(player.tableIndex) >= parseInt(currentTableIndex)){
+            position_index = parseInt(player.tableIndex) - parseInt(currentTableIndex);
+        }
+        else {
+            position_index = parseInt(player.tableIndex) - parseInt(currentTableIndex) + capacity_size;
+        }
+
+        if (position_index >= capacity_size){
+            position_index = 0;
+        }
+
+        if (common.zoneId == Common.TLMN_SOLO_ZONE) {
+            if(indexPos == 1) position_index = 2;
+        }
+
+        var avatar = new Avatar();
+
+        cc.log("avatar", avatar);
+
+        var _numberCard = player.numberCard;
+        var user_name = player.name;
+        var user_id = player.id;
+        var gold = player.gold;
+        var cash = player.cash;
+
+        //char buffer[20];
+        var buffer = cc.formatStr("%d", is_vip_room ? cash : gold);
+
+        //sprintf(buffer, "%lld $", is_vip_room ? cash : gold);
+
+        var image_index = player.tableIndex;
+
+        avatar.loadAvatar(image_index, user_id, user_name, buffer, this.roomIndex);
+        var pos = avatar.getAvatarPostion(position_index, origin, visibleSize, btn_message.getContentSize().height);
+        if(position_index == 0){
+            pos = MVec2(width/2 - avatar.getContentSize().width/2,pos.y);
+        }
+        avatar.setPosition(pos);
+
+        var cardCoverWidth = cardWidth() * 0.8;
+        if(avatar.getPlayerId() == getUserId()){
+            avatar.loadCardCover(cardCoverWidth, position_index, _numberCard,true);
+            avatar.hideCardCover();
+        }else{
+            avatar.loadCardCover(cardCoverWidth, position_index, _numberCard);
+        }
+
+        avatar.setNumberCard(_numberCard);
+
+        avatars.push(avatar);
+
+        if (avatars[avatars.length -1].getParent() == null)
+            thisObj.addChild(avatars[avatars.length -1],INDEX_AVATAR);
+    },
+    sortListPlayer : function(lst_player) {
+        lst_player.sort(function(a, b) {
+            return parseFloat(a.tableIndex) - parseFloat(b.tableIndex);
+        });
+    },
+    findPlayer : function(player_id){
+        var c_player_id = [50];
+
+        c_player_id = player_id;
+
+        var s_player_id = c_player_id;
+
+        for (i = 0; i < playerList.length; i++){
+            if (playerList[i].getID == s_player_id){
+                return playerList[i];
+            }
+        }
+
+        return null;
+    },
+    displayInfoRemainCard : function(remain_card_infos, thisObj) {
+        //find current index
+        var currentIndex = -1;
+        currentTableIndex = -1;
+
+        cc.log("remain_card_infos", remain_card_infos);
+
+        for (i = 0; i < remain_card_infos.length; i++)  {
+            var val = remain_card_infos[i].id;
+            if (getUserId() == val) {
+                currentIndex = i;
+                currentTableIndex = remain_card_infos[i].tableIndex;
+                break;
+            }
+        }
+        //end find current index
+
+        cc.log("list player size: ", remain_card_infos.length);
+
+        //int index = currentIndex;
+        var len = remain_card_infos.length;
+
+        for (i = 0; i < len; i++) {
+            this.setPositionPlayer(remain_card_infos[i], i, thisObj);
+        }
+    },
+    showWaitingPlayerOnScene : function(lstWaiting){
+        if (!lstWaiting.length){
+            lstDisplayWaitingPlayer.length = 0;
+
+            var size = lstWaiting.length;
+            var init_distance = 10;
+            var distance = init_distance;
+            for (i = 0; i < 3; i++){
+                if ((i + 1) > size){
+                    break;
+                }
+                var waitingPlayer = new WaitingPlayer();
+                waitingPlayer.setAvatar(lstWaiting[i].getName, lstWaiting[i].getAvatarId);
+                waitingPlayer.setPositionAvatar(origin, distance);
+                distance += waitingPlayer.getAvatar().getWidth()*0.5 + init_distance;
+                lstDisplayWaitingPlayer.push(waitingPlayer);
+                this.addChild(waitingPlayer);
+            }
+        }
+    },
+    isUserPlaying : function(){
+        var user_id = getUserId();
+        var player = this.findPlayer(user_id);
+        if (player != 0){
+            return true;
+        }
+        return false;
+    },
+    startMatchResponseHandler : function(rs) {
+        if (rs != 0) {
+            var matchRunning = rs.responseCode;
+            if (matchRunning) {
+
+                if (this.getChildByTag(TAG_TIME_COUNTDOWN) != null){
+                    this.removeChildByTag(TAG_TIME_COUNTDOWN);
+                }
+
+                // if (rs.has_countdowntimer() && rs.countdowntimer() >= 0) {
+                if (rs.countDownTimer >= 0) {
+                    setMatchCountDownTime(rs.countDownTimer);
+                }
+
+                // if (rs.has_firstturnuserid()) {
+                setFirstTurnUserId(rs.firstTurnUserId);
+                // }
+
+                if (!this.isUserPlaying()){ //neu la nguoi cho khi bat dau game thi khong hien thi nut san sang
+                    this.btn_san_sang.setVisible(false);
+                }
+
+                // for (i = 0; i < rs.args.length; i++) {
+                //     if (rs.args[i].key == "currentCards") {
+                //         var current_card_values = rs.args[i].value;
+                //         sortCard(current_card_values);
+                //
+                //         var avatar = findAvatarOfPlayer(getUserId());
+                //         if (avatar != 0){
+                //             var moveTo = MoveTo::create(0.2, avatar.getAvatarPostion(0, origin, visibleSize, btn_start_match.getHeight()));
+                //             avatar.runAction(moveTo);
+                //         }
+                //     } else {
+                //         //handle card remain count
+                //         var json = rs.args[i].value();
+                //         parseRemainCards(json);
+                //     }
+                // }
+                //
+                // if (this.isHiddenCardRemaining){
+                //     for (i = 0; i < avatars.length; i++){
+                //         if (avatars[i].getPlayerId() != getUserId()){
+                //             avatars[i].hideCardCover(false);
+                //         }
+                //     }
+                // }
+                //
+                // if (rs.has_message()) {
+                //     this.showToast(rs.message().c_str(), 2);
+                // }
+
+            } else {
+                // this.showToast(rs.message().c_str(), 2);
+            }
+        }
+    },
+    playerEnterRoomResponseHandler : function (newplayerresponse) {
+        cc.log("newplayerresponse", newplayerresponse);
+        if (newplayerresponse.responseCode) {
+            var player = convertFromBINPlayer(newplayerresponse.player);
+            var playerId = player.id;
+            if (playerId != getUserId()) {
+                if (newplayerresponse.enterRoomStatus == PlayerState.PLAYING){
+                    // player_list.push(newplayerresponse.player);
+                    player_list.push(newplayerresponse.player);
+                    lst_player.push(player);
+
+                    showInvitePlayer(lst_player.length);
+
+                    this.sortListPlayer();
+                    var index_pos_newplayer = findIndexPlayer(lst_player, player);
+                    if (index_pos_newplayer != -1){
+                        this.setPositionPlayer(lst_player[index_pos_newplayer], index_pos_newplayer);
+                    }
+                    if (getUserId() == common.ownerUserId && lst_player.length >= 2){
+                        this.btn_start_match.setVisible(true);
+                        this.btn_doi_luat.setVisible(false);
+                    }
+                } else {
+                    if (newplayerresponse.enterRoomStatus == PlayerState.WAITING){
+                        lst_waiting.push(player);
+                        waiting_player_list.push(player);
+                        resetListWaiting();
+                        this.showWaitingPlayerOnScene(lst_waiting);
+                        //dddd
+                    }
+                }
+            }
+
+            if (newplayerresponse.enterRoomStatus == PlayerState.PLAYING) {
+                if (newplayerresponse[0].changeOwnerRoomCd > 0) {
+
+                    if (this.getChildByTag(TAG_TIME_COUNTDOWN) != null){
+                        this.removeChildByTag(TAG_TIME_COUNTDOWN);
+                    }
+
+                    var time_wait = newplayerresponse.changeOwnerRoomCd / 1000;
+                    // addCountDown(time_wait);
+                }
+            }
+
+        } else {
+            // this.showToast(newplayerresponse.message, 2);
+            if (getUserId() == common.ownerUserId) {
+                this.is_create_room = true;
+                this.btn_start_match.setVisible(this.is_create_room);
+            }
+        }
+
+
+    },
+    setListPlayerFromParams : function(player_list_dt, waiting_player_list_dt, cardRemainingCount, thisObj) {
+
+        if (lst_player.length > 0) lst_player.length = 0;
+
+        cc.log("player_list", player_list_dt);
+
+        for (i = 0; i < player_list_dt.length; i++) {
+            var player = convertFromBINPlayer(player_list_dt[i]);
+            lst_player.push(player);
+        }
+
+        for (i = 0; i < waiting_player_list_dt.length; i++) {
+            var playerWait = convertFromBINPlayer(waiting_player_list_dt[i]);
+            lst_waiting.push(playerWait);
+        }
+
+
+        if (is_create_room){
+            // this.btn_san_sang.setVisible(false);
+        }
+        else {
+            if (this.isUserPlaying()){
+                // showInvitePlayer(lst_player.length);
+                showInvitePlayer(player_list_dt.length);
+                // this.btn_san_sang.setVisible(false);
+            }
+            else {
+                showBtnWithWatingPlayer(false);
+            }
+        }
+
+        // if (cardRemainingCount != 0){
+        //     parseRemainCards(cardRemainingCount);
+        // }
+
+        this.showWaitingPlayerOnScene(lst_waiting);
+
+        //sap xep lai lst_player theo table_index
+        this.sortListPlayer(lst_player);
+
+        //hien thi avatar cua nhung nguoi join vao phong
+        this.displayInfoRemainCard(lst_player, thisObj);
+    },
+    readyToPlayResponseHandler : function(ready_to_play_response){
+        cc.log("ready_to_play_response", ready_to_play_response);
+        if (ready_to_play_response != 0){
+            if (ready_to_play_response.responseCode){
+                if (getUserId() == ready_to_play_response.readyUserId){
+                    this.btn_san_sang.setVisible(false);
+                    showBtnWithWatingPlayer(true);
+                }
+
+                var ready_player_id = ready_to_play_response.readyUserId;
+                var table_index = ready_to_play_response.tableIndex;
+                var player = findWaiting(ready_player_id);
+
+                // if (player != 0){
+                //     //day vao lst playing
+                //     var waiting_player = *player;
+                //     waiting_player.setTableIndex(table_index);
+                //     lst_player.push_back(waiting_player);
+                //
+                //     showInvitePlayer(lst_player.size());  //show moi choi
+                //
+                //     //remove avatar tren ban choi
+                //     resetDisplayAvatar();
+                //     //dat waiting player len ban choi
+                //     sortListPlayer();
+                //     displayInfoRemainCard(lst_player);
+                //
+                //     //neu so luong nguoi choi lon hon 2 thi hien thi btn startmatch
+                //     if (Common::getInstance().getUserId() == getOwnerUserId() && lst_player.size() >= 2){
+                //         btn_start_match.setVisible(true);
+                //         this.btn_doi_luat.setVisible(false);
+                //     }
+                //
+                //     //xoa khoi lst_waiting
+                //     deleteWaitingPlayer(waiting_player.getID());
+                //
+                //     //hien thi lai danh sach cho len giao dien
+                //     resetListWaiting();
+                //     showWaitingPlayerOnScene(lst_waiting);
+                // }
+                //
+                // //show doi chu phong
+                // if (this.getChildByTag(TAG_TIME_COUNTDOWN) == nullptr){
+                //     int time_wait = ready_to_play_response.countdowntimer() / 1000;
+                //     addCountDown(time_wait);
+                // }
+            }
+            else {
+                // this.showToast(ready_to_play_response.message().c_str(), 2);
+            }
+        }
+    },
     onclose:function (e) {
 
     },
     onerror:function (e) {
 
     }
+
 });
 
 var TLMienNamScene = cc.Scene.extend({
@@ -437,130 +887,13 @@ var TLMienNamScene = cc.Scene.extend({
     }
 });
 
-var setListPlayerFromParams = function(player_list, waiting_player_list, cardRemainingCount, thisObj) {
-
-    if (lst_player.length > 0) lst_player.length = 0;
-
-    for (i = 0; i < player_list.length; i++) {
-        var player = convertFromBINPlayer(player_list[i]);
-        lst_player.push(player);
-    }
-
-    for (i = 0; i < waiting_player_list.length; i++) {
-        var playerWait = convertFromBINPlayer(waiting_player_list[i]);
-        lst_waiting.push(playerWait);
-    }
-
-
-    if (is_create_room){
-        // this.btn_san_sang.setVisible(false);
-    }
-    else {
-        if (isUserPlaying()){
-            // showInvitePlayer(lst_player.length);
-            showInvitePlayer(player_list.length);
-            // this.btn_san_sang.setVisible(false);
-        }
-        else {
-            showBtnWithWatingPlayer(false);
-        }
-    }
-
-    // if (cardRemainingCount != 0){
-    //     parseRemainCards(cardRemainingCount);
-    // }
-
-    showWaitingPlayerOnScene(lst_waiting);
-
-    //sap xep lai lst_player theo table_index
-    sortListPlayer(lst_player);
-
-    //hien thi avatar cua nhung nguoi join vao phong
-    displayInfoRemainCard(lst_player, thisObj);
-}
-
-var startMatchResponseHandler = function(rs) {
-    if (rs != 0) {
-        var matchRunning = rs.responseCode;
-        if (matchRunning) {
-
-            if (this.getChildByTag(TAG_TIME_COUNTDOWN) != null){
-                this.removeChildByTag(TAG_TIME_COUNTDOWN);
-            }
-
-            // if (rs.has_countdowntimer() && rs.countdowntimer() >= 0) {
-            if (rs.countDownTimer >= 0) {
-                setMatchCountDownTime(rs.countDownTimer);
-            }
-
-            // if (rs.has_firstturnuserid()) {
-                setFirstTurnUserId(rs.firstTurnUserId);
-            // }
-
-            if (!isUserPlaying()){ //neu la nguoi cho khi bat dau game thi khong hien thi nut san sang
-                this.btn_san_sang.setVisible(false);
-            }
-
-            // for (i = 0; i < rs.args.length; i++) {
-            //     if (rs.args[i].key == "currentCards") {
-            //         var current_card_values = rs.args[i].value;
-            //         sortCard(current_card_values);
-            //
-            //         var avatar = findAvatarOfPlayer(getUserId());
-            //         if (avatar != 0){
-            //             var moveTo = MoveTo::create(0.2, avatar.getAvatarPostion(0, origin, visibleSize, btn_start_match.getHeight()));
-            //             avatar.runAction(moveTo);
-            //         }
-            //     } else {
-            //         //handle card remain count
-            //         var json = rs.args[i].value();
-            //         parseRemainCards(json);
-            //     }
-            // }
-            //
-            // if (this.isHiddenCardRemaining){
-            //     for (i = 0; i < avatars.length; i++){
-            //         if (avatars[i].getPlayerId() != getUserId()){
-            //             avatars[i].hideCardCover(false);
-            //         }
-            //     }
-            // }
-            //
-            // if (rs.has_message()) {
-            //     this.showToast(rs.message().c_str(), 2);
-            // }
-
-        } else {
-            // this.showToast(rs.message().c_str(), 2);
-        }
+var reloadEnterRoom = function(dt){
+    //neu co ket noi thi gui reload room
+    if (ws.readyState == ws.OPEN) {
+        getEnterRoomMessageFromServer(this.roomIndex, "");
     }
 }
 
-var isUserPlaying = function(){
-    var user_id = getUserId();
-    var player = findPlayer(user_id);
-    if (player != 0){
-        return true;
-    }
-    return false;
-}
-
-//tim nguoi choi
-var findPlayer = function(player_id){
-    var c_player_id = [50];
-
-    c_player_id = player_id;
-
-    var s_player_id = c_player_id;
-
-    for (i = 0; i < playerList.length; i++){
-        if (playerList[i].getID == s_player_id){
-            return playerList[i];
-        }
-    }
-
-    return null;
-}
 
 var createCards = function(posX){
     var cardx = cards[posX];
@@ -671,123 +1004,15 @@ var createCards = function(posX){
 //     }
 // }
 
-var readyToPlayResponseHandler = function(ready_to_play_response){
-
-    if (ready_to_play_response != 0){
-        if (ready_to_play_response.responseCode){
-            if (getUserId() == ready_to_play_response.readyUserId){
-                this.btn_san_sang.setVisible(false);
-                showBtnWithWatingPlayer(true);
-            }
-
-            var ready_player_id = ready_to_play_response.readyUserId;
-            var table_index = ready_to_play_response.tableIndex;
-            var player = findWaiting(ready_player_id);
-
-            // if (player != 0){
-            //     //day vao lst playing
-            //     var waiting_player = *player;
-            //     waiting_player.setTableIndex(table_index);
-            //     lst_player.push_back(waiting_player);
-            //
-            //     showInvitePlayer(lst_player.size());  //show moi choi
-            //
-            //     //remove avatar tren ban choi
-            //     resetDisplayAvatar();
-            //     //dat waiting player len ban choi
-            //     sortListPlayer();
-            //     displayInfoRemainCard(lst_player);
-            //
-            //     //neu so luong nguoi choi lon hon 2 thi hien thi btn startmatch
-            //     if (Common::getInstance().getUserId() == getOwnerUserId() && lst_player.size() >= 2){
-            //         btn_start_match.setVisible(true);
-            //         this.btn_doi_luat.setVisible(false);
-            //     }
-            //
-            //     //xoa khoi lst_waiting
-            //     deleteWaitingPlayer(waiting_player.getID());
-            //
-            //     //hien thi lai danh sach cho len giao dien
-            //     resetListWaiting();
-            //     showWaitingPlayerOnScene(lst_waiting);
-            // }
-            //
-            // //show doi chu phong
-            // if (this.getChildByTag(TAG_TIME_COUNTDOWN) == nullptr){
-            //     int time_wait = ready_to_play_response.countdowntimer() / 1000;
-            //     addCountDown(time_wait);
-            // }
-        }
-        else {
-            // this.showToast(ready_to_play_response.message().c_str(), 2);
-        }
-    }
-}
-
 var convertFromBINPlayer = function(binplayer) {
     var uid = binplayer.userId;
-
+    cc.log("binplayer", binplayer);
     var numberCard = 0;
     var player = TLMNPlayer.init(binplayer.displayName == null ? binplayer.userName : binplayer.displayName, uid.low, numberCard, binplayer.cash.low,
         binplayer.gold.low, 0, binplayer.tableIndex, binplayer.avatarId);
     return player;
 }
 
-//show danh sach nguoi cho
-var showWaitingPlayerOnScene = function(lstWaiting){
-    if (!lstWaiting.length){
-        lstDisplayWaitingPlayer.length = 0;
-
-        var size = lstWaiting.length;
-        var init_distance = 10;
-        var distance = init_distance;
-        for (i = 0; i < 3; i++){
-            if ((i + 1) > size){
-                break;
-            }
-            var waitingPlayer = new WaitingPlayer();
-            waitingPlayer.setAvatar(lstWaiting[i].getName, lstWaiting[i].getAvatarId);
-            waitingPlayer.setPositionAvatar(origin, distance);
-            distance += waitingPlayer.getAvatar().getWidth()*0.5 + init_distance;
-            lstDisplayWaitingPlayer.push(waitingPlayer);
-            this.addChild(waitingPlayer);
-        }
-    }
-}
-
-var sortListPlayer = function(lst_player) {
-    lst_player.sort(function(a, b) {
-        return parseFloat(a.tableIndex) - parseFloat(b.tableIndex);
-    });
-}
-
-var displayInfoRemainCard = function(remain_card_infos, thisObj) {
-    //find current index
-    var currentIndex = -1;
-    currentTableIndex = -1;
-
-    cc.log("remain_card_infos", remain_card_infos);
-
-    for (i = 0; i < remain_card_infos.length; i++)  {
-        var val;
-        val = remain_card_infos[i].id;
-        if (getUserId() == val) {
-            currentIndex = i;
-            currentTableIndex = remain_card_infos[i].tableIndex;
-            break;
-        }
-    }
-    //end find current index
-
-    cc.log("list player size: ", remain_card_infos.length);
-
-    //int index = currentIndex;
-    var len = remain_card_infos.length;
-
-    for (i = 0; i < len; i++) {
-        setPositionPlayer(remain_card_infos[i], i, thisObj);
-    }
-}
 
 // var parseRemainCards = function(json) {
 //     try {
@@ -832,80 +1057,6 @@ var displayInfoRemainCard = function(remain_card_infos, thisObj) {
 
 //set vi tri nguoi choi: indexPos . vi tri cua nguoi choi trong lst_player 
 //capacity_size . so nguoi choi toi da trong room
-var setPositionPlayer = function(player, indexPos, thisObj){
-
-    cc.log("player", player);
-
-    cc.log("currentTableIndex", currentTableIndex);
-
-    cc.log("player.tableIndex", player.tableIndex);
-
-    var position_index = 0;  //vi tri that cua nguoi choi
-    //tinh toan vi tri that cua nguoi choi
-    if (parseInt(player.tableIndex) >= parseInt(currentTableIndex)){
-        position_index = parseInt(player.tableIndex) - parseInt(currentTableIndex);
-        cc.log("position_index player.tableIndex >= currentTableInde", position_index);
-    }
-    else {
-        position_index = player.tableIndex - currentTableIndex + capacity_size;
-    }
-
-    if (position_index >= capacity_size){
-        position_index = 0;
-    }
-
-    if (position_index < 0){
-        position_index = 0;
-    }
-
-    if (common.zoneId == Common.TLMN_SOLO_ZONE) {
-        if(indexPos == 1) position_index = 2;
-    }
-
-    var avatar = new Avatar();
-
-    cc.log("avatar", avatar);
-
-    var _numberCard = player.numberCard;
-    var user_name = player.name;
-    var user_id = player.id;
-    var gold = player.gold;
-    var cash = player.cash;
-
-    //char buffer[20];
-    var buffer = cc.formatStr("%d", is_vip_room ? cash : gold);
-
-    //sprintf(buffer, "%lld $", is_vip_room ? cash : gold);
-
-    var image_index = player.tableIndex;
-
-    avatar.loadAvatar(image_index, user_id, user_name, buffer, roomIndex);
-    var pos = avatar.getAvatarPostion(position_index, origin, visibleSize, btn_message.getHeight());
-    if(position_index == 0){
-        pos = MVec2(width/2 - avatar.getContentSize().width/2,pos.y);
-    }
-    avatar.setPosition(pos);
-
-    var cardCoverWidth = cardWidth() * 0.8;
-cc.log("aaaaaaaaaaa", (avatar.getPlayerId()));
-    if(avatar.getPlayerId() == getUserId()){
-        cc.log("cardCoverWidth", cardCoverWidth);
-        avatar.loadCardCover(cardCoverWidth, position_index, _numberCard,true);
-        avatar.hideCardCover();
-    }else{
-        cc.log("cardCoverWidth 1", cardCoverWidth);
-        cc.log("position_index 1", position_index);
-        cc.log("_numberCard 1", _numberCard);
-        avatar.loadCardCover(cardCoverWidth, position_index, _numberCard);
-    }
-
-    avatar.setNumberCard(_numberCard);
-
-    avatars.push(avatar);
-
-    if (avatars[avatars.length -1].getParent() == null)
-        thisObj.addChild(avatars[avatars.length -1],INDEX_AVATAR);
-}
 
 var findIndexPlayer = function(lstPlayer, player){
 

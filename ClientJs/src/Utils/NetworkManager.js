@@ -132,10 +132,12 @@ var NetworkManager = {
 }
 
 var getInitializeMessageFromServer = function(cp, appversion , country, language, device_id, device_info, pakageName) {
+    cc.log("getInitializeMessageFromServer");
     var request = initInitializeMessage(cp, appversion, country, language, device_id, device_info, pakageName);
 
 
     requestMessage(request, getOS(), NetworkManager.INITIALIZE, "");
+
 
 }
 
@@ -168,8 +170,8 @@ var getLoginMessageFromServer = function(username, password)
 {
     var request = initLoginMessage(username, password);
 
-    requestMessage(request, getOS(), NetworkManager.LOGIN, "");
-
+    var reqMess = requestMessage(request, getOS(), NetworkManager.LOGIN, "");
+    return reqMess;
 }
 
 var initLoginMessage = function(username, password) {
@@ -780,14 +782,15 @@ var getEnterZoneMessageFromServer = function(zoneId) {
         zoneId : zoneId
     }).encode();
 
-    requestMessage(request, getOS(),NetworkManager.ENTER_ZONE, getSessionId());
-
+    var reqMess = requestMessage(request, getOS(),NetworkManager.ENTER_ZONE, getSessionId());
+    return reqMess;
 }
 
 var getExitZoneMessageFromServer = function(zoneId) {
     var request = initExitZoneMessage(zoneId);
-    requestMessage(request, getOS(),
+    var reqMess = requestMessage(request, getOS(),
         NetworkManager.EXIT_ZONE, getSessionId());
+    return reqMess;
 }
 
 var initExitZoneMessage = function(zoneId) {
@@ -805,7 +808,8 @@ var initExitZoneMessage = function(zoneId) {
 
 var getFilterRoomMessageFromServer = function(zone_id, roomType, first_result, max_result, orderByField, asc) {
     var request = initFilterRoomMessage(zone_id, roomType, first_result, max_result, orderByField, asc);
-    requestMessage(request, getOS(), NetworkManager.FILTER_ROOM, getSessionId());
+    var reqMess = requestMessage(request, getOS(), NetworkManager.FILTER_ROOM, getSessionId());
+    return reqMess;
 }
 
 var initFilterRoomMessage = function(zone_id, roomType, first_result, max_result, orderByField, asc) {
@@ -844,7 +848,8 @@ var initUserStatusRequest = function(type){
 var getEnterRoomMessageFromServer = function(room_index, password) {
     cc.log("getEnterRoomMessageFromServer");
     var request = initEnterRoomMessage(room_index, password);
-    requestMessage(request, getOS(), NetworkManager.ENTER_ROOM, getSessionId());
+    var reqMess = requestMessage(request, getOS(), NetworkManager.ENTER_ROOM, getSessionId());
+    return reqMess;
 }
 
 var initEnterRoomMessage = function(room_index, password) {
@@ -876,6 +881,7 @@ var initStartMatchMessage = function(room_index) {
 }
 
 var getReadyToPlayMessageFromServer = function(roomIndex, tableIndex){
+    cc.log("getReadyToPlayMessageFromServer");
     var request = initReadyMessage(roomIndex, tableIndex);
 
     requestMessage(request, getOS(), NetworkManager.READY_TO_PLAY, getSessionId());

@@ -3,7 +3,7 @@
  */
 var TLMNPlayer = ({
 
-    init:function (n, i, c, g, h, number, pos, tableIndex)
+    init:function (n, i, c, g, h, number, tableIndex, pos)
     {
         var setData = {
             name : n,
@@ -12,8 +12,8 @@ var TLMNPlayer = ({
             gold : g,
             avatar_id : h,
             numberCard : number,
-            postion : pos,
-            tableIndex : tableIndex
+            tableIndex : tableIndex,
+            postion : pos
         };
 
         return setData;

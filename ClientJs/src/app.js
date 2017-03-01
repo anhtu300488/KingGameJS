@@ -2,6 +2,12 @@ var listMessages = [];
 
 var listRoomPlay = [];
 
+var player_list = [];
+var waiting_player_list = [];
+
+var lst_player = [];
+var lst_waiting = [];
+
 var HelloWorldLayer = cc.Layer.extend({
     sprite:null,
     ctor:function () {

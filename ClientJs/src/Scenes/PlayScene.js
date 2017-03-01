@@ -6,7 +6,7 @@ var btnInvitePlay = new ccui.Button();
 var passwordRequired = false;
 var is_create_room = false;
 var is_vip_room = false;
-var roomIndex;
+// var roomIndex;
 var padding = 10;
 var btn_message = new ccui.Button();
 var btn_caidat =   new ccui.Button();
@@ -88,13 +88,28 @@ var isVipRoom = function(){
 var PlayLayer = cc.Layer.extend({
     ctor: function() {
         this._super();
+
         this.init();
 
     },
     init:function () {
         this._super();
 
+        if (!baseSceneConnect.init()) {
+            return false;
+        }
 
+        common.gameState = GAME_STATE.IN_GAME;
+
+        // this.initMenu();
+
+        ws.onmessage = this.ongamestatus.bind(this);
+
+        this.scheduleUpdate();
+
+        return true;
+    },
+    initMenu: function(){
         var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
 
         var spriteWidth = spriteBG.getContentSize().width;
@@ -152,7 +167,7 @@ var PlayLayer = cc.Layer.extend({
             lb_value_minbet.getPositionY());
         this.addChild(lb_title_room);
 
-        var lb_value_room = MLabel.create(roomIndex + 1, btnKhoa.getHeight() * 0.25, cc.color.WHITE);
+        var lb_value_room = MLabel.create(this.roomIndex + 1, btnKhoa.getHeight() * 0.25, cc.color.WHITE);
         lb_value_room.setAnchorPoint(cc.p(0,1));
         lb_value_room.setPosition(lb_title_room.getPositionX() + lb_title_room.getWidth() + 2, lb_value_minbet.getPositionY());
         this.addChild(lb_value_room);
@@ -187,19 +202,14 @@ var PlayLayer = cc.Layer.extend({
         this.addChild(btn_message);
         this.addChild(btn_purcharse);
         this.addChild(btn_caidat);
-
-        ws.onmessage = this.ongamestatus.bind(this);
-
-        return true;
     },
     ongamestatus: function(e) {
         cc.log("data 1", e);
         if(e.data!==null || e.data !== 'undefined')
         {
-            parseFrom(e.data, e.data.byteLength);
-            cc.log("listMessages", listMessages);
-            while(listMessages.length > 0) {
-                var buffer = listMessages.shift();
+            var lstMess = parseFrom(e.data, e.data.byteLength);
+            while(lstMess.length > 0) {
+                var buffer = lstMess.shift();
                 this.playSceneHandleMessage(buffer);
             }
         }
@@ -213,10 +223,10 @@ var PlayLayer = cc.Layer.extend({
                     cc.log("m_popupTLMN");
                 {
                     if (!check_exit_room) {
-                        getExitRoomMessageFromServer(roomIndex);
+                        getExitRoomMessageFromServer(this.roomIndex);
                         pSender.loadTextureNormal("res/btn_back_out.png");
                     }else {
-                        getCancelExitRoomMessageFromServer(roomIndex);
+                        getCancelExitRoomMessageFromServer(this.roomIndex);
                         pSender.loadTextureNormal("res/btn_back_tlmn.png");
                     }
                     check_exit_room = !check_exit_room;
@@ -299,13 +309,214 @@ var PlayLayer = cc.Layer.extend({
         switch (buffer.message_id) {
             case NetworkManager.EXIT_ROOM:
                 var msg = buffer.response;
-                exitRoomResponseHandler(msg);
+                this.exitRoomResponseHandler(msg);
                 break;
             case NetworkManager.CANCEL_EXIT_ROOM:
                 var msg = buffer.response;
-                cancelExitRoomResponseHandler(msg);
+                this.cancelExitRoomResponseHandler(msg);
                 break;
         }
+    },
+    onExit: function(){
+        baseSceneConnect.onExit();
+    },
+    update: function(dt){
+        baseSceneConnect.update(dt);
+
+        // if(Common::getInstance()->getJarStatus()) {
+        //     delta_time_jar += delta;
+        //     if (delta_time_jar >= 6.0) {
+        //         if (!isBreakjar)  {
+        //             isRequestJar = false;
+        //             requestJar(delta);
+        //             delta_time_jar = 0.0;
+        //         }
+        //     }
+        //     jarResponseHandler();
+        //     getCountDownResponseHandler();
+        // }
+
+        // this.getEnterZoneResponse();
+
+        // getHeadLineResponse();  //thong bao trong sanh game
+        //
+        // /*
+        //  chat
+        //  */
+        // chatResponseHandler();
+        //
+        // //lock phong
+        // lockRoomResponseHandler();
+
+        if(listMessages.length > 0) {
+            for (i = 0; i < listMessages.length; i++) {
+                if (listMessages[i].message_id == NetworkManager.EXIT_ROOM) {
+                    initialMessage = listMessages[i].response;
+
+                    this.exitRoomResponseHandler(initialMessage);
+                    listMessages.splice(i, 1);
+                }
+            }
+        }
+
+
+
+        // //user info
+        // viewUserInfoFromServer();
+        //
+        // textEmoticonResponseHandler();
+        //
+        // //message chap nhan loi moi vao phong
+        // replyToInviteResponse();
+        //
+        // //message nap the
+        // //getCapchaMessageResponse();
+    },
+    exitRoomResponseHandler : function(exit_room_response) {
+        if (exit_room_response != 0) {
+            cc.log("exit_room_response", exit_room_response);
+            // if (exit_room_response.responseCode && exit_room_response.exitAfterMatchEnd) {
+            if (exit_room_response.responseCode) {
+                // if (!exit_room_response.exitAfterMatchEnd) {
+                cc.log("exit_room_response.exitAfterMatchEnd", exit_room_response.exitAfterMatchEnd);
+                var enter_room_response = 0; //xoa bien luu trang thai dang choi khi nguoi choi join lai ban choi
+                var default_room_type = common.requestRoomType != -1 ? common.requestRoomType : ROOM_TYPE.XU;
+                cc.log("default_room_type", default_room_type);
+                // onHideNotify();  //an thong bao di
+
+                var showtable = new SceneTable(common.displayRoomList, default_room_type, exit_room_response.notEnoughMoney,
+                    exit_room_response.message ? exit_room_response.message : "");
+                cc.director.runScene(showtable);
+                // }else{
+                //     // showToast(TXT_REGISTER_EXITROOM, 2);
+                // }
+            }
+            else {
+                // this.showToast(exit_room_response.message().c_str(), 2);
+            }
+        }
+    },
+    getEnterZoneResponse: function(enter_zone_response){
+
+        if (enter_zone_response != 0) { //found
+            if (enter_zone_response.responseCode) {
+                common.requestRoomType = enter_zone_response.defaultRoomTypeLoad;
+
+                if (enter_zone_response.enableDisplayRoomList) {
+                    /*
+                     Sau này xử lý phần người chơi click vào một mức cược cụ thể không cần hiển thị danh sách phòng chơi
+                     */
+                    var cashRoomList = [];
+                    var goldRoomList = [];
+                    if (enter_zone_response.cashRoomConfigs.length > 0) {
+                        for (i = 0; i < enter_zone_response.cashRoomConfigs.length; i++) {
+                            cashRoomList.push(enter_zone_response.cashRoomConfigs[i]);
+                        }
+                    }
+                    if (enter_zone_response.goldRoomConfigs.length > 0) {
+                        for (i = 0; i < enter_zone_response.goldRoomConfigs.length; i++) {
+                            goldRoomList.push(enter_zone_response.goldRoomConfigs[i]);
+                        }
+                    }
+                    // setGoldRoomList(goldRoomList);
+                    // setCashRoomList(cashRoomList);
+                    common.goldRoomList = goldRoomList;
+                    common.cashRoomList = cashRoomList;
+
+                    var showtable = SceneTable(common.displayRoomList, false, "");
+                    cc.director.runScene(showtable);
+                }
+            }
+        }
+    }
+    // setPositionPlayer: function(player){
+    //     auto btn_danh_bai = MButton::create(BTN_GREEN);
+    //
+    //     int position_index;  //vi tri that cua nguoi choi
+    //     //tinh toan vi tri that cua nguoi choi
+    //     if (player.getTableIndex() >= currentTableIndex){
+    //         position_index = player.getTableIndex() - currentTableIndex;
+    //     }
+    //     else {
+    //         position_index = player.getTableIndex() - currentTableIndex + capacity_size;
+    //     }
+    //
+    //     if (position_index >= capacity_size){
+    //         position_index = 0;
+    //     }
+    //
+    //     auto avatar = Avatar::create();
+    //
+    //     // int _numberCard = player.getNumberCard();
+    //     string user_name = player.getName();
+    //     string user_id = player.getID();
+    //     long long gold = player.getGold();
+    //     long long cash = player.getCash();
+    //
+    //     //char buffer[20];
+    //     //sprintf(buffer, "%lld $", is_vip_room ? cash : gold);
+    //
+    //     std::string buffer = StringUtils::format("%lld $", is_vip_room ? cash : gold);
+    //     int image_index = player.getAvatarId();
+    //
+    //     avatar->loadAvatar(image_index, user_id, user_name, buffer, roomIndex);
+    //     auto pos = avatar->getAvatarPostion(position_index, origin, visibleSize, btn_danh_bai->getHeight());
+    //     if(position_index == 0){
+    //         pos = MVec2(width/2 - avatar->getContentSize().width/2,avatar->getPosition().y);
+    //     }
+    //     avatar->setPosition(pos);
+    //
+    //     double cardCoverWidth = cardWidth() * 0.8f;
+    //     avatar->loadCardCover(cardCoverWidth, position_index, 0);
+    //     if (position_index == 0) {
+    //         //if (indexPos == currentIndex) {
+    //         avatar->hideCardCover();
+    //     }
+    //
+    //     avatar->setNumberCard(0);
+    //
+    //     avatars.push_back(avatar);
+    //
+    //     if (avatar->getParent() == nullptr)
+    //         this->addChild(avatar);
+    // },
+    // resetListWaiting: function(){
+    //     for (size_t i = 0; i < lstDisplayWaitingPlayer.size(); i++)
+    //     {
+    //         if (lstDisplayWaitingPlayer[i]->getParent() != nullptr){
+    //             lstDisplayWaitingPlayer[i]->removeFromParentAndCleanup(true);
+    //         }
+    //     }
+    //     lstDisplayWaitingPlayer.clear();
+    // },
+    // addCountDown: function(countDown,start){
+    //     auto background_countDown = MSprite::create("background_text_countdown.png");
+    //     background_countDown->setPosition(MVec2(width/2+background_countDown->getWidth()*0.2f,
+    //     height/2 - background_countDown->getHeight()/2));
+    //     background_countDown->setTag(TAG_TIME_COUNTDOWN);
+    //     this->addChild(background_countDown);
+    //
+    //     string bg = !start ? "text_chuphongsedoisau.png" : "text_vanchoisebatdausau.png";
+    //     auto background_countDownLeft = MSprite::create(bg);
+    //     background_countDownLeft->setPosition(Vec2(- background_countDownLeft->getWidth(),
+    //         background_countDown->getHeight()/2 - background_countDownLeft->getHeight()/2));
+    //     background_countDown->addChild(background_countDownLeft);
+    //
+    //     auto timerCountDown = MLabel::createCountDown(countDown);
+    //     timerCountDown->setPosition(Vec2(background_countDown->getWidth()/2,background_countDown->getHeight()/2));
+    //     background_countDown->addChild(timerCountDown);
+    //
+    //     background_countDown->runAction(Sequence::create(DelayTime::create(countDown),RemoveSelf::create(), NULL));
+    // }
+
+
+});
+
+var PlayScene = cc.Scene.extend({
+    onEnter:function () {
+        this._super();
+        var layer = new PlayLayer();
+        this.addChild(layer);
     }
 });
 
@@ -319,30 +530,6 @@ var findAvatarOfPlayer = function(player_id) {
     return null;
 }
 
-var exitRoomResponseHandler = function(exit_room_response) {
-    if (exit_room_response != 0) {
-        cc.log("exit_room_response", exit_room_response);
-        // if (exit_room_response.responseCode && exit_room_response.exitAfterMatchEnd) {
-        if (exit_room_response.responseCode) {
-            // if (!exit_room_response.exitAfterMatchEnd) {
-                cc.log("exit_room_response.exitAfterMatchEnd", exit_room_response.exitAfterMatchEnd);
-                var enter_room_response = 0; //xoa bien luu trang thai dang choi khi nguoi choi join lai ban choi
-                var default_room_type = common.requestRoomType != -1 ? common.requestRoomType : ROOM_TYPE.XU;
-                cc.log("default_room_type", default_room_type);
-                // onHideNotify();  //an thong bao di
-
-                var showtable = new SceneTable(isDisplayRoomList(), default_room_type, exit_room_response.notEnoughMoney,
-                    exit_room_response.message ? exit_room_response.message : "");
-                cc.director.runScene(showtable);
-            // }else{
-            //     // showToast(TXT_REGISTER_EXITROOM, 2);
-            // }
-        }
-        else {
-            // this.showToast(exit_room_response.message().c_str(), 2);
-        }
-    }
-}
 
 //an cac nut moi choi va chat doi voi nguoi cho
 var showBtnWithWatingPlayer = function(isShow){
@@ -384,4 +571,5 @@ var addCountDown = function(countDown,start){
     background_countDown.runAction(cc.Sequence(cc.delayTime(countDown),cc.RemoveSelf(), null));
 }
 
+var playScene = new PlayLayer();
 

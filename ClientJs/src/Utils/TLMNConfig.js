@@ -23,9 +23,9 @@ var PATH = "bigken";
 // var url = "ws://"+SERVER_NAME+":"+SERVER_PORT+"/"+PATH;
 var url = "ws://192.168.100.250:1280/bigken";
 ws = new WebSocket(url);
-// setTimeout(bindEvents, 1000);
 
 ws.binaryType = "arraybuffer";
+
 
 // cc.log("ws = ", ws);
 // ws.onopen = function() {
@@ -39,17 +39,331 @@ ws.binaryType = "arraybuffer";
 //     setTimeout(function(){sendData()}, 120);
 // };
 
-function connect() {
-    ws = new WebSocket('ws://192.168.100.250:1280/bigken');
-    ws.binaryType = "arraybuffer";
-    setTimeout(bindEvents, 1000);
-}
-
-function bindEvents() {
-    ws.onopen = function() {
-        log('onopen called');
-    };
-}
+// function connect() {
+//     ws = new WebSocket(url);
+//     ws.binaryType = "arraybuffer";
+//     ws.onopen = function(evt) { onOpen(evt) };
+//     ws.onclose = function(evt) { onClose(evt) };
+//     ws.onmessage = function(evt) { onMessage(evt) };
+//     ws.onerror = function(evt) { onError(evt) };
+// }
+//
+// function onOpen(evt)
+// {
+//     cc.log("CONNECTED");
+//     doSend(evt);
+// }
+//
+// function onClose(evt)
+// {
+//     cc.log("DISCONNECTED");
+// }
+//
+// function onMessage(evt)
+// {
+//     cc.log("evt.data = ", evt);
+//
+//     if(evt.data!==null || evt.data !== 'undefined')
+//     {
+//         var lstMess = parseFrom(evt.data, evt.data.byteLength);
+//         cc.log("lstMess", lstMess);
+//         while(lstMess.length > 0) {
+//             var buffer = lstMess.shift();
+//             handleMessage(buffer);
+//         }
+//
+//     }
+//     // ws.close();
+// }
+//
+// function onError(evt)
+// {
+//     cc.log('ERROR:' + evt.data);
+// }
+//
+// function doSend(message)
+// {
+//     cc.log("SENT: " + message);
+//     ws.send(message);
+// }
+//
+// var handleMessage = function(e) {
+//     var buffer = e;
+//     cc.log("buffer = ", buffer);
+//     switch (buffer.message_id) {
+//         case NetworkManager.INITIALIZE:
+//             var msg = buffer.response;
+//             initialMessageResponseHandler(msg);
+//             break;
+//         case NetworkManager.LOGIN:
+//             var msg = buffer.response;
+//             loginResponseHandler(msg);
+//             break;
+//         case NetworkManager.ENTER_ZONE:
+//             var msg = buffer.response;
+//             enterZoneResponseHandler(msg);
+//             break;
+//         case NetworkManager.EXIT_ZONE:
+//             cc.log("EXIT_ZONE");
+//             var msg = buffer.response;
+//             exitZoneResponseHandler(msg);
+//             break;
+//         case NetworkManager.FILTER_ROOM:
+//             cc.log("FILTER_ROOM");
+//             var msg = buffer.response;
+//             filterRoomResponseHandler(msg);
+//             break;
+//         case NetworkManager.USER_STATUS:
+//             cc.log("USER_STATUS");
+//             var msg = buffer.response;
+//             userStatusResponseHandler(msg);
+//             break;
+//         case NetworkManager.ENTER_ROOM:
+//             cc.log("ENTER_ROOM");
+//             var msg = buffer.response;
+//             enterRoomResponseHandler(msg);
+//             break;
+//         case NetworkManager.PLAYER_ENTER_ROOM:
+//             cc.log("PLAYER_ENTER_ROOM");
+//             var msg = buffer.response;
+//             playerEnterRoomResponseHandler(msg);
+//             break;
+//     }
+// }
+//
+// var loginResponseHandler = function(loginresponse) {
+//     // if(listMessages.length > 0){
+//     //     for(i = 0; i < listMessages.length; i++){
+//     //         if(listMessages[i].message_id == NetworkManager.LOGIN) {
+//     //
+//     //             loginresponse = listMessages[i].response;
+//     cc.log("loginresponse", loginresponse);
+//     if (loginresponse != 0) {
+//         if (loginresponse.responseCode) {
+//             // if (loginType == FB_LOGIN)
+//             //     tryLoginFacebook = false;
+//             var session_id = loginresponse.sessionId;
+//
+//             cc.sys.localStorage.setItem(Common.KEY_SESSION_ID,
+//                 loginresponse.sessionId);
+//             // setSessionId(session_id);
+//
+//             cc.sys.localStorage.setItem(Common.KEY_USER_ID,
+//                 loginresponse.userInfo.userId.low);
+//
+//
+//             // setHasPlayingMatch(loginresponse.hasPlayingMatch);
+//             common.hasPlayingMatch = loginresponse.hasPlayingMatch;
+//             if (loginresponse.userInfo) {
+//                 saveUserInfo(loginresponse.userInfo);
+//             }
+//
+//             if (loginresponse.userSetting) {
+//                 saveUserSetting(loginresponse.userSetting);
+//             }
+//
+//             // if (!isHasPlayingMatch()) {
+//             if (!common.hasPlayingMatch) {
+//                 // setPrefString(USER_NAME, edit_user->getText());
+//                 // setPrefString(USER_PASSWORD, edit_matkhau->getText());
+//                 var showgame = new ShowGameScene();
+//                 cc.director.runScene(showgame);
+//             }
+//         }
+//         else {
+//             // if (loginType == FB_LOGIN) {
+//             //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ACCESS_TOKEN);
+//             //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_ID);
+//             //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_FIRST_NAME);
+//             //     cocos2d::UserDefault::getInstance()->deleteValueForKey(FB_LAST_NAME);
+//             //     if (tryLoginFacebook) {
+//             //         PopupMessageBox* popupMessage = new PopupMessageBox();
+//             //         popupMessage->showPopup(loginresponse->message().c_str());
+//             //     }
+//             //     else {
+//             //         tryLoginFacebook = true;
+//             //         Common::getInstance()->loginFacebook();
+//             //     }
+//             //     return;
+//             // }
+//             //
+//             // PopupMessageBox* popupMessage = new PopupMessageBox();
+//             // popupMessage->showPopup(loginresponse->message().c_str());
+//         }
+//         // // Code kill room index
+//         // if (Common::getInstance()->getUserName() == "sanglx") {
+//         //     NetworkManager::getInstance()->getKillRoomMessageFromServer(4, 10);
+//         // }
+//     }
+//     //         }
+//     //     }
+//     //
+//     // }
+//
+// }
+//
+// var enterZoneResponseHandler = function (enterZoneResponse) {
+//     //handle login
+//     // if(listMessages.length > 0) {
+//     //     for (i = 0; i < listMessages.length; i++) {
+//     //         if (listMessages[i].message_id == NetworkManager.ENTER_ZONE) {
+//     //
+//     //             enterZoneResponse = listMessages[i].response;
+//     if (enterZoneResponse != 0) { //found
+//         if (enterZoneResponse.responseCode) {
+//
+//             // setRequestRoomType(enterZoneResponse.defaultRoomTypeLoad);
+//             common.requestRoomType = enterZoneResponse.defaultRoomTypeLoad;
+//
+//             if (enterZoneResponse.enableDisplayRoomList) {
+//                 /*
+//                  Sau này xử lý phần người chơi click vào một mức cược cụ thể không cần hiển thị danh sách phòng chơi
+//                  */
+//                 var cashRoomList = [];
+//                 var goldRoomList = [];
+//                 if (enterZoneResponse.cashRoomConfigs.length > 0) {
+//                     for (i = 0; i < enterZoneResponse.cashRoomConfigs.length; i++) {
+//                         cashRoomList.push(enterZoneResponse.cashRoomConfigs[i]);
+//                     }
+//                 }
+//                 if (enterZoneResponse.goldRoomConfigs.length > 0) {
+//                     for (i = 0; i < enterZoneResponse.goldRoomConfigs.length; i++) {
+//                         goldRoomList.push(enterZoneResponse.goldRoomConfigs[i]);
+//                     }
+//                 }
+//                 // setGoldRoomList(goldRoomList);
+//                 // setCashRoomList(cashRoomList);
+//                 common.goldRoomList = goldRoomList;
+//                 common.cashRoomList = cashRoomList;
+//             }
+//
+//             var zoneId = common.zoneId;
+//             if (zoneId == Common.TAMXINGAU_ZONE){
+//                 cc.log("tam_xi_ngau");
+//                 // var tam_xi_ngau = TamXiNgau::create(this);
+//                 // tam_xi_ngau.setPosition(MVec2(0, 0));
+//                 // this.addChild(tam_xi_ngau);
+//             }
+//             else if (zoneId == Common.WHEEL_ZONE) {
+//                 cc.log("WHEEL_ZONE");
+//                 // auto node = VongQuayMayMan::create(this);
+//                 // node.setPosition(MVec2(0, 0));
+//                 // this.addChild(node, INDEX_POPUP);
+//             }
+//             else if (zoneId == Common.MINIPOKER_ZONE) {
+//                 cc.log("MINIPOKER_ZONE");
+//                 // auto node = MiniPoker::create(this);
+//                 // node.setPosition(MVec2(0, 0));
+//                 // this.addChild(node, INDEX_POPUP);
+//             }
+//             // else if (zoneId == Common.MINITHREECARDS_ZONE) {
+//             //     cc.log("MINITHREECARDS_ZONE");
+//             //     // auto node = MiniThreeCards::create(this);
+//             //     // node.setPosition(MVec2(0, 0));
+//             //     // this.addChild(node, INDEX_POPUP);
+//             // }
+//             else {
+//                 // notify.onHideNotify();
+//                 // this.unscheduleUpdate();
+//                 var scenetable = new SceneTable(enterZoneResponse.enableDisplayRoomList, enterZoneResponse.defaultRoomTypeLoad);
+//                 cc.director.runScene(scenetable);
+//             }
+//             //    return;
+//         } else {
+//             cc.log("MINIPOKER_ZONE");
+//             // setRequestRoomType(-1);
+//             // setZoneId(-1);  //reset zone id
+//             common.requestRoomType = -1;
+//             common.zoneId = -1;  //reset zone id
+//             // showToast(enter_zone_response.message().c_str(), 2);
+//         }
+//     }
+//     //         }
+//     //     }
+//     // }
+//
+//
+// }
+//
+// var exitZoneResponseHandler = function (exitZoneResponse) {
+//     // var objThis = this;
+//     // if(listMessages.length > 0) {
+//     //     for (i = 0; i < listMessages.length; i++) {
+//     //         if (listMessages[i].message_id == NetworkManager.EXIT_ZONE) {
+//     //
+//     //             exitZoneResponse = listMessages[i].response;
+//     if (exitZoneResponse != 0) {
+//         if (exitZoneResponse.responseCode) {
+//             cc.log("exit");
+//             // setZoneId(-1);
+//             common.zoneId = -1;
+//             // notify.onHideNotify();
+//             // objThis.unscheduleUpdate();
+//             // listMessages.length = 0;
+//             var scene = new ShowGameScene();
+//             cc.director.runScene(scene);
+//
+//         }
+//     }
+//
+//     // objThis.unscheduleUpdate();
+//     //         }
+//     //     }
+//     // }
+//
+//
+//
+// }
+//
+// var filterRoomResponseHandler = function (filterRoomResponse) {
+//     // if(listMessages.length > 0) {
+//     //     for (i = 0; i < listMessages.length; i++) {
+//     //         if (listMessages[i].message_id == NetworkManager.FILTER_ROOM) {
+//     //
+//     //             filterRoomResponse = listMessages[i].response;
+//     if (filterRoomResponse != 0 && filterRoomResponse.responseCode) {
+//         if (filterRoomResponse.roomPlays.length > 0) {
+//             language.current = filterRoomResponse.roomPlays;
+//             // setListRoomPlay(filterRoomResponse.roomPlays);
+//         }
+//     }
+//     //         }
+//     //     }
+//     // }
+//
+//
+// }
+//
+// var userStatusResponseHandler = function (userStatusResponse) {
+//     // if(listMessages.length > 0) {
+//     //     for (i = 0; i < listMessages.length; i++) {
+//     //         if (listMessages[i].message_id == NetworkManager.USER_STATUS) {
+//     //
+//     //             userStatusResponse = listMessages[i].response;
+//     if (userStatusResponse != 0) {
+//         if (userStatusResponse.responseCode){
+//             totalNewMail = userStatusResponse.unreadMailCount;
+//
+//             if (totalNewMail > 0){
+//                 var str_total_mail = totalNewMail > 9 ? "9+" : totalNewMail;
+//                 label_number_new_mail.setString(str_total_mail);
+//                 sprite_new_mail.setVisible(true);
+//             }
+//             else {
+//                 sprite_new_mail.setVisible(false);
+//             }
+//         }
+//         // if (userStatusResponse.has_message()){
+//         //     PopupMessageBox* popup = new PopupMessageBox();
+//         //     popup.showPopup(user_status_response.message());
+//         // }
+//     }
+//     //         }
+//     //     }
+//     // }
+//
+//
+// }
 
 
 var LOGIN_STATE = {
@@ -65,9 +379,9 @@ var ROOM_TYPE = {
 };
 
 var PlayerState = {
-    NOT_IN_ROOM: 1,
+    NOT_IN_ROOM: 2,
     PLAYING: 3,
-    WAITING: 2
+    WAITING: 1
 };
 
 var USER_STATUS_CONFIG = {

@@ -10,9 +10,14 @@ var LoginLayer = cc.Layer.extend({
 
         this.init();
 
+        return true;
     },
     init:function(){
         this._super();
+
+        if (!baseSceneConnect.init()) {
+            return false;
+        }
 
         common.gameState = GAME_STATE.LOGIN_SCENE;
 
@@ -151,10 +156,12 @@ var LoginLayer = cc.Layer.extend({
 
         ws.onmessage = this.loginongamestatus.bind(this);
 
-        this.scheduleUpdate();
+        // this.scheduleUpdate();
 
-        return true;
+    },
 
+    onExit:function () {
+        baseSceneConnect.onExit();
     },
     menuCallBack: function(sender, type)
     {
@@ -300,11 +307,11 @@ var LoginLayer = cc.Layer.extend({
                             // setHasPlayingMatch(loginresponse.hasPlayingMatch);
                             common.hasPlayingMatch = loginresponse.hasPlayingMatch;
                             if (loginresponse.userInfo) {
-                                saveUserInfo(loginresponse.userInfo);
+                                this.saveUserInfo(loginresponse.userInfo);
                             }
 
                             if (loginresponse.userSetting) {
-                                saveUserSetting(loginresponse.userSetting);
+                                this.saveUserSetting(loginresponse.userSetting);
                             }
 
                             // if (!isHasPlayingMatch()) {
@@ -347,7 +354,7 @@ var LoginLayer = cc.Layer.extend({
 
     },
     update: function(delta){
-        // BaseScene::update(delta);
+        baseSceneConnect.update(delta);
         //handle login
         // if(oneTouch == true){
         //     countDownTouch+=delta;
@@ -364,7 +371,7 @@ var LoginLayer = cc.Layer.extend({
                     loginresponse = listMessages[i].response;
 
                     this.loginResponseHandler(loginresponse);
-
+                    listMessages.splice(i, 1);
                 }
             }
         }
@@ -372,6 +379,67 @@ var LoginLayer = cc.Layer.extend({
 
         // this.enterRoomResponseHandler();
         // this.resetPasswordResponseHandler();
+    },
+    saveUserInfo : function(userInfo) {
+        // setUserName(userInfo.userName);
+        common.userName = userInfo.userName;
+        if (userInfo.displayName) {
+            // setDisplayName(userInfo.displayName);
+            common.displayName = userInfo.displayName;
+        }
+
+        if (userInfo.level) {
+            // setLevel(userInfo.level);
+            common.level = userInfo.level;
+        }
+
+        if (userInfo.cash) {
+            // setCash(userInfo.cash.low);
+            common.cash = userInfo.cash.low;
+        }
+
+        if (userInfo.gold) {
+            // setGold(userInfo.gold.low);
+            common.gold = userInfo.gold.low;
+        }
+
+        if (userInfo.avatarId) {
+            // setAvatarId(userInfo.avatarId);
+            common.avatarId = userInfo.avatarId;
+        }
+
+        if (userInfo.mobile){
+            // setPhoneNunber(userInfo.mobile);
+            common.phoneNumber = userInfo.mobile;
+        }
+
+        if (userInfo.accountVerified){
+            // setAccountVerify(userInfo.accountVerified);
+            common.accountVerify = userInfo.accountVerified;
+        }
+
+        if (userInfo.disableCashTransaction){
+            // setDisableCashTransaction(userInfo.disableCashTransaction);
+            common.disableCashTransaction = userInfo.disableCashTransaction;
+        }
+
+        if (userInfo.securityKeySet){
+            // setSecurityKeySeted(userInfo.securityKeySet);
+            common.securityKeySeted = userInfo.securityKeySet;
+        }
+    },
+    saveUserSetting : function(userSetting) {
+        if (userSetting.autoReady) {
+            // setAutoReady(userSetting.autoReady);
+            common.autoReady = userSetting.autoReady;
+            setPrefs(pref.AUTOREADY, userSetting.autoReady);
+        }
+
+        if (userSetting.autoDenyInvitation) {
+            // setAutoDenyInvitation(userSetting.autoDenyInvitation);
+            common.autoDenyInvitation = userSetting.autoDenyInvitation;
+            setPrefs(pref.DENY_INVITES, userSetting.autoDenyInvitation);
+        }
     }
 });
 
@@ -382,67 +450,3 @@ var LoginScene = cc.Scene.extend({
         this.addChild(layer);
     }
 });
-
-
-var saveUserInfo = function(userInfo) {
-    // setUserName(userInfo.userName);
-    common.userName = userInfo.userName;
-    if (userInfo.displayName) {
-        // setDisplayName(userInfo.displayName);
-        common.displayName = userInfo.displayName;
-    }
-
-    if (userInfo.level) {
-        // setLevel(userInfo.level);
-        common.level = userInfo.level;
-    }
-
-    if (userInfo.cash) {
-        // setCash(userInfo.cash.low);
-        common.cash = userInfo.cash.low;
-    }
-
-    if (userInfo.gold) {
-        // setGold(userInfo.gold.low);
-        common.gold = userInfo.gold.low;
-    }
-
-    if (userInfo.avatarId) {
-        // setAvatarId(userInfo.avatarId);
-        common.avatarId = userInfo.avatarId;
-    }
-
-    if (userInfo.mobile){
-        // setPhoneNunber(userInfo.mobile);
-        common.phoneNumber = userInfo.mobile;
-    }
-
-    if (userInfo.accountVerified){
-        // setAccountVerify(userInfo.accountVerified);
-        common.accountVerify = userInfo.accountVerified;
-    }
-
-    if (userInfo.disableCashTransaction){
-        // setDisableCashTransaction(userInfo.disableCashTransaction);
-        common.disableCashTransaction = userInfo.disableCashTransaction;
-    }
-
-    if (userInfo.securityKeySet){
-        // setSecurityKeySeted(userInfo.securityKeySet);
-        common.securityKeySeted = userInfo.securityKeySet;
-    }
-}
-
-var saveUserSetting = function(userSetting) {
-    if (userSetting.autoReady) {
-        // setAutoReady(userSetting.autoReady);
-        common.autoReady = userSetting.autoReady;
-        setPrefs(pref.AUTOREADY, userSetting.autoReady);
-    }
-
-    if (userSetting.autoDenyInvitation) {
-        // setAutoDenyInvitation(userSetting.autoDenyInvitation);
-        common.autoDenyInvitation = userSetting.autoDenyInvitation;
-        setPrefs(pref.DENY_INVITES, userSetting.autoDenyInvitation);
-    }
-}
