@@ -156,7 +156,7 @@ var LoginLayer = cc.Layer.extend({
 
         ws.onmessage = this.loginongamestatus.bind(this);
 
-        // this.scheduleUpdate();
+        this.scheduleUpdate();
 
     },
 
@@ -363,15 +363,19 @@ var LoginLayer = cc.Layer.extend({
         //         countDownTouch = 0;
         //     }
         // }
-
         if(listMessages.length > 0) {
             for (i = 0; i < listMessages.length; i++) {
+                cc.log("listMessages login 1", listMessages);
                 if (listMessages[i].message_id == NetworkManager.LOGIN) {
 
                     loginresponse = listMessages[i].response;
 
                     this.loginResponseHandler(loginresponse);
-                    listMessages.splice(i, 1);
+                    if(listMessages.length == 1){
+                        listMessages.length = 0;
+                    } else {
+                        listMessages.splice(i, 1);
+                    }
                 }
             }
         }

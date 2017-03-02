@@ -271,10 +271,11 @@ var registerResponseHandler = function(loginresponse) {
             //     Common.KEY_USER_ID, loginresponse.userInfo.userId);
             cc.log("userInfo", loginresponse.userInfo);
             // if (loginresponse.has_userinfo()) {
-                saveUserInfo(loginresponse.userInfo);
+                var loginLayer = new LoginLayer();
+                loginLayer.saveUserInfo(loginresponse.userInfo);
             // }
             // if (loginresponse.has_usersetting()) {
-                saveUserSetting(loginresponse.userSetting);
+                loginLayer.saveUserSetting(loginresponse.userSetting);
             // }
             if (!loginresponse.hasplayingmatch()) {
                 // setPrefString(USER_NAME, user_id_str_register);

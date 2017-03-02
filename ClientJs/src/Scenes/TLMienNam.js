@@ -493,7 +493,11 @@ var TLMienNamLayer = cc.Layer.extend({
                     newplayerresponse = listMessages[i].response;
                     this.playerEnterRoomResponseHandler(newplayerresponse);
 
-                    listMessages.splice(i, 1);
+                    if(listMessages.length == 1){
+                        listMessages.length = 0;
+                    } else {
+                        listMessages.splice(i, 1);
+                    }
                 }
             }
         }

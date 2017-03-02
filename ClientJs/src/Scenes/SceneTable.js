@@ -590,7 +590,11 @@ var SceneTableLayer = cc.Layer.extend({
 
                     enterroomresponse = listMessages[i].response;
                     this.enterRoomResponseHandler(enterroomresponse);
-                    listMessages.splice(i, 1);
+                    if(listMessages.length == 1){
+                        listMessages.length = 0;
+                    } else {
+                        listMessages.splice(i, 1);
+                    }
                 }
             }
         }
@@ -624,7 +628,11 @@ var SceneTableLayer = cc.Layer.extend({
 
                     exitZoneResponse = listMessages[i].response;
                     this.exitZoneResponseHandler(exitZoneResponse);
-                    listMessages.splice(i, 1);
+                    if(listMessages.length == 1){
+                        listMessages.length = 0;
+                    } else {
+                        listMessages.splice(i, 1);
+                    }
                 }
             }
         }
@@ -635,7 +643,11 @@ var SceneTableLayer = cc.Layer.extend({
 
                     filterRoomResponse = listMessages[i].response;
                     this.filterRoomResponseHandler(filterRoomResponse);
-                    listMessages.splice(i, 1);
+                    if(listMessages.length == 1){
+                        listMessages.length = 0;
+                    } else {
+                        listMessages.splice(i, 1);
+                    }
                 }
             }
         }

@@ -84,7 +84,7 @@ var IntroLayer = cc.Layer.extend({
 
         ws.onmessage = this.ongamestatus.bind(this);
 
-        // this.scheduleUpdate();
+        this.scheduleUpdate();
 
     },
 
@@ -183,15 +183,15 @@ var IntroLayer = cc.Layer.extend({
         //
         //
         // cc.log("update");
-        // if(ws.readyState == ws.CLOSED){
-        //     cc.sys.localStorage.removeItem(Common.KEY_SESSION_ID);
-        //     common.sessionId = "-1";
-        //
-        //     if(isConnected()){
-        //         closeConnection();
-        //         this.scheduleOnce(goToIntroScene,2,"Intro");
-        //     }
-        // }
+        if(ws.readyState == ws.CLOSED){
+            cc.sys.localStorage.removeItem(Common.KEY_SESSION_ID);
+            common.sessionId = "-1";
+
+            if(isConnected()){
+                closeConnection();
+                this.scheduleOnce(baseSceneConnect.goToIntroScene,2,"Intro");
+            }
+        }
         //
         // // getEmergencyNotificationResponse();
         // //

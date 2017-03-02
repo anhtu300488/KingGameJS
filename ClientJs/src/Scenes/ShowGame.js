@@ -716,7 +716,11 @@ var ShowGameLayer = cc.Layer.extend({
 
                     enterZoneResponse = listMessages[i].response;
                     this.enterZoneResponseHandler(enterZoneResponse);
-                    listMessages.splice(i, 1);
+                    if(listMessages.length == 1){
+                        listMessages.length = 0;
+                    } else {
+                        listMessages.splice(i, 1);
+                    }
                 }
             }
         }
