@@ -155,8 +155,8 @@ var LoginLayer = cc.Layer.extend({
         this.addChild(version_txt);
 
         ws.onmessage = this.loginongamestatus.bind(this);
-
-        this.scheduleUpdate();
+        //
+        // this.scheduleUpdate();
 
     },
 

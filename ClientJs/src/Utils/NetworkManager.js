@@ -452,7 +452,7 @@ var parseFrom = function(read_str, len)
         cc.log("NetworkManager: error packet length = 0");
     }
 
-    cc.log("listMessages parse", listMessages);
+    // cc.log("listMessages parse", listMessages);
 
     return lstMess;
 }

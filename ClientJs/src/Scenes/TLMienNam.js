@@ -19,43 +19,40 @@ var enter_room_status = 0;
 var TLMNgameTag;
 var isDisplayRoomList;
 
+var playScene = new PlayScene();
+
 var TLMienNamLayer = cc.Layer.extend({
     sprite:null,
     isHiddenCardRemaining: false,
     isPreviousWinnerGoFirst : false,
-    ctor:function (roomIndex, playerList, waitingPlayerList,
-    createRoom, gameTag, isDisplayRoomList, passwordRequired, isVipRoom, minBet,
-    cardRemainingCount, reEnterRoomResponse) {
+    ctor:function (_roomIndex, _playerList, _waitingPlayerList, _createRoom, _gameTag, _isDisplayRoomList,
+                   passwordRequired, isVipRoom, minBet, cardRemainingCount, reEnterRoomResponse) {
         //////////////////////////////
         // 1. super init first
         this._super();
 
-        cc.log("TLMN");
+        var roomIndex = this.roomIndex = _roomIndex;
 
-        this.roomIndex = roomIndex;
+        var createRoom = this.createRoom = _createRoom;
 
-        this.cardRemainingCount = cardRemainingCount;
+        var cardRemainingCount = this.cardRemainingCount = cardRemainingCount;
 
-        // TLMNgameTag = _gameTag;
+        var TLMNgameTag = _gameTag;
 
         // 'layer' is an autorelease object
         setCreateRoom(createRoom);
         setVipRoom(isVipRoom);
         setRoomIndex(roomIndex);
         setPassWordRequired(passwordRequired);
-        // setDisplayRoomList(isDisplayRoomList);
-        common.displayRoomList = isDisplayRoomList;
-        setPlayerList(playerList);
-        setWaitingPlayerList(waitingPlayerList);
+        setDisplayRoomList(isDisplayRoomList);
+        // common.displayRoomList = isDisplayRoomList;
+        setPlayerList(_playerList);
+        setWaitingPlayerList(_waitingPlayerList);
         setEnterRoomResponse(reEnterRoomResponse);
-        // setMinBet(minBet);
-        common.minBet  = minBet;
-
-        // ws.onmessage = this.ongamestatus.bind(this);
-        // ws.onclose = this.onclose.bind(this);
-        // ws.onerror = this.onerror.bind(this);
-
-        // this.scheduleUpdate();
+        playScene.setMinBet(minBet);
+        // common.minBet  = minBet;
+        this.initMenu();
+        this.initGame(cardRemainingCount);
 
         this.init();
 
@@ -65,19 +62,15 @@ var TLMienNamLayer = cc.Layer.extend({
     init: function () {
         this._super();
 
-        cc.log("playScene.init", playScene.init());
         if (!playScene.init() ) {
             return false;
         }
 
         capacity_size = 4;
 
-        this.initMenu();
-        this.initGame(this.cardRemainingCount);
-
         ws.onmessage = this.ongamestatus.bind(this);
 
-        this.scheduleUpdate();
+        // this.scheduleUpdate();
     },
 
 
@@ -88,8 +81,8 @@ var TLMienNamLayer = cc.Layer.extend({
     },
 
     initMenu: function () {
-        // var playLayer = new PlayLayer();
-        // this.addChild(playLayer);
+        var playLayer = new PlayLayer();
+        this.addChild(playLayer);
 
         var bkgTable = MSprite.create(res.sprite_table);
         bkgTable.setScale(width*0.8/bkgTable.getWidth());
@@ -146,11 +139,6 @@ var TLMienNamLayer = cc.Layer.extend({
         this.addChild(this.btn_san_sang);
         this.addChild(this.btn_doi_luat);
         this.addChild(lb_luatchoi);
-
-        bkgTable.runAction(cc.repeatForever(cc.sequence(cc.delayTime(6.0),
-            cc.callFunc(function(){
-                reloadEnterRoom(0);
-            }))));
 
 
     },
@@ -210,7 +198,7 @@ var TLMienNamLayer = cc.Layer.extend({
                 break;
             case NetworkManager.READY_TO_PLAY:
                 var msg = buffer.response;
-                cc.log("PLAYER_ENTER_ROOM");
+                cc.log("READY_TO_PLAY");
                 this.readyToPlayResponseHandler(msg);
                 break;
             case NetworkManager.PLAYER_ENTER_ROOM:
@@ -714,9 +702,13 @@ var TLMienNamLayer = cc.Layer.extend({
         if (newplayerresponse.responseCode) {
             var player = convertFromBINPlayer(newplayerresponse.player);
             var playerId = player.id;
+            cc.log("playerId", playerId);
+            cc.log("getUserId()", getUserId());
             if (playerId != getUserId()) {
+                cc.log("newplayerresponse.enterRoomStatus", newplayerresponse.enterRoomStatus);
                 if (newplayerresponse.enterRoomStatus == PlayerState.PLAYING){
                     // player_list.push(newplayerresponse.player);
+                    cc.log("newplayerresponse.player", newplayerresponse.player);
                     player_list.push(newplayerresponse.player);
                     lst_player.push(player);
 
@@ -733,8 +725,9 @@ var TLMienNamLayer = cc.Layer.extend({
                     }
                 } else {
                     if (newplayerresponse.enterRoomStatus == PlayerState.WAITING){
+
                         lst_waiting.push(player);
-                        waiting_player_list.push(player);
+                        // waiting_player_list.push(player);
                         resetListWaiting();
                         this.showWaitingPlayerOnScene(lst_waiting);
                         //dddd
@@ -769,17 +762,19 @@ var TLMienNamLayer = cc.Layer.extend({
         if (lst_player.length > 0) lst_player.length = 0;
 
         cc.log("player_list", player_list_dt);
-
-        for (i = 0; i < player_list_dt.length; i++) {
-            var player = convertFromBINPlayer(player_list_dt[i]);
-            lst_player.push(player);
+        if(player_list_dt.length){
+            for (i = 0; i < player_list_dt.length; i++) {
+                var player = convertFromBINPlayer(player_list_dt[i]);
+                lst_player.push(player);
+            }
         }
 
-        for (i = 0; i < waiting_player_list_dt.length; i++) {
-            var playerWait = convertFromBINPlayer(waiting_player_list_dt[i]);
-            lst_waiting.push(playerWait);
+        if(waiting_player_list_dt.length){
+            for (i = 0; i < waiting_player_list_dt.length; i++) {
+                var playerWait = convertFromBINPlayer(waiting_player_list_dt[i]);
+                lst_waiting.push(playerWait);
+            }
         }
-
 
         if (is_create_room){
             // this.btn_san_sang.setVisible(false);
@@ -890,13 +885,6 @@ var TLMienNamScene = cc.Scene.extend({
         this.addChild(layer);
     }
 });
-
-var reloadEnterRoom = function(dt){
-    //neu co ket noi thi gui reload room
-    if (ws.readyState == ws.OPEN) {
-        getEnterRoomMessageFromServer(this.roomIndex, "");
-    }
-}
 
 
 var createCards = function(posX){

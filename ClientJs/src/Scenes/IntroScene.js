@@ -84,7 +84,7 @@ var IntroLayer = cc.Layer.extend({
 
         ws.onmessage = this.ongamestatus.bind(this);
 
-        this.scheduleUpdate();
+        // this.scheduleUpdate();
 
     },
 
@@ -103,8 +103,6 @@ var IntroLayer = cc.Layer.extend({
         if(e.data!==null || e.data !== 'undefined')
         {
             var lstMess = parseFrom(e.data, e.data.byteLength);
-            cc.log("lstMess", lstMess);
-
             while(lstMess.length > 0) {
                 var buffer = lstMess.shift();
                 this.handleMessage(buffer);

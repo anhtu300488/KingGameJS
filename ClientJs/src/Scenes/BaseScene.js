@@ -1,13 +1,13 @@
 /**
  * Created by MyPC on 12/12/2016.
  */
-// var visibleSize = cc.size(1280,768);//cc.director.getVisibleSize();
-// var width = visibleSize.width;
-// var height = visibleSize.height;
-//
-// var origin = cc.director.getVisibleOrigin();
-// var originX = origin.x;
-// var originY = origin.y;
+var visibleSize = cc.size(1280,768);//cc.director.getVisibleSize();
+var width = visibleSize.width;
+var height = visibleSize.height;
+
+var origin = cc.director.getVisibleOrigin();
+var originX = origin.x;
+var originY = origin.y;
 
 var ZERO = cc.p(0.0, 0.0);
 var ONE = cc.p(1.0, 1.0);
@@ -406,7 +406,6 @@ var BaseLayer = cc.Layer.extend({
     update: function(delta) {
         if(listMessages.length > 0) {
             for (i = 0; i < listMessages.length; i++) {
-                cc.log("listMessages", listMessages);
                 if (listMessages[i].message_id == NetworkManager.INITIALIZE) {
                     initialMessage = listMessages[i].response;
 

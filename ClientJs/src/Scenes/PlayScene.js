@@ -29,6 +29,14 @@ var getRoomIndex = function() {
     return this.roomIndex;
 }
 
+var setDisplayRoomList = function(_isDisplayRoomList) {
+    this._displayRoomList = _isDisplayRoomList;
+}
+
+var isDisplayRoomList = function(){
+    return this._displayRoomList;
+}
+
 var setPassWordRequired = function(passwordRequired){
     this.passwordRequired = passwordRequired;
 }
@@ -85,6 +93,14 @@ var isVipRoom = function(){
     return this.is_vip_room;
 }
 
+// var setMinBet = function(minBet){
+//     this.minBet = minBet;
+// }
+//
+// var getMinBet = function(){
+//     return this.minBet;
+// }
+
 var PlayLayer = cc.Layer.extend({
     ctor: function() {
         this._super();
@@ -101,20 +117,112 @@ var PlayLayer = cc.Layer.extend({
 
         common.gameState = GAME_STATE.IN_GAME;
 
-        // this.initMenu();
+        var spriteBG = MSprite.create(res.COMMON_SPRITE_ITEM_BACKGROUND);
+
+        var spriteWidth = spriteBG.getWidth();
+
+        var spriteHeight = spriteBG.getHeight();
+
+        var rows = visibleSize.width/ spriteWidth + 1;
+        var cols = visibleSize.height/ spriteHeight + 1;
+        for(var i = 0; i< rows; i++){
+            for(var j = 0; j<cols; j++){
+                var itemSpriteBG = MSprite.create(res.COMMON_SPRITE_ITEM_BACKGROUND);
+                var centerPos = cc.p(spriteBG.x + i*spriteWidth, spriteBG.y + j*spriteHeight);
+                itemSpriteBG.setPosition(centerPos);
+                this.addChild(itemSpriteBG);
+            }
+        }
+
+        var btnBack = MButton.create("res/btn_back_tlmn.png", TAG.TLMN_BTN_BACK);
+        btnBack.setPosition(MVec2(padding - btnBack.getHeight()/6,
+            height - padding - btnBack.getHeight()*(1.0-1.0/6)));
+        btnBack.addTouchEventListener(this.menuCallBack, this);
+
+        var btnInvitePlay = MButton.create("res/popup_moichoi/btn_moichoi.png", TAG.BTN_INVITE_TO_PLAY);
+        btnInvitePlay.setPosition(MVec2(padding,height - 2*padding - btnInvitePlay.getHeight()*2));
+        btnInvitePlay.addTouchEventListener(this.menuCallBack, this);
+
+        var icon_lock = passwordRequired ? "res/btn_mokhoa.png" : "res/btn_khoa.png";
+
+        var btnKhoa = MButton.create(icon_lock, TAG.TLMN_BTN_KHOA);
+        btnKhoa.setPosition(MVec2(2*padding + btnKhoa.getWidth(),height - padding - btnKhoa.getHeight()));
+        btnKhoa.addTouchEventListener(this.menuCallBack, this);
+        btnKhoa.setVisible(is_create_room);
+
+        var title_game = getTitleGame();
+
+        var lb_title_game = MLabel.create(title_game, btnKhoa.getHeight() * 0.35, cc.color(10, 175, 244),true);
+        lb_title_game.setAnchorPoint(cc.p(0,1));
+        var posx_titlegame = is_create_room ? (btnKhoa.getPositionX() + btnKhoa.getWidth() + padding) :
+            (btnInvitePlay.getPositionX() + btnKhoa.getWidth() + padding);
+        lb_title_game.setPosition(cc.p(posx_titlegame, originY + height - padding));
+        this.addChild(lb_title_game);
+
+        var playScene = new PlayScene();
+        var value_minbet = playScene.getMinBet();
+        var minbet_type = is_vip_room ? "KEN" : "XU";
+
+        var lb_value_minbet = MLabel.create(value_minbet + " " + minbet_type, btnKhoa.getHeight() * 0.25, cc.color.WHITE);
+        lb_value_minbet.setAnchorPoint(cc.p(0,1));
+        lb_value_minbet.setPosition(cc.p(lb_title_game.getPositionX(),
+            lb_title_game.getPositionY() - lb_title_game.getHeight() - 2));
+        this.addChild(lb_value_minbet);
+
+        var lb_title_room = MLabel.create("Bàn", btnKhoa.getHeight() * 0.25, cc.color(10, 175, 244));
+        lb_title_room.setAnchorPoint(cc.p(0,1));
+        lb_title_room.setPosition(lb_value_minbet.getPositionX() + lb_value_minbet.getWidth() + 5,
+            lb_value_minbet.getPositionY());
+        this.addChild(lb_title_room);
+
+        var lb_value_room = MLabel.create(getRoomIndex() + 1, btnKhoa.getHeight() * 0.25, cc.color.WHITE);
+        lb_value_room.setAnchorPoint(cc.p(0,1));
+        lb_value_room.setPosition(lb_title_room.getPositionX() + lb_title_room.getWidth() + 2, lb_value_minbet.getPositionY());
+        this.addChild(lb_value_room);
+
+        var btn_caidat = MButton.create("res/btn_caidat.png", TAG.TLMN_BTN_CAIDAT);
+        btn_caidat.setPosition(MVec2(width - padding - btn_caidat.getContentSize().width,
+            height - btn_caidat.getContentSize().height - padding));
+        btn_caidat.addTouchEventListener(this.menuCallBack, this);
+
+        var btn_menu = MButton.create(res.BTN_MENU, TAG.TLMN_BTN_MENU);
+        btn_menu.setPosition(cc.p(origin.x + padding, origin.y + visibleSize.height - btn_menu.getHeight() - padding));
+        btn_menu.addTouchEventListener(this.menuCallBack, this);
+
+        btn_message = MButton.create(res.BTN_MESSAGE, TAG.TLMN_BTN_MESSAGE);
+        btn_message.setPosition(MVec2(width - btn_message.getContentSize().width - padding, padding));
+        btn_message.addTouchEventListener(this.menuCallBack, this);
+
+        var btn_purcharse = MButton.create(res.BTN_PURCHASE, TAG.TLMN_BTN_PURCHASE);
+        btn_purcharse.setPosition(cc.p(btn_caidat.getPositionX() - padding - btn_purcharse.getContentSize().width,
+            btn_caidat.getPositionY()));
+        btn_purcharse.addTouchEventListener(this.menuCallBack, this);
+
+        //icon facebook
+        var btn_facebook = MButton.create(res.BTN_FACEBOOK, TAG.TLMN_BTN_FACEBOOK);
+        btn_facebook.setPosition(cc.p(btn_purcharse.getPositionX() - padding - btn_facebook.getWidth(),
+            btn_purcharse.getPositionY()));
+        btn_facebook.addTouchEventListener(this.menuCallBack, this);
+
+        this.addChild(btnBack);
+        this.addChild(btnKhoa);
+        this.addChild(btnInvitePlay);
+        this.addChild(btn_message);
+        this.addChild(btn_purcharse);
+        this.addChild(btn_caidat);
 
         ws.onmessage = this.ongamestatus.bind(this);
 
-        this.scheduleUpdate();
+        // this.scheduleUpdate();
 
         return true;
     },
     initMenu: function(){
-        var spriteBG = new cc.Sprite(res.COMMON_SPRITE_ITEM_BACKGROUND);
+        var spriteBG = MSprite.create(res.COMMON_SPRITE_ITEM_BACKGROUND);
 
-        var spriteWidth = spriteBG.getContentSize().width;
+        var spriteWidth = spriteBG.getWidth();
 
-        var spriteHeight = spriteBG.getContentSize().height;
+        var spriteHeight = spriteBG.getHeight();
 
         var rows = visibleSize.width/ spriteWidth + 1;
         var cols = visibleSize.height/ spriteHeight + 1;
@@ -517,6 +625,12 @@ var PlayScene = cc.Scene.extend({
         this._super();
         var layer = new PlayLayer();
         this.addChild(layer);
+    },
+    setMinBet: function(minBet){
+        this.minBet = minBet;
+    },
+    getMinBet: function(){
+        return this.minBet;
     }
 });
 

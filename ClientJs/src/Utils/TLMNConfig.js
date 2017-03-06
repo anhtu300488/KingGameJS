@@ -16,15 +16,87 @@ var  SERVER_NAME = "115.146.127.17";
 //const char*  SERVER_NAME = "103.28.37.24";
 //const char*  SERVER_NAME = "192.168.1.100";
 
-var SERVER_PORT = 1280;
+var SERVER_PORT = 1580;
 
-var PATH = "bigken";
+var PATH = "megajackpot";
 
 // var url = "ws://"+SERVER_NAME+":"+SERVER_PORT+"/"+PATH;
-var url = "ws://115.146.127.17:1280/bigken";
+var url = "ws://115.146.127.17:1580/megajackpot";
 ws = new WebSocket(url);
 
 ws.binaryType = "arraybuffer";
+
+cc.log("ws = ", ws);
+
+// ws.onmessage = function(evt) { onMessage(evt) };
+//
+// function onMessage(evt)
+// {
+//     cc.log("evt.data = ", evt);
+//
+//     if(evt.data!==null || evt.data !== 'undefined')
+//     {
+//         var lstMess = parseFrom(evt.data, evt.data.byteLength);
+//         cc.log("lstMess onMessage", lstMess);
+//         while(lstMess.length > 0) {
+//             var buffer = lstMess.shift();
+//             handleMessage(buffer);
+//         }
+//
+//     }
+//     // ws.close();
+// }
+//
+// var handleMessage = function(e) {
+//     var buffer = e;
+//     cc.log("buffer = ", buffer);
+//     switch (buffer.message_id) {
+//         case NetworkManager.INITIALIZE:
+//             var msg = buffer.response;
+//             baseSceneConnect.initialMessageResponseHandler(msg);
+//             break;
+//         case NetworkManager.LOGIN:
+//             var msg = buffer.response;
+//             var loginScene = new LoginLayer();
+//             loginScene.loginResponseHandler(msg);
+//             break;
+//         case NetworkManager.ENTER_ZONE:
+//             var msg = buffer.response;
+//             var showGame = new ShowGameLayer();
+//             showGame.enterZoneResponseHandler(msg);
+//             break;
+        // case NetworkManager.EXIT_ZONE:
+        //     cc.log("EXIT_ZONE");
+        //     var msg = buffer.response;
+        //     var sceneTable = new SceneTableLayer();
+        //     sceneTable.exitZoneResponseHandler(msg);
+        //     break;
+        // case NetworkManager.FILTER_ROOM:
+        //     var msg = buffer.response;
+        //     cc.log("FILTER_ROOM", msg);
+        //     var sceneTable = new SceneTableLayer();
+        //     sceneTable.filterRoomResponseHandler(msg);
+        //     break;
+        // case NetworkManager.USER_STATUS:
+        //     cc.log("USER_STATUS");
+        //     var msg = buffer.response;
+        //     var sceneTable = new SceneTableLayer();
+        //     sceneTable.userStatusResponseHandler(msg);
+        //     break;
+        // case NetworkManager.ENTER_ROOM:
+        //     cc.log("ENTER_ROOM");
+        //     var msg = buffer.response;
+        //     var sceneTable = new SceneTableLayer();
+        //     sceneTable.enterRoomResponseHandler(msg);
+        //     break;
+        // case NetworkManager.PLAYER_ENTER_ROOM:
+        //     cc.log("PLAYER_ENTER_ROOM");
+        //     var msg = buffer.response;
+        //     var tlmnLayer = new TLMienNamLayer();
+        //     tlmnLayer.playerEnterRoomResponseHandler(msg);
+        //     break;
+//     }
+// }
 
 var LOGIN_STATE = {
     NORMAL_LOGIN : 1,

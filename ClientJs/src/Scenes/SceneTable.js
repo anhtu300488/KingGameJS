@@ -27,7 +27,7 @@ var SceneTableLayer = cc.Layer.extend({
         requestRoomType(defaultRoomTypeLoad);
         // setMessage(notEnoughMoney, message);
 
-        // ws.onmessage = this.ongamestatus.bind(this);
+        ws.onmessage = this.ongamestatus.bind(this);
         // ws.onclose = this.onclose.bind(this);
         // ws.onerror = this.onerror.bind(this);
 
@@ -71,9 +71,9 @@ var SceneTableLayer = cc.Layer.extend({
 
         this.initMenu();
 
-        this.scheduleUpdate();
+        // this.scheduleUpdate();
 
-        background_screen.runAction(cc.repeatForever(cc.sequence(cc.delayTime(6.0),
+        background_screen.runAction(cc.repeatForever(cc.sequence(cc.delayTime(20.0),
         cc.callFunc(function(){
             reloadRoom(0);
         }))));
@@ -527,6 +527,7 @@ var SceneTableLayer = cc.Layer.extend({
         if(e.data!==null || e.data !== 'undefined')
         {
             var lstMess = parseFrom(e.data, e.data.byteLength);
+            cc.log("lstMess", lstMess);
             while(lstMess.length > 0) {
                 var buffer = lstMess.shift();
                 this.handleMessage(buffer);
@@ -556,11 +557,12 @@ var SceneTableLayer = cc.Layer.extend({
                 var msg = buffer.response;
                 this.enterRoomResponseHandler(msg);
                 break;
-            case NetworkManager.PLAYER_ENTER_ROOM:
-                cc.log("PLAYER_ENTER_ROOM");
-                var msg = buffer.response;
-                playerEnterRoomResponseHandler(msg);
-                break;
+            // case NetworkManager.PLAYER_ENTER_ROOM:
+            //     cc.log("PLAYER_ENTER_ROOM");
+            //     var msg = buffer.response;
+            //     var tlmnLayer = new TLMienNamLayer();
+            //     tlmnLayer.playerEnterRoomResponseHandler(msg);
+            //     break;
         }
     },
     update: function(delta) {
@@ -584,20 +586,20 @@ var SceneTableLayer = cc.Layer.extend({
         // getUserStatusResponse();
     
         //handle enter room response
-        if(listMessages.length > 0) {
-            for (i = 0; i < listMessages.length; i++) {
-                if (listMessages[i].message_id == NetworkManager.ENTER_ROOM) {
-
-                    enterroomresponse = listMessages[i].response;
-                    this.enterRoomResponseHandler(enterroomresponse);
-                    if(listMessages.length == 1){
-                        listMessages.length = 0;
-                    } else {
-                        listMessages.splice(i, 1);
-                    }
-                }
-            }
-        }
+        // if(listMessages.length > 0) {
+        //     for (i = 0; i < listMessages.length; i++) {
+        //         if (listMessages[i].message_id == NetworkManager.ENTER_ROOM) {
+        //
+        //             enterroomresponse = listMessages[i].response;
+        //             this.enterRoomResponseHandler(enterroomresponse);
+        //             if(listMessages.length == 1){
+        //                 listMessages.length = 0;
+        //             } else {
+        //                 listMessages.splice(i, 1);
+        //             }
+        //         }
+        //     }
+        // }
 
 
         // this.createRoomResponseHandler();
@@ -688,6 +690,7 @@ var SceneTableLayer = cc.Layer.extend({
 
     },
     filterRoomResponseHandler : function (filterRoomResponse) {
+        cc.log("filterRoomResponse", filterRoomResponse);
         // if(listMessages.length > 0) {
         //     for (i = 0; i < listMessages.length; i++) {
         //         if (listMessages[i].message_id == NetworkManager.FILTER_ROOM) {

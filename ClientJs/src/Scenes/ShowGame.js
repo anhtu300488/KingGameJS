@@ -343,8 +343,8 @@ var ShowGameLayer = cc.Layer.extend({
         }
 
         ws.onmessage = this.ongamestatus.bind(this);
-
-
+        //
+        //
         // this.scheduleUpdate();
     },
 
@@ -620,6 +620,7 @@ var ShowGameLayer = cc.Layer.extend({
         //         if (listMessages[i].message_id == NetworkManager.ENTER_ZONE) {
         //
         //             enterZoneResponse = listMessages[i].response;
+        cc.log("enterZoneResponse", enterZoneResponse);
                     if (enterZoneResponse != 0) { //found
                         if (enterZoneResponse.responseCode) {
 
