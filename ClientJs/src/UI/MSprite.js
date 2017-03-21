@@ -4,8 +4,8 @@
 
 var MSprite = cc.Sprite.extend({
 
-    ctor: function () {
-        this._super();
+    ctor: function (textureName) {
+        this._super(textureName);
     },
     getWidth: function () {
         return this.getContentSize().width;
@@ -16,16 +16,14 @@ var MSprite = cc.Sprite.extend({
 });
 
 MSprite.create = function(textureName){
-    var sprite = new MSprite();
-    sprite.setTexture(textureName);
+    var sprite = new MSprite(textureName);
     sprite.setAnchorPoint(cc.p(0,0));
 
     return sprite;
 }
 
 MSprite.createWithSize = function(textureName,size){
-    var sprite = new MSprite();
-    sprite.setTexture(textureName);
+    var sprite = new MSprite(textureName);
     sprite.setAnchorPoint(cc.p(0,0));
     sprite.setScaleX(size.width/sprite.getWidth());
     sprite.setScaleY(size.height/sprite.getHeight());
@@ -34,7 +32,7 @@ MSprite.createWithSize = function(textureName,size){
 }
 
 MSprite.createwithFrameName= function(textureName) {
-    var sprite = new MSprite();
+    var sprite = new MSprite(textureName);
     sprite.setAnchorPoint(cc.p(0,0));
     sprite.setSpriteFrame(textureName);
     return sprite;

@@ -29,18 +29,19 @@ var IntroLayer = cc.Layer.extend({
             //
             //     timeSchedule = 3.0;
             //
-            cc.spriteFrameCache.addSpriteFrames("res/cidade.plist");
-            cc.spriteFrameCache.addSpriteFrames("res/loading.plist");
-            cc.spriteFrameCache.addSpriteFrames("res/nem.plist");
-            cc.spriteFrameCache.addSpriteFrames("res/avatar_win_animation.plist");
             cc.spriteFrameCache.addSpriteFrames("res/sprite_cards.plist");
-            cc.spriteFrameCache.addSpriteFrames("res/cogai_xocdia.plist");
-            cc.spriteFrameCache.addSpriteFrames("res/daily_gift/hom_sprite.plist");
-            cc.spriteFrameCache.addSpriteFrames("res/level_up/levelup_sprites.plist");
-            cc.spriteFrameCache.addSpriteFrames("res/xoc.plist");
-            cc.spriteFrameCache.addSpriteFrames("res/cangat.plist");
-            cc.spriteFrameCache.addSpriteFrames("res/an.plist");
-            cc.spriteFrameCache.addSpriteFrames("res/xocdia/chip_sprites.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/cidade.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/loading.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/nem.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/avatar_win_animation.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/sprite_cards.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/cogai_xocdia.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/daily_gift/hom_sprite.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/level_up/levelup_sprites.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/xoc.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/cangat.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/an.plist");
+            // cc.spriteFrameCache.addSpriteFrames("res/xocdia/chip_sprites.plist");
             //
             //     // SoundManager::getInstance().preLoadAudio(soundTLMN);
             //     // SoundManager::getInstance().preLoadAudio(soundPhom);

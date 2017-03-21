@@ -2,6 +2,7 @@
  * Created by MyPC on 08/02/2017.
  */
 var player_id = 0;
+var posIndex = 0;
 var Avatar = cc.Layer.extend({
     PADDING : 15,
     XONG : 10,
@@ -49,7 +50,7 @@ var Avatar = cc.Layer.extend({
         // this.money.setAlignment(cc.TEXT_ALIGNMENT_CENTER);
         this.addChild(this.money);
 
-        this.spriteCard = MSprite.create("res/card_cover.png");
+        this.spriteCard = MSprite.create("#card_cover.png");
         this.addChild(this.spriteCard);
 
         /* Anh Điệp xem lại chỗ này tạo Sprite mới không dùng hàm này được
@@ -143,7 +144,7 @@ var Avatar = cc.Layer.extend({
     },
     getAvatarPostion: function(index,origin,visibleSize,buttonHeight){
         var pos = cc.p(0, 0);
-        var posIndex = index;
+        posIndex = index;
         var spritez = MSprite.create("res/nem_gach_da/background_nem.png");
         var sizeS = spritez.getContentSize().width*0.75;
         switch (index) {
@@ -285,6 +286,9 @@ var Avatar = cc.Layer.extend({
     },
     getPlayerId : function(){
         return player_id;
+    },
+    getPositionIndex: function(){
+        return posIndex;
     }
 
 

@@ -3,7 +3,7 @@ var card_tag = [];
 
 var padding = 20;
 var currentTableIndex;
-var cardViews = [4];
+var cardViews = [];
 var _currentTurnUserId;
 
 var CARD_SHOWING_ZORDER = 1;
@@ -20,6 +20,8 @@ var TLMNgameTag;
 var isDisplayRoomList;
 
 var playScene = new PlayScene();
+var lst_player = [];
+var lst_waiting = [];
 
 var TLMienNamLayer = cc.Layer.extend({
     sprite:null,
@@ -103,7 +105,7 @@ var TLMienNamLayer = cc.Layer.extend({
         this.btn_start_match.setPosition(cc.p(origin.x + width*0.5 - this.btn_start_match.getWidth()/2 - btn_message.getContentSize().width,
             btn_danh_bai.getPosition().y));
         this.btn_start_match.addTouchEventListener(this.menuCallBack, this);
-        this.btn_start_match.setVisible(is_create_room && playerList.length >= 2);
+        this.btn_start_match.setVisible(is_create_room && player_list.length >= 2);
 
         var btn_bo_luot = MButton.createWithText(res.BTN_YELLOW, "Bỏ lượt", TAG.TLMN_BTN_BOLUOT);
         btn_bo_luot.setPosition(cc.p(origin.x+width*0.5-btn_bo_luot.getWidth()*2.5,
@@ -146,14 +148,13 @@ var TLMienNamLayer = cc.Layer.extend({
         //PlayScene::menuCallBack(pSender, eventType);
         if(eventType == ccui.Widget.TOUCH_ENDED) {
             var tag = pSender.tag;
-            cc.log("tag", tag);
-            cc.log("this.roomIndex", this.roomIndex);
             switch (tag) {
                 case TAG.TLMN_START_MATCH:
-                    if (playerList.length >= 2) {
+                    if (lst_player.length >= 2) {
+                        cc.log("getStartMatchMessageFromServer");
                         getStartMatchMessageFromServer(this.roomIndex);
                         this.btn_start_match.setVisible(false);
-                        this.btn_doi_luat.setVisible(false);
+                        // this.btn_doi_luat.setVisible(false);
                     } else {
                         cc.log("Khong du nguoi choi");
                     }
@@ -194,6 +195,7 @@ var TLMienNamLayer = cc.Layer.extend({
         switch (buffer.message_id) {
             case NetworkManager.START_MATCH:
                 var msg = buffer.response;
+                cc.log("START_MATCH");
                 this.startMatchResponseHandler(msg);
                 break;
             case NetworkManager.READY_TO_PLAY:
@@ -219,7 +221,7 @@ var TLMienNamLayer = cc.Layer.extend({
             common.ownerUserId  = current_user_id;
 
             //show change rule button khi co 1 minh chu phong
-            if (playerList.length == 1){
+            if (player_list.length == 1){
                 this.btn_doi_luat.setVisible(true);
             }
         }
@@ -374,50 +376,10 @@ var TLMienNamLayer = cc.Layer.extend({
         }
         this.showInitCard();
     },
-    showInitCard: function() {
-        for (i = 0; i < cards.length; i++){
-            this.createCards(i);
-            if (card_tag[i].getParent() == null)
-                this.addChild(card_tag[i]);
-        }
-
-        //== chiabai
-
-        for(i = 0;i < 4;i++){
-            for(j =0 ;j< avatars.length;j++){
-                if(avatars[j].getPlayerId() != getUserId() && avatars[j].getPositionIndex() == i){
-                    for(k = 0 ;k < 8;k++){
-                        var card = OtherCardSprite.createCardCover(cardWidth()*0.8);
-                        card.setPosition(MVec2(width / 2 - cardWidth() / 2, height / 2));
-                        var pos = this.getCardCoverPostion(avatars[j]);
-                        card.runAction(new cc.Sequence(new cc.MoveTo(0.05*k, pos), new cc.RemoveSelf,null));
-                        cardViews[i].push(card);
-                    }
-                    break;
-                }
-            }
-        }
-
-        for(i = 0 ;i < 4 ; i++){
-            if(cardViews[i].length > 0)
-                for(j =0 ;j < cardViews[i].length;j++){
-                if(cardViews[i][j].getParent()== null){
-                    this.addChild(cardViews[i][j]);
-                }
-            }
-        }
-
-        // play sound chiabai
-        // SoundManager::getInstance().playSound(soundTLMN[37]);
-        for(i = 0; i < card_tag.length;i++){
-            var moveTo = new cc.MoveTo(0.2+0.06*i,MVec2(width / 2 + (i - 5) * cardWidth(),posYCard()));
-            card_tag[i].runAction(moveTo);
-            card_tag[i].setPosY(originY + posYCard());
-        }
-    },
     getCardCoverPostion: function(avatar){
-        return Vec2(avatar.getPosition().x + avatar.spriteCard.getPosition().x,
-            avatar.getPosition().y + avatar.spriteCard.getPosition().y);
+        // return Vec2(avatar.getPosition().x + avatar.spriteCard.getPosition().x,
+        //     avatar.getPosition().y + avatar.spriteCard.getPosition().y);
+        return Vec2(avatar.getPosition().x, avatar.getPosition().y);
     },
     getCurrentTurnUserId: function() {
         return _currentTurnUserId;
@@ -509,7 +471,7 @@ var TLMienNamLayer = cc.Layer.extend({
         //  */
         // this.changeRuleResponseHandler();
     },
-    setPositionPlayer : function(player, indexPos, thisObj){
+    setPositionPlayer : function(player, indexPos){
 
         var position_index = 0;  //vi tri that cua nguoi choi
         //tinh toan vi tri that cua nguoi choi
@@ -552,7 +514,7 @@ var TLMienNamLayer = cc.Layer.extend({
         }
         avatar.setPosition(pos);
 
-        var cardCoverWidth = cardWidth() * 0.8;
+        var cardCoverWidth = this.cardWidth() * 0.8;
         if(avatar.getPlayerId() == getUserId()){
             avatar.loadCardCover(cardCoverWidth, position_index, _numberCard,true);
             avatar.hideCardCover();
@@ -565,9 +527,10 @@ var TLMienNamLayer = cc.Layer.extend({
         avatars.push(avatar);
 
         if (avatars[avatars.length -1].getParent() == null)
-            thisObj.addChild(avatars[avatars.length -1],INDEX_AVATAR);
+            this.addChild(avatars[avatars.length -1],INDEX_AVATAR);
     },
-    sortListPlayer : function(lst_player) {
+    sortListPlayer : function() {
+        cc.log("lst_player", lst_player);
         lst_player.sort(function(a, b) {
             return parseFloat(a.tableIndex) - parseFloat(b.tableIndex);
         });
@@ -579,9 +542,9 @@ var TLMienNamLayer = cc.Layer.extend({
 
         var s_player_id = c_player_id;
 
-        for (i = 0; i < playerList.length; i++){
-            if (playerList[i].getID == s_player_id){
-                return playerList[i];
+        for (i = 0; i < lst_player.length; i++){
+            if (lst_player[i].getID == s_player_id){
+                return lst_player[i];
             }
         }
 
@@ -610,7 +573,7 @@ var TLMienNamLayer = cc.Layer.extend({
         var len = remain_card_infos.length;
 
         for (i = 0; i < len; i++) {
-            this.setPositionPlayer(remain_card_infos[i], i, thisObj);
+            this.setPositionPlayer(remain_card_infos[i], i);
         }
     },
     showWaitingPlayerOnScene : function(lstWaiting){
@@ -642,6 +605,7 @@ var TLMienNamLayer = cc.Layer.extend({
         return false;
     },
     startMatchResponseHandler : function(rs) {
+        cc.log("rs = ", rs);
         if (rs != 0) {
             var matchRunning = rs.responseCode;
             if (matchRunning) {
@@ -650,47 +614,49 @@ var TLMienNamLayer = cc.Layer.extend({
                     this.removeChildByTag(TAG_TIME_COUNTDOWN);
                 }
 
-                // if (rs.has_countdowntimer() && rs.countdowntimer() >= 0) {
-                if (rs.countDownTimer >= 0) {
-                    setMatchCountDownTime(rs.countDownTimer);
+                if (rs.countDownTimer && rs.countDownTimer >= 0) {
+                    this.setMatchCountDownTime(rs.countDownTimer);
                 }
 
-                // if (rs.has_firstturnuserid()) {
-                setFirstTurnUserId(rs.firstTurnUserId);
-                // }
+                if (rs.firstTurnUserId) {
+                    this.setFirstTurnUserId(rs.firstTurnUserId);
+                }
 
                 if (!this.isUserPlaying()){ //neu la nguoi cho khi bat dau game thi khong hien thi nut san sang
                     this.btn_san_sang.setVisible(false);
                 }
+                cc.log("avatars", avatars);
+                for (i = 0; i < rs.args.length; i++) {
+                    if (rs.args[i].key == "currentCards") {
+                        var current_card_values = rs.args[i].value;
+                        this.sortCard(current_card_values);
 
-                // for (i = 0; i < rs.args.length; i++) {
-                //     if (rs.args[i].key == "currentCards") {
-                //         var current_card_values = rs.args[i].value;
-                //         sortCard(current_card_values);
-                //
-                //         var avatar = findAvatarOfPlayer(getUserId());
-                //         if (avatar != 0){
-                //             var moveTo = MoveTo::create(0.2, avatar.getAvatarPostion(0, origin, visibleSize, btn_start_match.getHeight()));
-                //             avatar.runAction(moveTo);
-                //         }
-                //     } else {
-                //         //handle card remain count
-                //         var json = rs.args[i].value();
-                //         parseRemainCards(json);
-                //     }
-                // }
-                //
-                // if (this.isHiddenCardRemaining){
-                //     for (i = 0; i < avatars.length; i++){
-                //         if (avatars[i].getPlayerId() != getUserId()){
-                //             avatars[i].hideCardCover(false);
-                //         }
-                //     }
-                // }
-                //
-                // if (rs.has_message()) {
-                //     this.showToast(rs.message().c_str(), 2);
-                // }
+                        var avatar = findAvatarOfPlayer(getUserId());
+                        cc.log('avatar', avatar);
+                        if (avatar != 0){
+                            var moveTo = cc.moveTo(0.2, avatar.getAvatarPostion(0, origin, visibleSize, this.btn_start_match.getContentSize().height));
+                            avatar.runAction(moveTo);
+                        }
+                    } else {
+                        //handle card remain count
+                        var json = rs.args[i].value();
+                        cc.log("json", json);
+                        // parseRemainCards(json);
+                    }
+                }
+
+                if (this.isHiddenCardRemaining){
+                    for (i = 0; i < avatars.length; i++){
+                        if (avatars[i].getPlayerId() != getUserId()){
+                            avatars[i].hideCardCover(false);
+                        }
+                    }
+                }
+
+                if (rs.message) {
+                    // this.showToast(rs.message().c_str(), 2);
+                    cc.log("message");
+                }
 
             } else {
                 // this.showToast(rs.message().c_str(), 2);
@@ -698,17 +664,12 @@ var TLMienNamLayer = cc.Layer.extend({
         }
     },
     playerEnterRoomResponseHandler : function (newplayerresponse) {
-        cc.log("newplayerresponse", newplayerresponse);
         if (newplayerresponse.responseCode) {
             var player = convertFromBINPlayer(newplayerresponse.player);
             var playerId = player.id;
-            cc.log("playerId", playerId);
-            cc.log("getUserId()", getUserId());
             if (playerId != getUserId()) {
-                cc.log("newplayerresponse.enterRoomStatus", newplayerresponse.enterRoomStatus);
                 if (newplayerresponse.enterRoomStatus == PlayerState.PLAYING){
                     // player_list.push(newplayerresponse.player);
-                    cc.log("newplayerresponse.player", newplayerresponse.player);
                     player_list.push(newplayerresponse.player);
                     lst_player.push(player);
 
@@ -736,7 +697,7 @@ var TLMienNamLayer = cc.Layer.extend({
             }
 
             if (newplayerresponse.enterRoomStatus == PlayerState.PLAYING) {
-                if (newplayerresponse[0].changeOwnerRoomCd > 0) {
+                if (newplayerresponse.changeOwnerRoomCd > 0) {
 
                     if (this.getChildByTag(TAG_TIME_COUNTDOWN) != null){
                         this.removeChildByTag(TAG_TIME_COUNTDOWN);
@@ -761,7 +722,6 @@ var TLMienNamLayer = cc.Layer.extend({
 
         if (lst_player.length > 0) lst_player.length = 0;
 
-        cc.log("player_list", player_list_dt);
         if(player_list_dt.length){
             for (i = 0; i < player_list_dt.length; i++) {
                 var player = convertFromBINPlayer(player_list_dt[i]);
@@ -813,39 +773,39 @@ var TLMienNamLayer = cc.Layer.extend({
 
                 var ready_player_id = ready_to_play_response.readyUserId;
                 var table_index = ready_to_play_response.tableIndex;
-                var player = findWaiting(ready_player_id);
+                var player = this.findWaiting(ready_player_id);
 
-                // if (player != 0){
-                //     //day vao lst playing
-                //     var waiting_player = *player;
-                //     waiting_player.setTableIndex(table_index);
-                //     lst_player.push_back(waiting_player);
-                //
-                //     showInvitePlayer(lst_player.size());  //show moi choi
-                //
-                //     //remove avatar tren ban choi
-                //     resetDisplayAvatar();
-                //     //dat waiting player len ban choi
-                //     sortListPlayer();
-                //     displayInfoRemainCard(lst_player);
-                //
-                //     //neu so luong nguoi choi lon hon 2 thi hien thi btn startmatch
-                //     if (Common::getInstance().getUserId() == getOwnerUserId() && lst_player.size() >= 2){
-                //         btn_start_match.setVisible(true);
-                //         this.btn_doi_luat.setVisible(false);
-                //     }
-                //
-                //     //xoa khoi lst_waiting
-                //     deleteWaitingPlayer(waiting_player.getID());
-                //
-                //     //hien thi lai danh sach cho len giao dien
-                //     resetListWaiting();
-                //     showWaitingPlayerOnScene(lst_waiting);
-                // }
-                //
+                if (player != 0){
+                    //day vao lst playing
+                    var waiting_player = player;
+                    waiting_player.setTableIndex(table_index);
+                    lst_player.push(waiting_player);
+
+                    showInvitePlayer(lst_player.length);  //show moi choi
+
+                    //remove avatar tren ban choi
+                    this.resetDisplayAvatar();
+                    //dat waiting player len ban choi
+                    this.sortListPlayer();
+                    this.displayInfoRemainCard(lst_player);
+
+                    //neu so luong nguoi choi lon hon 2 thi hien thi btn startmatch
+                    if (getUserId() == common.ownerUserId && lst_player.length >= 2){
+                        this.btn_start_match.setVisible(true);
+                        this.btn_doi_luat.setVisible(false);
+                    }
+
+                    //xoa khoi lst_waiting
+                    this.deleteWaitingPlayer(waiting_player.getID());
+
+                    //hien thi lai danh sach cho len giao dien
+                    resetListWaiting();
+                    this.showWaitingPlayerOnScene(lst_waiting);
+                }
+
                 // //show doi chu phong
-                // if (this.getChildByTag(TAG_TIME_COUNTDOWN) == nullptr){
-                //     int time_wait = ready_to_play_response.countdowntimer() / 1000;
+                // if (this.getChildByTag(TAG_TIME_COUNTDOWN) == null){
+                //     var time_wait = ready_to_play_response.countDownTimer / 1000;
                 //     addCountDown(time_wait);
                 // }
             }
@@ -853,6 +813,131 @@ var TLMienNamLayer = cc.Layer.extend({
                 // this.showToast(ready_to_play_response.message().c_str(), 2);
             }
         }
+    },
+    findWaiting: function(player_id){
+        var c_player_id = [50];
+
+        c_player_id = player_id;
+
+        var s_player_id = c_player_id;
+
+        for (i = 0; i < lst_waiting.length; i++){
+            if (lst_waiting[i].getID == s_player_id){
+                return lst_waiting[i];
+            }
+        }
+        return null;
+    },
+    resetDisplayAvatar: function(){
+        if (!avatars.length){
+            for (i = 0; i < avatars.length; i++){
+                if (avatars[i].getParent() != null){
+                    this.removeChild(avatars[i]);
+                }
+            }
+            avatars.clear();
+        }
+    },
+    deleteWaitingPlayer: function(player_id){
+        var k = -1;
+        for (i = 0; i < lst_waiting.length; i++){
+            if (lst_waiting[i].getID == player_id){
+                k = i;
+            }
+        }
+
+        // if (k != -1 && !lst_waiting.length)
+        //     lst_waiting.erase(lst_waiting.begin() + k);
+    },
+    setMatchCountDownTime: function(_countDownTime) {
+        this._matchCountDownTime = _countDownTime;
+    },
+
+    getMatchCountDownTime: function() {
+        return this._matchCountDownTime;
+    },
+    setFirstTurnUserId: function(_firstTurnUserId) {
+        this._firstTurnUserId = _firstTurnUserId;
+    },
+
+    getFirstTurnUserId: function() {
+        return this._firstTurnUserId;
+    },
+    sortCard : function(card_values) {
+        cc.log("card_values", card_values);
+        // std::sort(card_values.begin(), card_values.end());
+        // card_values.sort(function(a, b) {
+        //     return parseFloat(a.tableIndex) - parseFloat(b.tableIndex);
+        // });
+        if (!cards.length) cards.length = 0;
+        for(i=0;i<card_values.length;i++){
+            var card = Object.create(Card);
+            card.value = card_values[i]; // Số thẻ là 1-52
+            cc.log("card", card.name());
+            cards.push(card);
+
+        }
+        this.showInitCard();
+    },
+    showInitCard: function() {
+        for (i = 0; i < cards.length; i++){
+            this.createCards(i);
+            if (card_tag[i].getParent() == null)
+                this.addChild(card_tag[i]);
+        }
+
+        //== chiabai
+        cc.log("avatars", avatars);
+        for(i = 0; i < 4; i++){
+            for(j =0 ;j< avatars.length;j++){
+                if(avatars[j].getPlayerId() != getUserId() && avatars[j].getPositionIndex() == i){
+                    for(k = 0 ;k < 8;k++){
+                        // var card = OtherCardSprite.createCardCover(this.cardWidth()*0.8);
+                        var card = new cc.Sprite("#card_cover.png");
+                        cc.log("card width =", card.getContentSize().width);
+                        card.setPosition(MVec2(width / 2 - this.cardWidth() / 2, height / 2));
+                        var pos = this.getCardCoverPostion(avatars[j]);
+                        card.runAction(cc.sequence(cc.moveTo(0.05*k, pos),cc.removeSelf()));
+                        // cardViews[i].push(card);
+                        cardViews.push(card);
+                    }
+                    break;
+                }
+            }
+        }
+
+        for(i = 0 ;i < 4 ; i++){
+            if(cardViews.length > 0)
+                for(j =0 ;j < cardViews.length;j++){
+                if(cardViews[j].getParent()== null){
+                    this.addChild(cardViews[j]);
+                }
+            }
+        }
+
+        // // play sound chiabai
+        // SoundManager::getInstance()->playSound(soundTLMN[37]);
+        // for(int i = 0; i < card_tag.size();i++){
+        //     auto moveTo = MoveTo::create(0.2f+0.06f*i,MVec2(width / 2 + (i - 5) * cardWidth(),posYCard()));
+        //     card_tag[i]->runAction(moveTo);
+        //     card_tag[i]->setPosY(originY + posYCard());
+        // }
+    },
+    createCards : function(posX){
+        cc.log("cards", cards);
+        cc.log("posX", posX);
+        var cardx = cards[posX];
+        cc.log("cardx", cardx);
+        var cardSprite = CardSprite.create(cardx,posX,this.cardWidth(),this);
+        // cardSprite.addHidden();
+
+        cardSprite.setPosition(MVec2(visibleSize.width/2,
+            visibleSize.height/2));
+
+        card_tag.push(cardSprite);
+    },
+    cardWidth: function(){
+        return width/18;
     },
     onclose:function (e) {
 
@@ -864,39 +949,35 @@ var TLMienNamLayer = cc.Layer.extend({
 });
 
 var TLMienNamScene = cc.Scene.extend({
-    ctor:function (roomIndex, playerList, waitingPlayerList,
-                                     createRoom, gameTag, isDisplayRoomList, passwordRequired, isVipRoom, minBet,
-                                     cardRemainingCount, reEnterRoomResponse)
+    ctor:function (_roomIndex, _playerList, _waitingPlayerList, _createRoom, _gameTag, _isDisplayRoomList,
+                   passwordRequired, isVipRoom, minBet, cardRemainingCount, reEnterRoomResponse)
     {
         this._super();
-        this.init(roomIndex, playerList, waitingPlayerList,
-            createRoom, gameTag, isDisplayRoomList, passwordRequired, isVipRoom, minBet,
-            cardRemainingCount, reEnterRoomResponse);
+        this.init(_roomIndex, _playerList, _waitingPlayerList, _createRoom, _gameTag, _isDisplayRoomList,
+            passwordRequired, isVipRoom, minBet, cardRemainingCount, reEnterRoomResponse);
     },
 
-    init:function (roomIndex, playerList, waitingPlayerList,
-                   createRoom, gameTag, isDisplayRoomList, passwordRequired,isVipRoom, minBet,
-                   cardRemainingCount, reEnterRoomResponse)
+    init:function (_roomIndex, _playerList, _waitingPlayerList, _createRoom, _gameTag, _isDisplayRoomList,
+                   passwordRequired, isVipRoom, minBet, cardRemainingCount, reEnterRoomResponse)
     {
-        var layer = new TLMienNamLayer(roomIndex, playerList, waitingPlayerList,
-            createRoom, gameTag, isDisplayRoomList, passwordRequired,isVipRoom, minBet,
-            cardRemainingCount, reEnterRoomResponse);
+        var layer = new TLMienNamLayer(_roomIndex, _playerList, _waitingPlayerList, _createRoom, _gameTag,
+            _isDisplayRoomList, passwordRequired, isVipRoom, minBet, cardRemainingCount, reEnterRoomResponse);
 
         this.addChild(layer);
     }
 });
 
 
-var createCards = function(posX){
-    var cardx = cards[posX];
-    var cardSprite = CardSprite.create(cardx,posX,this.cardWidth(),this);
-    // cardSprite.addHidden();
-
-    cardSprite.setPosition(MVec2(visibleSize.width/2,
-        visibleSize.height/2));
-
-    card_tag.push(cardSprite);
-}
+// var createCards = function(posX){
+//     var cardx = cards[posX];
+//     var cardSprite = CardSprite.create(cardx,posX,this.cardWidth(),this);
+//     // cardSprite.addHidden();
+//
+//     cardSprite.setPosition(MVec2(visibleSize.width/2,
+//         visibleSize.height/2));
+//
+//     card_tag.push(cardSprite);
+// }
 
 // var showInitCard = function() {
 //     for (i = 0; i < cards.length; i++){
@@ -998,7 +1079,6 @@ var createCards = function(posX){
 
 var convertFromBINPlayer = function(binplayer) {
     var uid = binplayer.userId;
-    cc.log("binplayer", binplayer);
     var numberCard = 0;
     var player = TLMNPlayer.init(binplayer.displayName == null ? binplayer.userName : binplayer.displayName, uid.low, numberCard, binplayer.cash.low,
         binplayer.gold.low, 0, binplayer.tableIndex, binplayer.avatarId);
@@ -1053,7 +1133,7 @@ var convertFromBINPlayer = function(binplayer) {
 var findIndexPlayer = function(lstPlayer, player){
 
     for (i = 0; i < lstPlayer.length;i++){
-        if (lstPlayer[i].getID() == player.getID()){
+        if (lstPlayer[i].id == player.id){
             return i;
         }
     }

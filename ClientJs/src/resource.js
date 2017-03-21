@@ -222,6 +222,7 @@ var res = {
     btn_canquet:                 "res/vongquaymayman/btn_canquet.png",
     MINIPOKER_BACKGROUND_AVATAR: "res/miniPopup/miniPoker/background_avatar.png",
     TABLE_BG_CONTENT_CELL: "res/sprite_cell_content_table.png",
+    sprite_cards_plist : "res/sprite_cards.plist"
 };
 
 var g_resources = [];

@@ -21,7 +21,7 @@ var SERVER_PORT = 1580;
 var PATH = "megajackpot";
 
 // var url = "ws://"+SERVER_NAME+":"+SERVER_PORT+"/"+PATH;
-var url = "ws://115.146.127.17:1580/megajackpot";
+var url = "ws://localhost:1280/bigken";
 ws = new WebSocket(url);
 
 ws.binaryType = "arraybuffer";
@@ -111,9 +111,9 @@ var ROOM_TYPE = {
 };
 
 var PlayerState = {
-    NOT_IN_ROOM: 2,
-    PLAYING: 3,
-    WAITING: 1
+    NOT_IN_ROOM: 0,
+    PLAYING: 1,
+    WAITING: 2
 };
 
 var USER_STATUS_CONFIG = {

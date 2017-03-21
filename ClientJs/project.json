@@ -54,6 +54,13 @@
         "src/Scenes/SocdiaScene.js",
         "src/Scenes/ThreeCardsScene.js",
         "src/Scenes/VongQuayMayMan.js",
+        "src/Objects/TLMNPlayer.js",
+        "src/Objects/Card.js",
+        "src/Objects/CardSprite.js",
+        "src/Objects/WaitingPlayer.js",
+        "src/Objects/Player.js",
+        "src/Objects/Avatar.js",
+        "src/Objects/OtherCardSprite.js",
         "src/Scenes/TLMienNam.js",
         "src/UI/MButton.js",
         "src/UI/MLabel.js",
@@ -81,12 +88,11 @@
         "src/protobufObject/BINRoomOwnerChangedResponse.js",
         "src/protobufObject/BINCancelExitAfterMatchEndResponse.js",
         "src/protobufObject/BINPlayerExitRoomResponse.js",
-        "src/Objects/TLMNPlayer.js",
-        "src/Objects/Card.js",
-        "src/Objects/CardSprite.js",
-        "src/Objects/WaitingPlayer.js",
-        "src/Objects/Player.js",
-        "src/Objects/Avatar.js",
-        "src/Objects/OtherCardSprite.js"
+        "src/protobufObject/BINMatchBeginResponse.js",
+        "src/protobufObject/BINTurnResponse.js",
+        "src/protobufObject/BINSessionExpiredResponse.js",
+        "src/protobufObject/BINPingResponse.js",
+        "src/protobufObject/BINCreateRoomResponse.js",
+        "src/protobufObject/BINMatchEndResponse.js"
     ]
 }
