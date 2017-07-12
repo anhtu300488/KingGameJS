@@ -1,0 +1,33 @@
+package bigken.zonestatus;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigken.zonestatus";
+
+//ZoneStatus
+
+message BINZoneStatusRequest {
+	optional bool isCash = 1;
+}
+
+message BINRoomGroupInfo {
+	required int32 roomGroupId = 1;
+	required int32 userCount = 2;
+}
+
+message BINUserRankInfo {
+	required int32 rank = 1;
+	required int64 userId = 2;
+	required int32 avatarId = 3;
+	optional string displayName = 4;
+	optional int32 winMatch = 5;
+	optional int64 winMoney = 6;
+}
+
+message BINZoneStatusResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	repeated BINRoomGroupInfo rgInfoes = 3;
+	repeated BINUserRankInfo consecutiveWins = 4;
+	repeated BINUserRankInfo consecutiveLosts = 5;
+}
+
+//End ZoneStatus

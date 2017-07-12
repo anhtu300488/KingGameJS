@@ -25,5 +25,6 @@ message BINMatchEndResponse {
 	repeated textemoticon.BINTextEmoticon textEmoticons = 6;//text hiển thị cho mỗi người chơi(ví dụ lý do thắng, thua)
 	optional int32 countDownTimer = 7;
 	repeated mapfieldentry.BINMapFieldEntry args = 8;//map chứa các thông tin đặc biệt cho từng game
+	optional int32 zoneId = 9;
 }
 //End MatchEnd 

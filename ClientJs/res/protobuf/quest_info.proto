@@ -1,0 +1,58 @@
+package bigken.questinfo;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigken.questinfo";
+import "map_field_entry.proto";
+
+
+//QuestInfo
+
+message BINQuestInfoRequest {
+	required int32 type = 1;//mặc định = 1
+}
+
+//args: với nhiệm vụ tính thời gian và số ván chơi thêm các tham số
+	//zoneId: game
+	//includeCashRoom: có bao gồm bàn vip ko (true/false)
+	//includeGoldRoom: có bao gồm bàn thường ko (true/false)
+	//minCashBet: mức cược nhỏ nhất bàn vip (=0 - tất cả các mức cược)
+	//minGoldBet: mức cược nhỏ nhất bàn thường(=0 - tất cả các mức cược)
+	//
+message BINQuest {
+	required int32 groupId = 1;
+	required int32 questId = 2;//thứ tự
+	optional string questName = 3;
+	optional int32 currentPoint = 4;
+	optional int32 targetPoint = 5;
+	optional int32 cashBonus = 6;//thưởng cash
+	optional int32 goldBonus = 7;//thưởng gold
+	optional bool claimed = 8;//đã nhận hay chưa
+	optional int64 claimedTime = 9;//thời gian nhận thưởng
+	optional int32 previousQuestId = 10;//nhiệm vụ trước
+	optional int32 nextQuestId = 11;//nhiệm vụ tiếp theo
+	repeated mapfieldentry.BINMapFieldEntry args = 12;
+}
+
+message BINQuestInfoResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	repeated BINQuest checkInQuests = 3;//(nếu list rỗng thì không hiển thị điểm danh hàng ngày)
+	repeated BINQuest playingCountQuests = 4;//(nếu list rỗng thì không hiển thị nhiệm vụ số ván chơi từng game)
+	repeated BINQuest playingTimeQuests = 5;//(nếu list rỗng thì không hiển thị nhiệm vụ thời gian chơi từng game)
+}
+
+//End QuestInfo
+
+
+//ClaimQuestBonus
+message BINClaimQuestBonusRequest {
+	required int32 groupId = 1;//mặc định = 1
+	optional int32 questId = 2;
+}
+
+message BINClaimQuestBonusResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+}
+
+//End ClaimQuestBonus
+

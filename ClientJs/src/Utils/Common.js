@@ -524,12 +524,12 @@ var getPrefs = function(key){
 
 var getCp = function() {
     // if (TEST_ENVIRONMENT)
-    return "2";
+    return "19";
 
 }
 
 var getVersionCode = function() {
-    return "15";
+    return "20";
 }
 
 var getCountry = function() {
@@ -556,7 +556,7 @@ var getDeviceInfo = function() {
 }
 
 var getPackageName = function() {
-    return "com.bigken.twelfth.january.seventeen";
+    return "com.caothu.monbai";
 }
 
 var getAppVersion = function() {

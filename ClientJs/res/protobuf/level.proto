@@ -16,6 +16,18 @@ message BINMedal {
 	required int32 maxLevel = 3;
 }
 
+message BINVipLevel {
+    required int32 vip = 1;
+	required string name = 2;
+	optional int64 maxPoint = 3;
+	optional int64 totalCashPurchase = 4;
+	optional int32 maxParTopup = 5;
+	optional int32 maxTurnTopup = 6;
+	optional int32 minBalanceAfterTopup = 7;
+	optional int32 cashTransferTax = 8;
+	optional int32 cashReceived = 9;
+}
+
 //LevelUp 
 //Message được gửi đi khi user lên level
 message BINLevelUpResponse {

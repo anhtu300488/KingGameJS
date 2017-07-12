@@ -27,6 +27,7 @@ message BINCompleteIAPRequest {
 	required string productId = 2;
 	required string packageName = 3;
 	required string purchaseToken = 4;
+	optional string developerPayload = 5;
 }
 
 message BINCompleteIAPResponse {

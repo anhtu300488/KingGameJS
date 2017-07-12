@@ -29,6 +29,8 @@ message BINEnterZoneResponse {
 	optional int32 defaultRoomTypeLoad = 4;//loại phòng sẽ load lên đầu tiên khi vào 0: bàn thường (ken), 1: bàn vip (xu), 2 tổng hợp cả 2
 	repeated BINRoomConfig cashRoomConfigs = 5;
 	repeated BINRoomConfig goldRoomConfigs = 6;
+    optional int32 zoneId = 7;
+    optional bool jarStatus = 8;
 }
 
 message BINExitZoneRequest {
@@ -38,5 +40,6 @@ message BINExitZoneRequest {
 message BINExitZoneResponse {
     required bool responseCode = 1;
     optional string message = 2;
+    optional int32 zoneId = 3;
 }
 //End EnterZone 

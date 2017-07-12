@@ -17,6 +17,7 @@ message BINStartMatchResponse {
 	optional int32 countDownTimer = 3;	//thời gian đếm ngược sau khi ấn bắt đầu. thời gian này để người chơi có thể nhìn bài và chuẩn bị
 	optional int64 firstTurnUserId = 4;	//id của người đánh đầu tiên
 	repeated mapfieldentry.BINMapFieldEntry args = 5;
+	optional int32 zoneId = 6;
 }
 
 //args map chứa các thông tin thêm với từng game

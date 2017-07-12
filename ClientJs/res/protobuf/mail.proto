@@ -17,6 +17,7 @@ message BINMail {
 	optional int32 attachItemId = 10;//= 1: cash, 2: gold
 	optional int64 attachItemQuatity = 11;
 	optional int64 expiredTime = 12;
+	optional string expandedData = 13;
 }
 
 message BINFilterMailRequest {

@@ -1,0 +1,36 @@
+package bigken.bonus;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigken.bonus";
+
+//AdsBonusConfig
+message BINAdsBonusConfigRequest {
+	optional int32 type = 1;
+}
+
+message BINAdsBonus {
+	required int32 adsType = 1;
+	optional int32 cashBonus = 2;
+	optional int32 goldBonus = 3;
+}
+
+message BINAdsBonusConfigResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	repeated BINAdsBonus bonuses = 3;
+}
+//End AdsBonusConfig
+
+//AdsBonus
+
+message BINAdsBonusRequest {
+	required int32 adsType = 1;
+}
+
+message BINAdsBonusResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	optional int32 cashBonus = 3;
+	optional int32 goldBonus = 4;
+}
+
+//End AdsBonus

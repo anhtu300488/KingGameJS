@@ -12,6 +12,7 @@ message BINInitializeRequest {
 	optional string country = 5;
 	optional string language = 6;
 	optional string pakageName = 7;
+	optional bool liteVersion = 8;
 }
 
 message BINInitializeResponse {

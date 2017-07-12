@@ -14,6 +14,7 @@ message BINExitRoomResponse {
     optional string message = 2;
 	optional bool exitAfterMatchEnd = 3;//=true - dang ky thoat khi het van, false - thoat luon ( khi ban dang trong trang thai chua bat dau van choi)
 	optional bool notEnoughMoney = 4;
+	optional int32 zoneId = 5;
 }
 
 //nguoi choi khac trong ban nhan duoc message co player dang ky thoat khoi phong trong truong hop phong dang choi

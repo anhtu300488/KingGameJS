@@ -12,5 +12,6 @@ message BINPrepareNewMatchResponse {
 	required bool responseCode = 1;
     optional string message = 2;
 	optional int32 countDownTimer = 3;//countDownTime > 0 đếm ngược để thay chủ bàn hoặc tự động startMatch
+	optional int32 zoneId = 4;
 }
 //End PrepareNewMatch 

@@ -1,0 +1,29 @@
+package bigken.agent;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigken.agent";
+
+//Agent
+
+message BINAgentRequest {
+	optional int32 agentLevel = 1;//mặc định truyền lên 1
+}
+
+message BINAgent {
+	optional int32 agentId = 1;
+	optional int64 userId = 2;
+	optional string userName = 3;
+	optional string agentName = 4;
+	repeated string phoneNumbers = 5;
+	optional string email = 6;
+	optional string address = 7;
+	optional string facebookId = 8;
+	optional int32 agentLevel = 9;
+}
+
+message BINAgentResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	repeated BINAgent agents = 3;
+}
+
+//End Agent

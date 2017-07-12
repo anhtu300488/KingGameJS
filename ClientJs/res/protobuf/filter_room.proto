@@ -39,3 +39,25 @@ message BINFilterRoomResponse {
 }
 
 //End FilterRoom 
+
+//RoomStatus
+message BINRoomStatusRequest {
+    required int32 zoneId = 1;
+	repeated int32 indexs = 2;
+}
+
+message BINRoomStatus {
+    required int32 roomIndex = 1;
+	required int32 minBet = 2;
+	required int64 minEnterMoney = 3;
+	required int32 playerSize = 4;//số người chơi tối đa
+	required int32 playingPlayer = 5;//số người đang ngồi chơi
+	required bool passwordRequired = 6;
+}
+
+message BINRoomStatusResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+	repeated BINRoomStatus roomStatuses = 3;
+}
+//End RoomStatus

@@ -59,6 +59,7 @@ message BINTurnResponse {
 	optional bool matchEnd = 5;// = true: kết thúc ván (trường hợp người đánh hiện tại hết bài)
 	optional int countDownTimer = 6;//thời gian đếm ngược, phụ thuộc vào tham số matchEnd (matchEnd = true: thời gian countDown đến khi nhận được message matchEnd, matchEnd = false: countDown cho người đánh tiếp theo)
 	repeated mapfieldentry.BINMapFieldEntry args = 7;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
+	optional int32 zoneId = 8;
 }
 
 //End Turn 

@@ -1,0 +1,37 @@
+package bigken.lockmoney;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigken.lockmoney";
+import "map_field_entry.proto";
+
+message BINLockMoneyRequest {
+	required int64 lockMoney = 1;//Số tiền muốn khóa
+	required bool isCash = 2;//true:cash, false:gold
+	repeated mapfieldentry.BINMapFieldEntry args = 3;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
+}
+
+message BINLockMoneyResponse {
+	required bool responseCode = 1;
+	optional string message = 2;
+	optional int64 currentCash = 3;//Số tiền lại sau khi khóa
+	optional int64 currentCashLock = 4;//Số tiền đang khóa trong tài khoản
+	optional int64 currentGold = 5;//Số tiền lại sau khi khóa
+	optional int64 currentGoldLock = 6;//Số tiền đang khóa trong tài khoản
+	repeated mapfieldentry.BINMapFieldEntry args = 7;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
+}
+
+message BINUnLockMoneyRequest {
+	required int64 unLockMoney = 1;//Số tiền muốn mở khóa
+	required bool isCash = 2;//true:cash, false:gold
+	required string otp = 3;//Mã otp
+	repeated mapfieldentry.BINMapFieldEntry args = 4;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
+}
+
+message BINUnLockMoneyResponse {
+	required bool responseCode = 1;
+	optional string message = 2;
+	optional int64 currentCash = 3;//Số tiền lại sau khi khóa
+	optional int64 currentCashLock = 4;//Số tiền đang khóa trong tài khoản
+	optional int64 currentGold = 5;//Số tiền lại sau khi khóa
+	optional int64 currentGoldLock = 6;//Số tiền đang khóa trong tài khoản
+	repeated mapfieldentry.BINMapFieldEntry args = 7;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
+}

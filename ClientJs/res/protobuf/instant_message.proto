@@ -30,6 +30,31 @@ message BINInstantMessageResponse {
 	optional string receiverUserName = 10;
 	optional int64 receiverUserId = 11;
 	optional int32 textEmoticonId = 12;
+	optional string colorCode = 13;//dùng để hiển thị màu tên hiển thị khi chat (định dạng 255,255,255), nếu trường này rỗng thì để màu mặc định
+}
+
+message BINInstantMessage {
+	optional string senderName = 1;
+	optional int64 senderUserId = 2;
+	optional string instantMessage = 3;
+	optional int64 sentTime = 4;
+	optional string recipientName = 5;
+	optional int64 recipientUserId = 6;
+	optional int32 textEmoticonId = 7;
+	optional string colorCode = 8;
+}
+
+message BINInstantMessageHistoryRequest {
+	required int32 scope = 1;
+}
+
+message BINInstantMessageHistoryResponse {
+	required bool responseCode = 1;
+    optional string message = 2;
+	optional int32 scope = 3;
+	optional int32 zoneId = 4;
+	optional int32 roomIndex = 5;
+	repeated BINInstantMessage instantMessages = 6;
 }
 
 //End InstantMessage 

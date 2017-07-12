@@ -1,0 +1,18 @@
+package bigken.countdown;
+option java_package = "com.mi.game.network.data.bin";
+option java_outer_classname = "bigken.countdown";
+import "map_field_entry.proto";
+
+message BINCountDownRequest {
+	required int32 zoneId = 1;//Zone ID
+	repeated mapfieldentry.BINMapFieldEntry args = 2;
+}
+
+message BINCountDownResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+	optional int32 zoneId = 3;//Zone ID
+	optional int64 gameCountDown = 4;//Count down cua game (tai xiu...)
+	optional int64 jarCountDown = 5;//Count down cua hu game
+	repeated mapfieldentry.BINMapFieldEntry args = 6;//map chứa các thông tin đặc biệt cho từng game theo mô tả ở đầu file
+}

@@ -12,4 +12,13 @@ message BINOpenIdLoginRequest {
 	optional string email = 5;
 }
 
-//Open Id Login 
+//Open Id Login
+message BINOpenIdConnectRequest {
+	required int32 channel = 1;
+	required string openId = 2;
+}
+
+message BINOpenIdConnectResponse {
+    required bool responseCode = 1;
+    optional string message = 2;
+}

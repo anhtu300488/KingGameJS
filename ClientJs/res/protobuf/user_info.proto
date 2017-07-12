@@ -32,6 +32,10 @@ message BINUserInfo {
 	optional bool accountVerified = 24;
 	optional bool disableCashTransaction = 25;
 	optional bool securityKeySet = 26;
+    optional int64 cashLock = 27;
+    optional int64 goldLock = 28;
+    optional level.BINVipLevel vipLevel = 29;
+    optional int64 vipPoint = 30;
 }
 
 //End UserInfo 

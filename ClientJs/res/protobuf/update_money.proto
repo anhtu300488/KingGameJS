@@ -19,6 +19,7 @@ message BINUpdateMoneyResponse {
     required bool responseCode = 1;
     optional string message = 2;
 	repeated BINMoneyBox moneyBoxes = 3;//List chứa danh sách người chơi có tiền thay đổi
+	optional int32 zoneId = 4;
 }
 
 //End UpdateMoney 

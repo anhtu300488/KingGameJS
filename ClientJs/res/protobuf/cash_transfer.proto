@@ -14,6 +14,7 @@ message BINCashTransferConfigResponse {
 	optional int64 avaiableCash = 3;
 	optional int32 tax = 4;
 	optional bool enableSecurityCheck = 5;
+	optional int32 minCashTransfer = 6;
 }
 
 //End CashTransferConfig
@@ -26,6 +27,7 @@ message BINCashTransferRequest {
 	optional string userSecurityKey = 3;
 	optional string captchaSecurityKey = 4;
 	optional string captcha = 5;
+	optional string description = 6;
 }
 
 message BINCashTransferResponse {

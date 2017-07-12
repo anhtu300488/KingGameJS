@@ -12,5 +12,6 @@ message BINMatchBeginResponse {
 	required bool responseCode = 1;
     optional string message = 2;
 	optional int32 countDownTimer = 3; //thời gian đếm ngược cho lượt đánh đầu tiên, hết thời gian server sẽ tự đánh
+	optional int32 zoneId = 4;
 }
 //End MatchBegin 

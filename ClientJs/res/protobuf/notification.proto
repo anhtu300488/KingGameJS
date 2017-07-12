@@ -25,6 +25,7 @@ message BINEmergencyNotificationResponse {
 	required bool responseCode = 1;
     optional string message = 2;
 	repeated string notifications = 3;
+	repeated BINNews headlines = 4;
 }
 
 //End EmergencyNotification
